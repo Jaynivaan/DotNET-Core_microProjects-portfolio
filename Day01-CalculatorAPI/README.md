@@ -76,6 +76,8 @@ How to Run
 	dontnet run
 ```
 4. Open Postman and test endpoints.
+
+
  +add
  ```
  GET /add?a=5&b=3
@@ -94,7 +96,7 @@ GET /divide?a=5&b=3
 ```
 
 
-*** if trying though browser when you run the app user the formats  at the local host address bar 
+*** if trying though browser when you run the app user the formats  at the local host address bar ***
 
 
 ################################################################
