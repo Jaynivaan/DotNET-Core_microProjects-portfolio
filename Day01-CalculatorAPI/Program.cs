@@ -1,41 +1,91 @@
+//Entry point for the application
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
+//build the app ie configuring services and data flow pipeline
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//Root endpoint =>> simple health check
+app.MapGet("/", () => "Day01 calculator api is running...");
+
+//additon
+//example:  /add?a=5&b=3
+//query parameters ( a, b) are automatically bound from url
+app.MapGet("/add", (double a, double b) =>
 {
-    app.MapOpenApi();
-}
+    double result = a + b;
 
-app.UseHttpsRedirection();
+    //return structured json response.
+    return Results.Ok(new
+    {
+        succuss = true,
+        message ="Computer computed the computational value,,Thanks a lot for your valuable time and energy checking this out ",
+        operation = "addition",
+        inputA = a,
+        inputB = b,
+        result = result
+    });
+});
 
-var summaries = new[]
+//subtraction
+app.MapGet("/subtract", (double a, double b) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    double result = a - b;
 
-app.MapGet("/weatherforecast", () =>
+    //return structured json response.
+    return Results.Ok(new
+    {
+        succuss = true,
+        message = "Computer computed the computational value,,Thanks a lot for your valuable time and energy checking this out ",
+        operation = "subtraction",
+        inputA = a,
+        inputb = b,
+        result = (double)result
+    });
+
+});
+
+//multiplication
+app.MapGet("/multiply", (double a, double b) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    double result = a * b; 
 
+    //return structured json response.
+    return Results.Ok(new
+    {
+        succuss = true,
+        message = "Computer computed the computational value,,Thanks a lot for your valuable time and energy checking this out ",
+        operation = "multiplication",
+        inputA = a,
+        inputB = b,
+        result = result
+
+    });
+});
+
+//division
+app.MapGet("/division", (double a, double b) =>
+{
+    double result = a / b;
+
+    //return structured json response
+    return Results.Ok(new
+    {
+        succuss = true,
+        message = "Computer computed the computational value,,Thanks a lot for your valuable time and energy checking this out ",
+        operation = "division",
+        inputA = a,
+        inputB = b,
+        result = result
+    });
+});
+
+
+
+
+
+
+
+
+
+//start the application
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
