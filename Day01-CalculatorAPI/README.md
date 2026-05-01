@@ -68,28 +68,33 @@ How to Run
 
  ```bash
 	cd Day01-CalculatorAPI
+```
 
 3. Run the application:
 
 ```bash
 	dontnet run
-
+```
 4. Open Postman and test endpoints.
  +add
  ```
  GET /add?a=5&b=3
-
+ ```
  -subtract
  ```
  GET /subtract?a=4&b=3
-
+ ```
  xmultiply
  ```
  GET /multiply?a=5&b=3
-
+ ```
 /divide
 ```
 GET /divide?a=5&b=3
+```
+
+
+*** if trying though browser when you run the app user the formats  at the local host address bar 
 
 
 ################################################################
