@@ -1,0 +1,15 @@
+#visual studio
+.vs/
+bin/
+obj/
+
+# user specific files
+*.user
+*.suo
+
+#logs
+*.log
+
+#os files
+.DS_Store
+Thumbs.db
