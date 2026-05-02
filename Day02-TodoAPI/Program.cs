@@ -1,41 +1,82 @@
+//gam sam//
+using Day02_TodoAPI.Services;
+using Day02_TodoAPI.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//register service
+builder.Services.AddSingleton<TodoService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
-app.UseHttpsRedirection();
+//routes//
 
-var summaries = new[]
+//get all todos
+app.MapGet("/todos", (TodoService service) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var todos = service.GetAll();
+    
+    return Results.Ok(new ApiResponse<List<TodoItem>>
+    {
+        Success = true,
+        Message = "Todos fetched Successfully, Thanks!",
+        Data = todos
+    });
 
-app.MapGet("/weatherforecast", () =>
+});
+
+
+//get todo by id
+app.MapGet("/todo/{id}", (int id, TodoService service) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var todo = service.GetAll().FirstOrDefault(t => t.Id == id);
+    return todo is not null ? Results.Ok(todo) : Results.NotFound();
+
+});
+
+
+//create todo
+app.MapPost("/todo", (string title, TodoService service) =>
+{
+    var todo = service.Add(title);
+    return Results.Ok(new ApiResponse<TodoItem>
+    {
+        Success = true,
+        Message = "Todo created Successfully, Thanks!",
+        Data = todo
+    });
+
+});
+
+
+//update todo
+app.MapPut("/todo/{id}", (int id, string title, bool isCompleted, TodoService service) =>
+{
+    var updated = service.Update(id, title, isCompleted);
+    return updated ? Results.Ok("Updated") : Results.NotFound();
+});
+
+//delete todo
+app.MapDelete("/todo/{id}", (int id, TodoService service) =>
+{
+    var deleted = service.Delete(id);
+    if (!deleted)
+    {
+        return Results.NotFound(new ApiResponse<string>
+        {
+            Success = false,
+            Message = "Todo not found",
+            Data = null
+        });
+    }
+    return Results.Ok(new ApiResponse<string>
+    {
+        Success = true,
+        Message = "Todo deleted successfully",
+        Data = null
+    });
+});
+
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
