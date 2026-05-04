@@ -1,41 +1,92 @@
+//gs
+using Day04_FileUploadAPI.Models;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//----------------------------------------------------
+//    Step1: Define the Uploads Folder
+//----------------------------------------------------
 
-app.UseHttpsRedirection();
+//get the current directory
+var rootPath = Directory.GetCurrentDirectory();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+//combine it with "uploads" to get the full path (absolute path) to the uploads folder
+var uploadsFolder = Path.Combine(rootPath, "Uploads");
 
-app.MapGet("/weatherforecast", () =>
+//Create the uploads folder if it doesn't exist
+Directory.CreateDirectory(uploadsFolder);
+
+//----------------------------------------------------
+//step2: Upload Endpoint
+//----------------------------------------------------
+
+//This endpoint acceps a file from a user
+app.MapPost("/Upload", async (IFormFile file) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    // check if the file is not null and has content
+    if(file == null || file .Length == 0)
+    {
+        return Results.BadRequest(new ApiResponse<string>
+        {
+            Success = false,
+            Message = "No file uploaded or file is empty.",
+            Data = null
+        });
+    }
+    //safety: Extract only file name to prevent path traversal attacks
+    var safeFileName = Path.GetFileName(file.FileName);
+
+    //full path to save file.
+    var filePath = Path.Combine(uploadsFolder, safeFileName);
+
+    //save file
+    using var stream = new FileStream(filePath, FileMode.Create);
+    await file.CopyToAsync(stream);
+
+    //Success response.
+
+    return Results.Ok(new ApiResponse<object>
+    {
+                Success = true,
+                Message = "File uploaded successfully.",
+                Data = new
+                {
+                    fileName = safeFileName,
+                    size =file.Length,
+                    path = filePath
+                }
+    });
 })
-.WithName("GetWeatherForecast");
+.DisableAntiforgery();
 
-app.Run();
+//----------------------------------------------------
+//step3: List Uploaded Files Endpoint
+//----------------------------------------------------
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+//return list of Uploaded files
+app.MapGet("/files", () =>
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    //Read all files in the uploads folder
+    var files = Directory.GetFiles(uploadsFolder)
+        .Select(file => new
+        {
+            fileName = Path.GetFileName(file),
+            size = new FileInfo(file).Length
+        })
+        .ToList();
+    return Results.Ok(new ApiResponse<object>
+    {
+        Success = true,
+        Message = "Files fetched successfully.",
+        Data = files
+    });
+});
+
+//step4: run the app
+app.Run();
