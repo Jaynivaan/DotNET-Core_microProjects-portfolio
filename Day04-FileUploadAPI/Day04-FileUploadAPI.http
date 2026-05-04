@@ -1,0 +1,6 @@
+@Day04_FileUploadAPI_HostAddress = http://localhost:5178
+
+GET {{Day04_FileUploadAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
