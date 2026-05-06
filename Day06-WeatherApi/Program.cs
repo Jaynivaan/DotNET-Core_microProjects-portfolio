@@ -1,41 +1,45 @@
+//gs
+using Day06_WeatherApi.Services;
+using Day06_WeatherApi.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//Register http client factory
+builder.Services.AddHttpClient();
+
+//Register Weather service
+builder.Services.AddScoped<IWeatherService, WeatherService>();
+
+//bind weather api section from appsettings.json
+builder.Services.Configure<WeatherApiOption>(
+    builder.Configuration.GetSection("WeatherApi"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.MapGet("/weather/{city}", async
+(
+    string city,
+    IWeatherService weatherService
+) =>
 {
-    app.MapOpenApi();
-}
+    var result = await weatherService.GetWeatherAsync(city);
 
-app.UseHttpsRedirection();
+    if (result == null)
+    {
+        return Results.BadRequest(new
+        {
+            Success = false,
+            Message = "Could not fetch weather data."
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+        });
+    }
+    return Results.Ok(new
+    {
+        Success = true,
+        Data = result
+    });
+});
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+//start app
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
