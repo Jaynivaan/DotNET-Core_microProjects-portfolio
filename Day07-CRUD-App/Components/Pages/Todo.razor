@@ -1,0 +1,79 @@
+
+@page "/todo"
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+@using Day07_CRUD_App.Models
+@using Day07_CRUD_App.Services
+@inject ITodoService TodoService
+
+<h3>To do CRUD App </h3>
+
+<input @bind= "newTitle" placeholder="Enter Todo Title" />
+<button @onclick= "CreateTodo">Add Todo </button>
+
+<hr />
+@if (todos.Count == 0)
+{
+    <p>No Todos Yet. </p>
+
+}
+else
+{
+    <ul>
+        @foreach (var todo in todos)
+        {
+            <li>
+                <input type = "checkbox" checked ="@todo.IsCompleted"
+                    @onchange = "() => ToggleTodo(todo)" />
+
+                <span> @todo.Title </span>
+
+                <button @onclick = "() =>  DeleteTodo(todo.id)"> Delete </button>
+
+            </li>
+
+        }
+    </ul>
+
+}
+
+@code {
+    private List<TodoItem> todos = new();
+    private string newTitle = "";
+
+    protected override void OnInitialized()
+    {
+        LoadTodos();
+    }
+    private void LoadTodos()
+    {
+        todos = TodoService.GetAll();
+    }
+
+    private void CreateTodo()
+    {
+        if (string .IsNullOrWhiteSpace(newTitle))
+            return;
+
+        TodoService.Create(newTitle);
+
+        newTitle = "";
+
+        LoadTodos();
+        
+    }
+
+    private void ToggleTodo(TodoItem todo)
+    {
+        TodoService.Update(todo.Id, todo.Title, !todo.IsCompleted);
+
+        LoadTodos();
+    }
+
+    private void DeleteTodo (int id)
+    {
+        TodoService.Delete(id);
+
+        LoadTodos();
+    }
+
+}
