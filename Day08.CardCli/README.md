@@ -109,4 +109,9 @@ Inspired By:
 
 ----
 
-### 
+### to test this project its easy 
+from your system terminal run
+``
+dnx -y hellojay
+``
+
