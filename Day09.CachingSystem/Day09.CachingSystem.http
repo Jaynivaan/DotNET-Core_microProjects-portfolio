@@ -1,0 +1,6 @@
+@Day09.CachingSystem_HostAddress = http://localhost:5259
+
+GET {{Day09.CachingSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
