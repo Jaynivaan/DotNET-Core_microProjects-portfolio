@@ -1,41 +1,84 @@
+//gs
+using System.Threading.RateLimiting;
+using Day10.RateLimiter.Config;
+using Day10.RateLimiter.Endpoints;
+using Day10.RateLimiter.Responses;
+using Microsoft.AspNetCore.RateLimiting;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//-------------------------------------------
+//   Configuration Binding
+//-------------------------------------------
+//bind appsettings.json where we added the custom  settings section into strongly typed configuration object.
 
+var rateLimitOptions = new RateLimitOptions();
+
+builder.Configuration
+    .GetSection("RateLimiting")
+    .Bind(rateLimitOptions);
+
+//-----------------------------------------------------
+// Rate limiter Middleware
+//--------------------------------
+
+//Modern defensive backend engineering 
+//Middle ware sits in  request Pipeline
+//Every request flows through Middleware.
+
+//here we create  a named policy called storm
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("storm", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = rateLimitOptions.PermitLimit;
+        limiterOptions.Window =
+            TimeSpan.FromSeconds(rateLimitOptions.WindowSeconds);
+        limiterOptions.QueueLimit = rateLimitOptions.QueueLimit;
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+
+    //------------------------------------------------------
+    //  HTTP 429 response
+    //---------------------------------------------------
+
+    // Instead of ugly default response we return well structured DTO
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429;
+
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new ApiResponse
+            {
+                Success = false,
+                Message = "Too many Requests..Storm shield Activated ",
+                Timestamp = DateTime.UtcNow
+            },
+            cancellationToken: token
+        );
+    };
+
+});
+
+//next build app 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//-----------------------------------------
+// Middleware Pipeline
+//--------------------------------------
 
-app.UseHttpsRedirection();
+//middle ware order matters
+// request flow through pipeline in a certain order.
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseRateLimiter();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+//Endpoint mapping
+app.MapShieldEndpoints();
+
+//run the app
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
