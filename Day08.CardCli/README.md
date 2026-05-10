@@ -115,3 +115,7 @@ from your system terminal run
 dnx -y hellojay
 ``
 
+
+Gratitute
+==========
+My deep gratitude towards the wonderful mentors and teachers at <a href="https://the-tech-academy.com">Tech-Academy</a>who iluminated the path of C sharp and DOTNET world..

@@ -85,3 +85,8 @@ the curl commands to test the api endpoints are not added yet, but you can easil
 
 Note this project is a learning exercise and may not include all best practices for production logging. Always consider security and performance implications when implementing logging in real applications.
 and this readme is the step one and the time constraint for building the project is 90 minutes.and time starts fromthe time i commit the readme file.
+
+
+Gratitute
+==========
+My deep gratitude towards the wonderful mentors and teachers at <a href="https://the-tech-academy.com">Tech-Academy</a>who iluminated the path of C sharp and DOTNET world..
