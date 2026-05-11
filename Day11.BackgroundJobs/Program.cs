@@ -1,41 +1,40 @@
+//gs
+using Day11.BackgroundJobs.Endpoints;
+using Day11.BackgroundJobs.Services;
+
+//this program.cs is the orchestration layer of this application.
+//nervous system wiring.
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//===============================================================
+//Dependency injection Registration
+//==============================================================
+
+//Singleton
+//One shared memory state across whole application lifetime.
+
+builder.Services.AddSingleton<IJobStatusService, JobStatusService>();
+
+//================
+//hosted background worker
+//===================
+
+//framework automatically starts this worker.
+
+builder.Services.AddHostedService<BackgroundPulseWorker>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//==========================
+//Endpoint Mapping
+//==========
+app.MapJobStatusEndpoints();
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+//========================================
+//Run application
+//==================
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
+//gs
