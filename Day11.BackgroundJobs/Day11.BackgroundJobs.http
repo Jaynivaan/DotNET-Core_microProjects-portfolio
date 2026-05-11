@@ -1,0 +1,6 @@
+@Day11.BackgroundJobs_HostAddress = http://localhost:5064
+
+GET {{Day11.BackgroundJobs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
