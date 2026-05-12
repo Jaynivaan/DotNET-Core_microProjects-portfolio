@@ -76,7 +76,7 @@ An Optimised backend is not just request and response system but the live backgr
 
 ### Gratitude ###
 
-My deep gratitude towards the wonderful mentors and teachers at <a href="https://the-tech-academy.com">Tech-Academy</a>who iluminated the path of C sharp and DOTNET world..
+My deep gratitude towards the wonderful mentors and teachers at <a href="https://the-tech-academy.com">Tech-Academy</a>who illuminated the path of C sharp and DOTNET world..
 anyone interested to learn ..Learn from Tech-academy you meet with best explanations.. 
 
 
