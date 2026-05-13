@@ -1,0 +1,6 @@
+@Day13.SignalLanternAPI_HostAddress = http://localhost:5080
+
+GET {{Day13.SignalLanternAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
