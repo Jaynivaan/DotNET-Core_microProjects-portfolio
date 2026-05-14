@@ -1,0 +1,69 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using Day14.BlazorJobDashboard.Models
+@using Day14.BlazorJobDashboard.Services
+@using Day14.BlazorJobDashboard.SignalCards
+
+@inject IJobApiService JobApiService
+
+<h1>
+    " THE JOB DASHBOARD "
+</h1>
+
+<button @onclick="LoadData">
+    Refresh Status
+</button>
+
+<br />
+<br />
+
+@if (isLoading)
+{
+    <p> Loading Job Status..</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red">@errorMessage</p>
+}
+else if (jobStatus is not null)
+{
+    <JobCard Job="jobStatus" />
+}
+
+@code {
+    //state variables
+    private JobStatusDto? jobStatus;
+
+    private bool isLoading = true;
+
+    private string? errorMessage;
+
+    // runs automatically when page loads
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    //fetch data from service layer
+    private async Task LoadData()
+    {
+        try
+        {
+            isLoading = true;
+
+            errorMessage = null;
+
+            jobStatus = await JobApiService.GetJobStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

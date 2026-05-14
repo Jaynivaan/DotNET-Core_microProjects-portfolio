@@ -1,0 +1,36 @@
+@using Day14.BlazorJobDashboard.Models
+
+<div class="job-card">
+    <h2> Background Job Status </h2>
+
+    <p>
+        Status: 
+        @if (Job is not null && Job.IsRunning)
+        {
+            <span style="color: limegreen">Running</span>
+
+        }
+        else
+        {
+            <span style="color:red"> Stopped </span>
+        }
+    </p>
+
+    <p>
+        Last Updated:
+        @Job?.LastUpdated
+    </p>
+
+    <p>
+        Pulse Count: 
+        @Job?.PulseCount
+    </p>
+
+</div>
+
+@code {
+    //parent component sends data into this component
+        [Parameter]
+        public JobStatusDto? Job { get; set; }
+
+}

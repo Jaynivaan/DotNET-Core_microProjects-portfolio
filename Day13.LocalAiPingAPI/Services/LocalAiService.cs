@@ -122,7 +122,7 @@ namespace Day13.LocalAiPingAPI.Services
             //stream chunks from ollama
             await foreach (var update in _chatClient.GetStreamingResponseAsync(messages))
             {
-                if(! string.IsNullOrWhiteSpace(update.Text))
+                if(!string.IsNullOrWhiteSpace(update.Text))
                 {
                     yield return update.Text; 
                 }
