@@ -75,15 +75,15 @@ $$$
 planned endpoints
 
 ```
-GET/health
+http://localhost:port/health
 ```
 
 ```
-GET/system/status
+http://localhost:port/healthz
 ```
 
 ```
-GET/system/metadata
+http://localhost:port/metadata
 ```
 
 ---
@@ -98,7 +98,8 @@ Time planned :
 
 builder.Services.AddHealthChecks();
 
-app.MapHealthChecks("/health");
+app.MapHealthEndpoints();
+
 
 ###
 future vision

@@ -1,41 +1,32 @@
+//gs
+using Day15.HealthCheckObservabilityAPI.Config;
+using Day15.HealthCheckObservabilityAPI.Endpoints;
+using Day15.HealthCheckObservabilityAPI.Interfaces;
+using Day15.HealthCheckObservabilityAPI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//BUilt in .net health sytem
+builder.Services.AddHealthChecks();
+
+//bind options
+builder.Services.Configure<AppInfoOptions>(
+    builder.Configuration.GetSection("AppInfo")
+    );
+
+//register observability
+//healthcheck and observability is different
+
+builder.Services.AddScoped<ISystemInfoService, SystemInfoService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//builtin raw health check endpoint
+app.MapHealthChecks("/healthz");
 
-app.UseHttpsRedirection();
+//our custom crafted very thin endpoints
+app.MapHealthEndpoints();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+//start the app
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
