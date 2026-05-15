@@ -122,5 +122,15 @@ UI rendering
 ###gs
 
 
+gratitude:
+
+
+ mY deep gratitude towards wonderful mentors and teachers at <a href="https://the-tech-academy.com">Tech-Academy</a>who illuminated the path of C sharp and DOTNET world..
+anyone interested to learn ..Learn from Tech-academy you meet with best explanations.. 
+
+
+###gs
+
+
 
 

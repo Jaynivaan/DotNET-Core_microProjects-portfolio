@@ -1,0 +1,6 @@
+@Day15.HealthCheckObservabilityAPI_HostAddress = http://localhost:5284
+
+GET {{Day15.HealthCheckObservabilityAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
