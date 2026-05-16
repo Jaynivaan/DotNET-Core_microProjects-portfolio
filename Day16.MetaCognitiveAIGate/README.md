@@ -68,7 +68,7 @@ Options/		//
 Services/		//thinking engine of the system( teh architectural cognition)
 	Interfaces/	list contracts possible and allow loose coupling to the services.
 	Validators/	//checking and inspecting , disecting the prompt based onthe setting from appsettings allocatd sections config
-	Strategies/	//decicions for routing ie which route is appropriate based on validation result.
+	Strategies/	//decicions for routing ie which route is appropriate based on validation result.//(Backend routing and general routing ..)
 Extensions/
 
 very clean options , extensions pattern design..
