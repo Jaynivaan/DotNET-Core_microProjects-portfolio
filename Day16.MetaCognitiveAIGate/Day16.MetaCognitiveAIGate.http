@@ -1,0 +1,6 @@
+@Day16.MetaCognitiveAIGate_HostAddress = http://localhost:5116
+
+GET {{Day16.MetaCognitiveAIGate_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
