@@ -1,0 +1,35 @@
+[
+  {
+    "Text": "I love this application",
+    "Label": true
+  },
+  {
+    "Text": "This system is amazing ",
+    "Label": true
+  },
+  {
+    "Text": "I feel happy today",
+    "Label": true
+  },
+  {
+    "Text": "this project is wonderful",
+    "Label": true
+  },
+  {
+    "Text": "The experience was terrible",
+    "Label": false
+  },
+  {
+    "Text": "i hate this application",
+    "Label": false
+  },
+  {
+    "Text": "This is frustrating",
+    "Label": false
+  },
+  {
+    "Text": "The service was disappointing",
+    "Label": false
+  }
+
+]
