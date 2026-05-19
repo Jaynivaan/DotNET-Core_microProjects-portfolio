@@ -102,6 +102,12 @@ instead applied below given method..
 
 ---
 
+
+for testing run the project and go to the endpoint
+```
+/openapi/v1.json 
+```
+
 ### Time allowance
  180 min
 
