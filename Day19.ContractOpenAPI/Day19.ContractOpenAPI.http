@@ -1,0 +1,6 @@
+@Day19.ContractOpenAPI_HostAddress = http://localhost:5103
+
+GET {{Day19.ContractOpenAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

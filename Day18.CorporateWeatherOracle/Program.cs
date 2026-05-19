@@ -36,7 +36,7 @@ var sampleInput = new WorkforceData
 {
     Company = "AMD",
 
-    Year = 2025,
+    Year = 2006,
 
     EmployeesStart = 25000,
 
