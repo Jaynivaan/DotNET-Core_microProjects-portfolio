@@ -1,0 +1,20 @@
+//gs
+using Day22.InvoiceToCashLite.Extensions;
+using Day22.InvoiceToCashLite.Features.Invoices;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOpenApi();
+
+builder.Services.AddApplicationServices();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.MapInvoiceEndpoints();
+
+app.Run();
