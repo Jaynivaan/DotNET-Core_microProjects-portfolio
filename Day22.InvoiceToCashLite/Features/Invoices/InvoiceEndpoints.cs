@@ -8,7 +8,7 @@ namespace Day22.InvoiceToCashLite.Features.Invoices
     {
         public static void MapInvoiceEndpoints(this WebApplication app)
         {
-            app.MapPost("/invoices",(CreateInvoiceRequest request, IInvoiceService service) =>
+            app.MapPost("/api/invoices",(CreateInvoiceRequest request, IInvoiceService service) =>
             {
                 var result = service.CreateInvoice(request);
 
@@ -19,7 +19,7 @@ namespace Day22.InvoiceToCashLite.Features.Invoices
              .WithName("CreateInvoice")
              .WithSummary("Create a new Invoice");
 
-            app.MapGet("/invoices", (IInvoiceService service) =>
+            app.MapGet("/api/invoices", (IInvoiceService service) =>
             {
                 var result = service.GetAllInvoices();
 
@@ -29,7 +29,7 @@ namespace Day22.InvoiceToCashLite.Features.Invoices
              .WithSummary("Get all Invoices");
 
 
-            app.MapGet("/invoices/{id:guid}", (Guid id, IInvoiceService service) =>
+            app.MapGet("/api/invoices/{id:guid}", (Guid id, IInvoiceService service) =>
             {
                 var result = service.GetInvoiceById(id);
 
