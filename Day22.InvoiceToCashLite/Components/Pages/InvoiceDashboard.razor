@@ -1,5 +1,22 @@
 @page "/invoices"
+@rendermode InteractiveServer
 
 <h3> Invoice Dashboard</h3>
 
 <p>this is a minimal blazor frond end crafted for invoices ie, v1.</p>
+
+<p> Total invoices: @InvoiceCount</p>
+
+<button @onclick="IncreaseCount">
+    Refresh Dashboard
+</button>
+
+@code
+{
+    private int InvoiceCount = 0;
+    
+    private void IncreaseCount()
+    {
+        InvoiceCount++;
+    }
+}

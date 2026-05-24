@@ -2,13 +2,15 @@
 using Day22.InvoiceToCashLite.Extensions;
 using Day22.InvoiceToCashLite.Features.Invoices;
 using Day22.InvoiceToCashLite.Components;
+using Day22.InvoiceToCashLite.Features.Payments;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
 builder.Services.AddApplicationServices();
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -17,8 +19,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 app.UseAntiforgery();
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.MapInvoiceEndpoints();
+app.MapPaymentEndpoints();
 
 app.Run();

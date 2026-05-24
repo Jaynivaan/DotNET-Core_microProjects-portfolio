@@ -2,6 +2,8 @@
 using Day22.InvoiceToCashLite.Data;
 using Day22.InvoiceToCashLite.Features.Invoices;
 using Day22.InvoiceToCashLite.Features.Invoices.Interfaces;
+using Day22.InvoiceToCashLite.Features.Payments;
+using Day22.InvoiceToCashLite.Features.Payments.Interfaces;
 
 namespace Day22.InvoiceToCashLite.Extensions
 {
@@ -12,6 +14,7 @@ namespace Day22.InvoiceToCashLite.Extensions
         {
             services.AddSingleton<InMemoryStore>();
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             return services;
         }
