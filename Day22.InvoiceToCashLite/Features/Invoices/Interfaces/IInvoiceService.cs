@@ -10,7 +10,9 @@ namespace Day22.InvoiceToCashLite.Features.Invoices.Interfaces
 
         ApiResponse<List<InvoiceResponse>> GetAllInvoices();
 
-        ApiResponse<InvoiceResponse> GetInvoiceById(Guid Id);
+        ApiResponse<InvoiceResponse> GetInvoiceById(Guid id);
+
+        ApiResponse<InvoiceResponse> CancelInvoice(Guid id);
 
     }
 }

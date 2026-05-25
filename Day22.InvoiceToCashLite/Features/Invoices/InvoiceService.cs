@@ -68,9 +68,9 @@ namespace Day22.InvoiceToCashLite.Features.Invoices
             };
         }
 
-        public ApiResponse<InvoiceResponse>GetInvoiceById(Guid Id)
+        public ApiResponse<InvoiceResponse>GetInvoiceById(Guid id)
         {
-            var invoice = _store.Invoices.FirstOrDefault(x => x.Id == Id);
+            var invoice = _store.Invoices.FirstOrDefault(x => x.Id == id);
 
             if (invoice == null)
             {
@@ -89,6 +89,50 @@ namespace Day22.InvoiceToCashLite.Features.Invoices
             };
         }
         
+
+        public ApiResponse<InvoiceResponse> CancelInvoice(Guid id)
+        {
+            var invoice = _store.Invoices.FirstOrDefault(x => x.Id == id);
+
+            if (invoice == null)
+            {
+                return new ApiResponse<InvoiceResponse>
+                {
+                    Success = false,
+                    Message = "Invoice not found"
+                };
+            }
+
+            if (invoice.Status == InvoiceStatus.Cancelled)
+            {
+                return new ApiResponse<InvoiceResponse>
+                {
+                    Success = false,
+                    Message = "Invoice is already Cancelled."
+
+                };
+            }
+
+            if (invoice.Status == InvoiceStatus.Paid)
+            {
+                return new ApiResponse<InvoiceResponse>
+                {
+                    Success = false,
+                    Message = "Paid invoice cannot be cancelled."
+                };
+            }
+
+            invoice.Status = InvoiceStatus.Cancelled;
+
+            return new ApiResponse<InvoiceResponse>
+            {
+                Success = true,
+                Message = "Invoice Cancelled Successfully.",
+                Data = MapToResponse(invoice)
+            };
+
+        }
+
         private static InvoiceResponse MapToResponse(Invoice invoice)
         {
             return new InvoiceResponse
