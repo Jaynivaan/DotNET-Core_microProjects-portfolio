@@ -1,0 +1,6 @@
+@Day23.RealityFeedEngine_HostAddress = http://localhost:5107
+
+GET {{Day23.RealityFeedEngine_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
