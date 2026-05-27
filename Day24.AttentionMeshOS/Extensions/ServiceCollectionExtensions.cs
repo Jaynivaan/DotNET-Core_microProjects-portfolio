@@ -1,0 +1,21 @@
+//gs
+using Day24.AttentionMeshOS.Abstractions;
+using Day24.AttentionMeshOS.Services;
+using Day24.AttentionMeshOS.Storage;
+
+namespace Day24.AttentionMeshOS.Extensions
+{
+    public static class ServiceCollecionEXtensions
+    {
+        public static IServiceCollection AddAttentionMesh(this IServiceCollection services)
+        {
+            services.AddSingleton<IAttentionStore, InMemoryAttentionStore>();
+            services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
+            services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
+            services.AddSingleton<IAttentionEngine, AttentionEngine>();
+
+            return services;
+
+        }
+    }
+}
