@@ -120,6 +120,22 @@ time for this small project
 
 
 
+========================================
+version 1.1
+========================================
+version 1 was
+
+userInput=>AttentionBall=>perisistenceShot
+----
+
+version1.1  
+
+userInput => AttentionBall => RelatedBalls =>Attentionmesh =>Smarter Persistence shot
+
+***AttentionMeshOS version 1.1 : Connected Attention.
+
+
+
 ### oneday###fool###Make###this###happen
 
 

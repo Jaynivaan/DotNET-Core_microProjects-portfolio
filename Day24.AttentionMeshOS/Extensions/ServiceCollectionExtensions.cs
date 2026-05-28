@@ -13,7 +13,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
             services.AddSingleton<IAttentionEngine, AttentionEngine>();
-
+            services.AddSingleton<IAttentionMeshBuilder, AttentionMeshBuilder>();
             return services;
 
         }

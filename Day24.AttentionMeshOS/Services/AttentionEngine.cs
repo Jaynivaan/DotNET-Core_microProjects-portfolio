@@ -11,17 +11,19 @@ namespace Day24.AttentionMeshOS.Services
         private readonly ITextSignalClassifier _classifier;
         private readonly IAttentionStore _store;
         private readonly IPersistenceShotBuilder _shotBuilder;
+        private readonly IAttentionMeshBuilder _meshBuilder;
 
         public AttentionEngine(
             ITextSignalClassifier classifier,
             IAttentionStore store,
-            IPersistenceShotBuilder shotBuilder
+            IPersistenceShotBuilder shotBuilder,
+            IAttentionMeshBuilder meshBuilder
             )
         {
             _classifier = classifier;
             _store = store;
             _shotBuilder = shotBuilder;
-
+            _meshBuilder = meshBuilder;
         }
 
         public AttentionResponse Process(string userInput)
@@ -41,6 +43,9 @@ namespace Day24.AttentionMeshOS.Services
             
             _store.Save( attentionBall);
 
+            var mesh = _meshBuilder.Build(attentionBall);
+
+
             var shot = _shotBuilder.Build(
                 attentionBall,
                 aspirations,
@@ -54,6 +59,8 @@ namespace Day24.AttentionMeshOS.Services
                 attentionBall.NextMove,
                 aspirations.Select(x=> x.Name).ToList(),
                 tendencies.Select(x=> x.Name).ToList(),
+                mesh.RelatedBalls
+                    .Select(x => x.CurrentAim).ToList(),
                 shot.Text
                 );
         }
