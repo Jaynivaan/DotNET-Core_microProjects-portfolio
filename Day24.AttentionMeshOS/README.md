@@ -153,6 +153,10 @@ keyword overlayscore =>
 AttentionLink strength.
  
 
+ hence evolved version 1.2 with related context..
+
+ =================================================
+
 
 
 ### oneday###fool###Make###this###happen
