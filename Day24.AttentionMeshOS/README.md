@@ -134,6 +134,25 @@ userInput => AttentionBall => RelatedBalls =>Attentionmesh =>Smarter Persistence
 
 ***AttentionMeshOS version 1.1 : Connected Attention.
 
+====================================================
+version 1.2
+====================================================
+version 1.1 was attention mesh so when program ran taking in a prompt it will develop attention ball and persistenceshot then also form related items array..
+today  the mesh is evolving as "smarter mesh similarity"..
+
+the purpose is to compare new AttentionBall with old AttentinBalls, find shared keywords, Assign link strength and return strongest related context.
+
+Before AI Classification, the mesh must be stable rule based physical brain..
+
+AttentionBall A=> 
+
+AttentionBall B =>
+
+keyword overlayscore =>
+
+AttentionLink strength.
+ 
+
 
 
 ### oneday###fool###Make###this###happen

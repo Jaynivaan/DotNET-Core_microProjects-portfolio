@@ -8,27 +8,43 @@ namespace Day24.AttentionMeshOS.Services
     public sealed class AttentionMeshBuilder : IAttentionMeshBuilder
     {
         private readonly IAttentionStore _store;
+        private readonly ITextSimilarityService _similarityService;
 
-        public AttentionMeshBuilder(IAttentionStore store)
+        public AttentionMeshBuilder(
+            IAttentionStore store,
+            ITextSimilarityService similarityService
+            )
         {
             _store = store;
+            _similarityService = similarityService;
         }
         public AttentionMesh Build(AttentionBall activeBall)
         {
-            var relatedBalls = _store.GetAll()
+            var relatedItems = _store.GetAll()
             .Where(ball => ball.Id != activeBall.Id)
-            .Where(ball =>
-                activeBall.CurrentAim.Contains(ball.CurrentAim, StringComparison.OrdinalIgnoreCase) ||
-                ball.CurrentAim.Contains(activeBall.CurrentAim, StringComparison.OrdinalIgnoreCase))
+            .Select(ball => new
+            {
+                Ball = ball,
+                Score = _similarityService.CalculateSimilarity(
+                    activeBall.CurrentAim,
+                    ball.CurrentAim)
+            })
+            .Where(item => item.Score > 0)
+            .OrderByDescending(item => item.Score)
             .Take(3)
             .ToList();
 
-            var links = relatedBalls
-            .Select(ball => new AttentionLink(
+            var relatedBalls = relatedItems
+                .Select(item => item.Ball)
+                .ToList();
+
+
+            var links = relatedItems
+            .Select(item  => new AttentionLink(
                 activeBall.Id,
-                ball.Id,
-                "Related Attention Context",
-                0.7))
+                item.Ball.Id,
+                "Keyword Overlap Similarity",
+                item.Score))
             .ToList();
 
             return new AttentionMesh(

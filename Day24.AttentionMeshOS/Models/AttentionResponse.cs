@@ -11,7 +11,7 @@ namespace Day24.AttentionMeshOS.Models
         string NextMove,
         IReadOnlyList<string>Aspirations,
         IReadOnlyList<string>Tendencies,
-        IReadOnlyList<string> RelatedContext,
+        IReadOnlyList<RelatedContextResponse> RelatedContext,
         string PersistenceShot
         );
 }

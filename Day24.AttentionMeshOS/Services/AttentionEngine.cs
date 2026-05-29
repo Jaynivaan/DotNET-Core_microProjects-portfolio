@@ -45,6 +45,16 @@ namespace Day24.AttentionMeshOS.Services
 
             var mesh = _meshBuilder.Build(attentionBall);
 
+            var relatedContext = mesh.Links
+                .Join(
+                    mesh.RelatedBalls,
+                    link => link.ToId,
+                    ball => ball.Id,
+                    (link, ball) => new RelatedContextResponse(
+                        ball.CurrentAim,
+                        Math.Round(link.Strength, 2)))
+                .ToList();
+
 
             var shot = _shotBuilder.Build(
                 attentionBall,
@@ -59,8 +69,9 @@ namespace Day24.AttentionMeshOS.Services
                 attentionBall.NextMove,
                 aspirations.Select(x=> x.Name).ToList(),
                 tendencies.Select(x=> x.Name).ToList(),
-                mesh.RelatedBalls
-                    .Select(x => x.CurrentAim).ToList(),
+                //mesh.RelatedBalls
+                //    .Select(x => x.CurrentAim).ToList(),
+                relatedContext,
                 shot.Text
                 );
         }
