@@ -196,6 +196,11 @@ AttentionLink strength.
   to control the decay swiftness..
 
   hence evolving the version 1.3 the decayable attention os.
+
+  version 1.3.1 
+  configuration driven attention decay mechanism..
+
+
   ===
 
 
