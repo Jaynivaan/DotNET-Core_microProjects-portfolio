@@ -10,6 +10,9 @@ namespace Day24.AttentionMeshOS.Models
         string MustNotForget,
         string NextMove,
         int PeristenceLevel,
-        DateTimeOffset UpdatedAt
+        double AttentionWeight,
+        bool IsAnchor ,
+        DateTimeOffset UpdatedAt,
+        DateTimeOffset LastAccessedAt
         );
 }

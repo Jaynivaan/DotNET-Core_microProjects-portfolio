@@ -39,6 +39,9 @@ namespace Day24.AttentionMeshOS.Services
                 "Avoid raw Memory dumping",
                 "Continue building the attention system",
                 10,
+                1.0,
+                false,
+                DateTimeOffset.UtcNow,
                 DateTimeOffset.UtcNow);
             
             _store.Save( attentionBall);
@@ -52,7 +55,8 @@ namespace Day24.AttentionMeshOS.Services
                     ball => ball.Id,
                     (link, ball) => new RelatedContextResponse(
                         ball.CurrentAim,
-                        Math.Round(link.Strength, 2)))
+                        Math.Round(link.Strength, 2),
+                        Math.Round(ball.AttentionWeight, 2)))
                 .ToList();
 
 

@@ -156,6 +156,49 @@ AttentionLink strength.
  hence evolved version 1.2 with related context..
 
  =================================================
+ version 1.3
+ =================================================
+  version 1.2 introduced smarter mesh by using 
+  keyword overlap similarity to determine 
+  how strongly AttentionBalls are connected.
+   
+  every attention ball is treated equally .
+  human attention doesnt work this way..
+  Attention naturally fades when not revisited
+  Attention strengthens when its repeatedly returns to the same subject.
+
+  this verion 1.3 imposes the concept of attentionDecay.
+
+
+  AttentionBall=>
+
+  TimePasses=>
+
+  WeightDecays=>
+
+  less important AttentionObject
+
+
+  ---
+
+  AttentionBall=>
+
+  RepeatedACcess=>
+
+  WeightIncreases=>
+
+  More importantAttention
+
+  the goalis to make the mesh behave more like a living attention system
+  rather than a static memeory heap of garbage.
+
+  the degree of decay should be configuratble through appsettings.json 
+  to control the decay swiftness..
+
+  hence evolving the version 1.3 the decayable attention os.
+  ===
+
+
 
 
 
