@@ -10,30 +10,40 @@ namespace Day24.AttentionMeshOS.Services
         private readonly IAttentionStore _store;
         private readonly ITextSimilarityService _similarityService;
         private readonly IAttentionDecayService _decayService;
+        private readonly IAttentionReinforcementService _reinforcementService;
 
         public AttentionMeshBuilder(
             IAttentionStore store,
             ITextSimilarityService similarityService,
-            IAttentionDecayService decayService
+            IAttentionDecayService decayService,
+            IAttentionReinforcementService reinforcementService 
             )
         {
             _store = store;
             _similarityService = similarityService;
             _decayService = decayService;
+            _reinforcementService = reinforcementService;
         }
         public AttentionMesh Build(AttentionBall activeBall)
         {
-            var relatedItems = _store.GetAll()
+            var relatedItems = _store.GetAll().ToList()
             .Where(ball => ball.Id != activeBall.Id)
             .Select(ball =>
             {
                 var decayedBall = _decayService.ApplyDecay(ball);
+
+                var similarity = _similarityService.CalculateSimilarity(
+                    activeBall.CurrentAim, decayedBall.CurrentAim);
+
+                var processedBall = similarity > 0
+                    ? _reinforcementService.Reinforce(decayedBall)
+                    : decayedBall;
+                _store.Update(processedBall);
+
                 return new
                 {
-                    Ball = decayedBall,
-                    Score = _similarityService.CalculateSimilarity(
-                        activeBall.CurrentAim,
-                        decayedBall.CurrentAim ) * decayedBall.AttentionWeight                
+                    Ball = processedBall,
+                    Score = similarity * processedBall.AttentionWeight               
                 };
 
             })

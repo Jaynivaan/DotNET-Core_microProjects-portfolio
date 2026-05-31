@@ -201,9 +201,42 @@ AttentionLink strength.
   configuration driven attention decay mechanism..
 
 
-  ===
+======================================================  ===
+version 1.4.0
+======================================================
+Human attention doesnot only just fade it also 
+strengthens upon the rate of revisits.
+within config we have asetting parameter of boost rate.. 
 
+the attention attention will be invoked upon frequent invokations
+giving the attention ball added weight at a boost rate configured.
 
+attentionBall=> 
+
+revisited =>
+
+AttentionBoostApplied=>
+
+weight of ball increases.
+(now even more important ball for the attention mesh)
+
+ie making the mesh capable to be aware of important balls .
+
+user calls an input=> 
+
+related attention balls detected=>
+
+attention reinforcement activated=>
+
+attention boost rate used =>
+
+stronger active focus.
+
+hence version 1.4.0 Attention Reinforcement engine..
+
+=====================================================
+
+-------------------------------------------------
 
 
 
@@ -221,3 +254,4 @@ and to the World around me who relentlessly teach me roughest lessons only to bu
 
  with love &infin;
  the fool.. &hearts;
+

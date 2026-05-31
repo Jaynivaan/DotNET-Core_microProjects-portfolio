@@ -8,6 +8,8 @@ namespace Day24.AttentionMeshOS.Abstractions
     {
         void Save(AttentionBall attentionBall);
 
+        void Update(AttentionBall attentionBall);
+
         IReadOnlyList<AttentionBall> GetAll();
     }
 }
