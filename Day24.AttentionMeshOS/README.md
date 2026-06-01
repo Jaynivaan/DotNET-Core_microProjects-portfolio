@@ -235,7 +235,47 @@ stronger active focus.
 hence version 1.4.0 Attention Reinforcement engine..
 
 =====================================================
+Version 1.5.0
+=========================================
+AttentionMeshOS can now add ball, score ball, link ball, decay ball, strengthenball..
+today we add adding observability for ball state..
 
+the goal is to make the attentionMeshOS inspectable.
+as of now its internal state is unknown..
+
+today system evolving to an observable Attention State machine.
+system will expose GET/attention/state
+ which allow inspection of 
+ -Total balls, currentaim, attention weights, anchor status,last accessed time, updated time
+  \\this enhances the system insight or self awareness
+
+  -this is important thing as for handling this balls clear observability is needed...
+
+  -then we can impose more actions upon this balls..
+
+  hence version 1.5.0 AttentinStateObservabilityEngine deriving  using the .net outof the box tools...
+
+
+  version 1.5.1
+  -----------
+  implementing ILogger<T> Event Logging
+
+  teh goal is to make use of the logging tools provided by .net for adding a event logging sys.
+
+  -log when ball created,mesh built,decay applied,reinforcement applied,state requested
+  -make interval behaviour of system perceivably isolated.
+  
+  ILogger wisdom:
+
+  ILogger<T> allows
+  =consolelogging,debuglogging, filelogging,openTelemetry,cloudlogging.
+  hence version 1.5.1 deriving IloggerEventLogged AttentionMeshOS 
+
+  -------------
+  version 1.5.2
+  ---
+  this version implemented teh health check that .net diagnostics provides..
+  hence observability part of this programme completed for now..
 -------------------------------------------------
 
 

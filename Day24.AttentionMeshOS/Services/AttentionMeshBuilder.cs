@@ -1,24 +1,27 @@
 //gs
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
-
+using Microsoft.Extensions.Logging;
 namespace Day24.AttentionMeshOS.Services
 {
 
     public sealed class AttentionMeshBuilder : IAttentionMeshBuilder
     {
+        private readonly ILogger<AttentionMeshBuilder> _logger;
         private readonly IAttentionStore _store;
         private readonly ITextSimilarityService _similarityService;
         private readonly IAttentionDecayService _decayService;
         private readonly IAttentionReinforcementService _reinforcementService;
 
         public AttentionMeshBuilder(
+            ILogger<AttentionMeshBuilder> logger,
             IAttentionStore store,
             ITextSimilarityService similarityService,
             IAttentionDecayService decayService,
             IAttentionReinforcementService reinforcementService 
             )
         {
+            _logger = logger;
             _store = store;
             _similarityService = similarityService;
             _decayService = decayService;
@@ -26,6 +29,9 @@ namespace Day24.AttentionMeshOS.Services
         }
         public AttentionMesh Build(AttentionBall activeBall)
         {
+            _logger.LogInformation(
+                "Building mesh for AttentionBall {Id}", activeBall.Id);
+
             var relatedItems = _store.GetAll().ToList()
             .Where(ball => ball.Id != activeBall.Id)
             .Select(ball =>

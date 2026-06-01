@@ -23,7 +23,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<ITextSimilarityService, TextSimilarityService>();            
             services.AddSingleton<IAttentionDecayService, AttentionDecayService>();
             services.AddSingleton<IAttentionReinforcementService, AttentionReinforcementService>();
-
+            services.AddSingleton<IAttentionStateService, AttentionStateService>();
             
             return services;
 

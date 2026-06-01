@@ -8,17 +8,28 @@ namespace Day24.AttentionMeshOS.Endpoints
     {
         public static void MapAttentionEndpoints(this WebApplication app)
         {
-            app.MapPost("/attention/shot",(
-                AttentionRequest request,
+            app.MapPost("/attention/shot",
+                (AttentionRequest request,
                 IAttentionEngine attentionEngine )=>
-            {
-                var response = attentionEngine.Process(request.UserInput);
+                {
+                    var response = attentionEngine.Process(request.UserInput);
 
-                return Results.Ok(response);
-                
+                    return Results.Ok(response);
 
-            });
+                }
+            );
 
+            app.MapGet("/attention/State",
+                (IAttentionStateService stateService) =>
+                {
+                    var response = stateService.GetState();
+
+                    return Results.Ok(response);
+
+
+                }
+            ); 
+            
         }
     }
 }

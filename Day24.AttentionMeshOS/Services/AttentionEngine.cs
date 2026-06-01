@@ -2,12 +2,14 @@
 
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Day24.AttentionMeshOS.Services
 {
     public sealed class AttentionEngine : IAttentionEngine
     {
+        private readonly ILogger<AttentionEngine> _logger;
         private readonly ITextSignalClassifier _classifier;
         private readonly IAttentionStore _store;
         private readonly IPersistenceShotBuilder _shotBuilder;
@@ -17,17 +19,23 @@ namespace Day24.AttentionMeshOS.Services
             ITextSignalClassifier classifier,
             IAttentionStore store,
             IPersistenceShotBuilder shotBuilder,
-            IAttentionMeshBuilder meshBuilder
+            IAttentionMeshBuilder meshBuilder,
+            ILogger<AttentionEngine> logger 
             )
         {
             _classifier = classifier;
             _store = store;
             _shotBuilder = shotBuilder;
             _meshBuilder = meshBuilder;
+            _logger = logger;
         }
 
         public AttentionResponse Process(string userInput)
         {
+            _logger.LogInformation(
+                "Processing attention request: {userInput}",
+                userInput);
+
             var aspirations = _classifier.DetectAspirations(userInput);
 
             var tendencies = _classifier.DetectTendencies(userInput);
@@ -43,7 +51,11 @@ namespace Day24.AttentionMeshOS.Services
                 false,
                 DateTimeOffset.UtcNow,
                 DateTimeOffset.UtcNow);
-            
+
+            _logger.LogInformation(
+                "AttentionBall created: {Id}", attentionBall.Id
+                );
+
             _store.Save( attentionBall);
 
             var mesh = _meshBuilder.Build(attentionBall);
@@ -59,12 +71,18 @@ namespace Day24.AttentionMeshOS.Services
                         Math.Round(ball.AttentionWeight, 2)))
                 .ToList();
 
+            _logger.LogInformation(
+                "AttentionMesh built with {RelatedCount} related context points", 
+                mesh.RelatedBalls.Count);
 
             var shot = _shotBuilder.Build(
                 attentionBall,
                 aspirations,
                 tendencies
                 );
+
+            _logger.LogInformation(
+                "PersistenceShot generated Successfully");
 
             return new AttentionResponse(
                 attentionBall.CurrentAim,
