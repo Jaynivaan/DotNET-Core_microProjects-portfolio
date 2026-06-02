@@ -277,7 +277,29 @@ system will expose GET/attention/state
   this version implemented teh health check that .net diagnostics provides..
   hence observability part of this programme completed for now..
 -------------------------------------------------
+============================================================
+version 1.6.0
+============================================================
 
+until now all balls are treated equally .
+however the real attention doesnot work that way..
+certain thoughts , goals, aspirations remain important even when 
+they are not actively revisited.
+
+These important balls anchors attention..
+
+this version introduces the concept of Attention anchors.
+
+An Anchor is  a protected AttentionBall that represents 
+longterm importance within the  attentionMesh.
+
+normal attention balls are subject to decay, reinforcement then eventually fade..
+
+Anchor attention balls anchor , they have a protected decay, higher minimum weight
+and  long term persistence within the mesh..
+
+this versions facilitates manually writer mark certain balls as anchors 
+subsequent versions may introduce auto anchor detection protocls.
 
 
 ### oneday###fool###Make###this###happen

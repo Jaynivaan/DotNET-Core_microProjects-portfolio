@@ -24,7 +24,8 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IAttentionDecayService, AttentionDecayService>();
             services.AddSingleton<IAttentionReinforcementService, AttentionReinforcementService>();
             services.AddSingleton<IAttentionStateService, AttentionStateService>();
-            
+            services.AddSingleton<IAttentionAnchorService, AttentionAnchorService>();
+            services.AddSingleton<IAnchorStateService, AnchorStateService>();
             return services;
 
         }

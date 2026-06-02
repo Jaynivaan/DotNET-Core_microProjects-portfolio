@@ -14,13 +14,16 @@ namespace Day24.AttentionMeshOS.Services
         private readonly IAttentionStore _store;
         private readonly IPersistenceShotBuilder _shotBuilder;
         private readonly IAttentionMeshBuilder _meshBuilder;
+        private readonly IAttentionAnchorService _anchorService;
 
         public AttentionEngine(
+            ILogger<AttentionEngine> logger,
             ITextSignalClassifier classifier,
             IAttentionStore store,
             IPersistenceShotBuilder shotBuilder,
             IAttentionMeshBuilder meshBuilder,
-            ILogger<AttentionEngine> logger 
+            IAttentionAnchorService anchorService
+
             )
         {
             _classifier = classifier;
@@ -28,6 +31,7 @@ namespace Day24.AttentionMeshOS.Services
             _shotBuilder = shotBuilder;
             _meshBuilder = meshBuilder;
             _logger = logger;
+            _anchorService = anchorService;
         }
 
         public AttentionResponse Process(string userInput)
@@ -40,6 +44,8 @@ namespace Day24.AttentionMeshOS.Services
 
             var tendencies = _classifier.DetectTendencies(userInput);
 
+            var isAnchor = _anchorService.ShouldCreateAnchor(userInput);
+
             var attentionBall = new AttentionBall(
                 Guid.NewGuid(),
                 userInput,
@@ -48,7 +54,7 @@ namespace Day24.AttentionMeshOS.Services
                 "Continue building the attention system",
                 10,
                 1.0,
-                false,
+                isAnchor,
                 DateTimeOffset.UtcNow,
                 DateTimeOffset.UtcNow);
 
