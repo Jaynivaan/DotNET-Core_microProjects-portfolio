@@ -301,7 +301,13 @@ and  long term persistence within the mesh..
 this versions facilitates manually writer mark certain balls as anchors 
 subsequent versions may introduce auto anchor detection protocls.
 
+versoin 1.6.1
+----------------
+added anchor observable endpoint 
+also implemented openapi for all the endpoints..
 
+an input that include "#anchor " will mark the created ball as an anchor ball.
+---
 ### oneday###fool###Make###this###happen
 
 
