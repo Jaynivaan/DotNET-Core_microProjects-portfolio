@@ -36,6 +36,7 @@ namespace Day24.AttentionMeshOS.Services
             return attentionBall with
             {
                 AttentionWeight = Math.Round(newWeight, 3),
+                ReinforcementCount = attentionBall.ReinforcementCount + 1,
                 LastAccessedAt = DateTimeOffset.UtcNow,
                 UpdatedAt = DateTimeOffset.UtcNow
             };

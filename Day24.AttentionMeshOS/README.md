@@ -310,6 +310,33 @@ an input that include "#anchor " will mark the created ball as an anchor ball.
 ---
 ### oneday###fool###Make###this###happen
 
+--------------------
+version 1.6.2
+--------------------
+
+manually creating an anchor ball is good but it would be better if the system can detect 
+important balls and proactively anchor them.
+
+This version introduces a simple rule based auto anchor mechanism.
+
+Promotion signals:
+- Attention Weight
+- Reinforcement Count
+- Repeated Attention returns
+
+
+
+normal ball => reinforcement => higher weight => potential anchor candidate
+
+Anchor Attention
+attention ball => meets promotion signals => auto anchor applied => becomes an anchor ball-then 
+-protected from decay, longer persistence, higher minimum weight.
+
+Important principle: 
+Anchor doesnot mean permanent.
+
+hence version 1.6.2 with auto anchor detection mechanism.
+ --------
 
 Gratitude:
 ---------

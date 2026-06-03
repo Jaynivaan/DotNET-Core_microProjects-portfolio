@@ -54,6 +54,7 @@ namespace Day24.AttentionMeshOS.Services
                 "Continue building the attention system",
                 10,
                 1.0,
+                0,
                 isAnchor,
                 DateTimeOffset.UtcNow,
                 DateTimeOffset.UtcNow);

@@ -8,6 +8,7 @@ namespace Day24.AttentionMeshOS.Models
         Guid Id,
         string CurrentAim,
         double AttentionWeight,
+        int ReinforcementCount,
         bool IsAnchor,
         DateTimeOffset LastAccessedAt,
         DateTimeOffset UpdatedAt

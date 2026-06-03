@@ -11,6 +11,7 @@ namespace Day24.AttentionMeshOS.Models
         string NextMove,
         int PeristenceLevel,
         double AttentionWeight,
+        int ReinforcementCount,
         bool IsAnchor ,
         DateTimeOffset UpdatedAt,
         DateTimeOffset LastAccessedAt

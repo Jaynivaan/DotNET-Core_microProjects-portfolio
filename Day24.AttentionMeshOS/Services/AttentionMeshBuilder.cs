@@ -12,13 +12,15 @@ namespace Day24.AttentionMeshOS.Services
         private readonly ITextSimilarityService _similarityService;
         private readonly IAttentionDecayService _decayService;
         private readonly IAttentionReinforcementService _reinforcementService;
+        private readonly IAttentionPromotionService _promotionService;
 
         public AttentionMeshBuilder(
             ILogger<AttentionMeshBuilder> logger,
             IAttentionStore store,
             ITextSimilarityService similarityService,
             IAttentionDecayService decayService,
-            IAttentionReinforcementService reinforcementService 
+            IAttentionReinforcementService reinforcementService,
+            IAttentionPromotionService promotionService
             )
         {
             _logger = logger;
@@ -26,6 +28,7 @@ namespace Day24.AttentionMeshOS.Services
             _similarityService = similarityService;
             _decayService = decayService;
             _reinforcementService = reinforcementService;
+            _promotionService = promotionService;
         }
         public AttentionMesh Build(AttentionBall activeBall)
         {
@@ -44,6 +47,9 @@ namespace Day24.AttentionMeshOS.Services
                 var processedBall = similarity > 0
                     ? _reinforcementService.Reinforce(decayedBall)
                     : decayedBall;
+
+                processedBall = _promotionService.PromoteIfEligible(processedBall);
+
                 _store.Update(processedBall);
 
                 return new

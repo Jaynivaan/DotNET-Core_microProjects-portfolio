@@ -25,6 +25,7 @@ namespace Day24.AttentionMeshOS.Services
                     ball.Id,
                     ball.CurrentAim,
                     ball.AttentionWeight,
+                    ball.ReinforcementCount,
                     ball.IsAnchor,
                     ball.LastAccessedAt,
                     ball.UpdatedAt))
