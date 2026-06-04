@@ -336,6 +336,27 @@ Important principle:
 Anchor doesnot mean permanent.
 
 hence version 1.6.2 with auto anchor detection mechanism.
+
+---------------
+version 1.6.3
+----------------
+
+until now the attention anchor marked anchor true is remaining so safely.. 
+
+now we need to detect when an anchor ball is no longer active .
+
+ie long inactivity => stale Anchor 
+
+stale only means this ball need review not immediately removed..
+
+
+hence version 1.6.3 with stale anchor detection mechanism.
+
+----------------
+
+-----------------
+
+
  --------
 
 Gratitude:

@@ -9,14 +9,16 @@ namespace Day24.AttentionMeshOS.Services
     {
         private readonly ILogger<AttentionStateService> _logger;
         private readonly IAttentionStore _store;
+        private readonly IAnchorStalenessService _stalenessService;
 
         public AttentionStateService(
             IAttentionStore store,
-            ILogger<AttentionStateService> logger)
+            ILogger<AttentionStateService> logger,
+            IAnchorStalenessService stalenessService)
         {
             _logger = logger;
             _store = store;
-
+            _stalenessService = stalenessService;
         }
         public AttentionStateResponse GetState()
         {
@@ -27,6 +29,7 @@ namespace Day24.AttentionMeshOS.Services
                     ball.AttentionWeight,
                     ball.ReinforcementCount,
                     ball.IsAnchor,
+                    _stalenessService.IsStale(ball),
                     ball.LastAccessedAt,
                     ball.UpdatedAt))
                 .ToList();

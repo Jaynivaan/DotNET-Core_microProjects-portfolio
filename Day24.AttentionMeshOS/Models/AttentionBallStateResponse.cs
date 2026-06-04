@@ -10,6 +10,7 @@ namespace Day24.AttentionMeshOS.Models
         double AttentionWeight,
         int ReinforcementCount,
         bool IsAnchor,
+        bool IsStaleAnchor,
         DateTimeOffset LastAccessedAt,
         DateTimeOffset UpdatedAt
         );
