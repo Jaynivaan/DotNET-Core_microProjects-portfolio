@@ -118,7 +118,7 @@ time for this small project
 
 180min
 
-
+```
 
 ========================================
 version 1.1
@@ -318,18 +318,22 @@ manually creating an anchor ball is good but it would be better if the system ca
 important balls and proactively anchor them.
 
 This version introduces a simple rule based auto anchor mechanism.
-
+```
 Promotion signals:
 - Attention Weight
 - Reinforcement Count
 - Repeated Attention returns
+```
 
-
-
+```
 normal ball => reinforcement => higher weight => potential anchor candidate
+```
 
 Anchor Attention
-attention ball => meets promotion signals => auto anchor applied => becomes an anchor ball-then 
+```
+attention ball => meets promotion signals => auto anchor applied => becomes an anchor ball-
+```
+then 
 -protected from decay, longer persistence, higher minimum weight.
 
 Important principle: 
@@ -345,7 +349,11 @@ until now the attention anchor marked anchor true is remaining so safely..
 
 now we need to detect when an anchor ball is no longer active .
 
-ie long inactivity => stale Anchor 
+ie 
+
+```
+long inactivity => stale Anchor 
+```
 
 stale only means this ball need review not immediately removed..
 
