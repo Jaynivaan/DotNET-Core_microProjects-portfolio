@@ -379,6 +379,12 @@ staled => demotion => normal ball
 
 ```
 
+for demotion the logic conditions depends on 
+```
+1.IsStale
+2.Is not attentionWeight low
+3.is reinforcent count low
+```
 hence version 1.6.4 with anchor demotion mechanism.
 ---
 ### oneday###fool###Make###this###happen
