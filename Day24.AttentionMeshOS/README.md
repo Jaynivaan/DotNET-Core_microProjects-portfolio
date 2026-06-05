@@ -307,8 +307,7 @@ added anchor observable endpoint
 also implemented openapi for all the endpoints..
 
 an input that include "#anchor " will mark the created ball as an anchor ball.
----
-### oneday###fool###Make###this###happen
+
 
 --------------------
 version 1.6.2
@@ -362,9 +361,27 @@ hence version 1.6.3 with stale anchor detection mechanism.
 
 ----------------
 
+Version 1.6.4
 -----------------
+now system can detect stale balls .. but just that is not enought..
+we need demotion mechanism.
 
+so that a stale anchor can now return to a normal attention..
 
+Important principle:
+ie demotion is not Deletion..
+
+it just means ball looses its privilages..
+looses its decay protection status..
+
+```
+staled => demotion => normal ball
+
+```
+
+hence version 1.6.4 with anchor demotion mechanism.
+---
+### oneday###fool###Make###this###happen
  --------
 
 Gratitude:
