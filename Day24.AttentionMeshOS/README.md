@@ -387,6 +387,53 @@ for demotion the logic conditions depends on
 ```
 hence version 1.6.4 with anchor demotion mechanism.
 ---
+
+========================================
+version 1.7.0
+========================================
+
+Attention can now
+- Gain Strength,
+- Reinforced,
+- if promoted act as anchors\
+- then stale at a point
+- then lastly demoted to normal state
+
+till now we are just using inmemory storage.. data never persisted .
+now we advance to File based Attention Persistence.
+
+Goal is simple when app runs 
+=> Attention Balls created from input 
+=> save to file
+=>Application restarts
+=> Attention data loaded from file.
+
+this version uses System.Text.Json
+
+
+basically for this os storage should remain pluggable..
+
+current store provides
+```
+InMemoryAttentionStore
+```
+
+new provider will be
+```
+FileAttentionStore
+```
+
+core basic principle :
+
+The engine should depend on abstraction IAttention Store.
+
+hence deriving version	1.7.0  File -Based Attention Persistence.
+
+-------------------
+
+
+
+ 
 ### oneday###fool###Make###this###happen
  --------
 

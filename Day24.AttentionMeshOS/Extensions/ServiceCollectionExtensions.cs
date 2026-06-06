@@ -15,7 +15,7 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
 
-            services.AddSingleton<IAttentionStore, InMemoryAttentionStore>();
+            services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
             services.AddSingleton<IAttentionEngine, AttentionEngine>();
@@ -28,6 +28,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IAnchorStateService, AnchorStateService>();
             services.AddSingleton<IAttentionPromotionService, AttentionPromotionService>();
             services.AddSingleton<IAnchorStalenessService, AnchorStalenessService>();
+            services.AddSingleton<IAnchorDemotionService, AnchorDemotionService>();
             return services;
 
         }
