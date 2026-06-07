@@ -1,7 +1,9 @@
 //gs
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Day24.AttentionMeshOS.Storage
 {
@@ -27,6 +29,16 @@ namespace Day24.AttentionMeshOS.Storage
         public IReadOnlyList<AttentionBall> GetAll()
         {
             return _attentionBalls;
+        }
+        public bool Delete(Guid attentionBallId)
+        {
+            var attentionBall = _attentionBalls.FirstOrDefault(ball => ball.Id == attentionBallId);
+
+            if (attentionBall == null) return false;
+
+            _attentionBalls.Remove(attentionBall);
+
+            return true;
         }
     }
 }

@@ -430,6 +430,34 @@ The engine should depend on abstraction IAttention Store.
 hence deriving version	1.7.0  File -Based Attention Persistence.
 
 -------------------
+Version 1.7.1
+-------------------
+
+from yesterday attention ball persist... 
+now any persistence without release option is a burden..
+
+Real attention doesnt hold anything for ever..
+before we added decay function but still its only decaying not deleting ..
+
+nature of attention 
+- some attention completes its purpose 
+- some attention only create noise 
+- some attention are created by mistake
+- some attention are just beyond its expiry date.
+
+so today s goal is to intentionally remove attention ball from active attentionMesh.
+remember this is surely not careless unaware deletion..
+this is"concious intentional release".
+
+core flow we implement :
+DELETE /attention/{id}
+
+AttentionBall =>found In Store 
+=> released from active mesh
+=> store Updated =>file Persisted
+
+Hence version 1.7.1 the freewill release mechanism..
+-----
 
 
 

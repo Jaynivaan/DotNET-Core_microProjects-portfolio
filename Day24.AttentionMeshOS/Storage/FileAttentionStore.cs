@@ -1,7 +1,9 @@
 //gs
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
@@ -101,6 +103,30 @@ namespace Day24.AttentionMeshOS.Storage
             _logger.LogInformation(
                 "Persisted { Count }  AttentionBalls to file {path}.", 
                 _attentionBalls.Count, _filePath);
+        }
+
+        public bool Delete(Guid attentionBallId)
+        {
+            var attentionBall = _attentionBalls
+                .FirstOrDefault(ball => ball.Id == attentionBallId);
+
+            if (attentionBall is null)
+            {
+                _logger.LogWarning(
+                    "invalid entry"
+                    ); return false;
+
+            }
+
+            _attentionBalls.Remove(attentionBall);
+
+            SaveToFile();
+
+            _logger.LogInformation(
+                "Released AttentionBall {id} from file store.", attentionBallId);
+
+            return true;
+            
         }
     }
 }
