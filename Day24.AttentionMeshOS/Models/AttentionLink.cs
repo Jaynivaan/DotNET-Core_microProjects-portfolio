@@ -5,9 +5,11 @@ using System;
 namespace Day24.AttentionMeshOS.Models
 {
     public sealed record AttentionLink(
-       Guid FormId,
+       Guid FromId,
        Guid ToId,
        string Relationship,
-       double Strength
+       double Strength,
+       DateTimeOffset CreatedAt
+        
         );
 }

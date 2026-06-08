@@ -11,10 +11,19 @@ namespace Day24.AttentionMeshOS.Storage
     {
         private readonly List<AttentionBall> _attentionBalls = new();
 
+        private readonly List<AttentionLink> _attentionLinks = new();
+
         public void Save(AttentionBall attentionBall)
         {
             _attentionBalls.Add(attentionBall);
         }
+
+
+        public void SaveLink(AttentionLink attentionLink)
+        {
+            _attentionLinks.Add(attentionLink);
+        }
+
 
         public void Update(AttentionBall attentionBall)
         {
@@ -26,10 +35,20 @@ namespace Day24.AttentionMeshOS.Storage
 
             _attentionBalls[index] = attentionBall;
         }
+
+
         public IReadOnlyList<AttentionBall> GetAll()
         {
             return _attentionBalls;
+
         }
+
+        public IReadOnlyList<AttentionLink> GetLinks()
+        {
+            return _attentionLinks;
+        }
+
+
         public bool Delete(Guid attentionBallId)
         {
             var attentionBall = _attentionBalls.FirstOrDefault(ball => ball.Id == attentionBallId);

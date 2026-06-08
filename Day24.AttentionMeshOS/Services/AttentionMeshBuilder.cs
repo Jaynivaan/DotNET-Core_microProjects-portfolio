@@ -80,8 +80,21 @@ namespace Day24.AttentionMeshOS.Services
                 activeBall.Id,
                 item.Ball.Id,
                 "Keyword Overlap Similarity",
-                item.Score))
+                item.Score,
+                DateTimeOffset.UtcNow 
+                ))
             .ToList();
+
+            foreach (var link in links)
+            {
+                _store.SaveLink(link);
+
+                _logger.LogInformation(
+                    "AttentionLink persisted: {fromId} -> {ToId}, Strength => {Strength}",
+                    link.FromId,
+                    link.ToId,
+                    link.Strength);
+            }
 
             return new AttentionMesh(
             activeBall,

@@ -16,6 +16,7 @@ namespace Day24.AttentionMeshOS.Storage
         private readonly ILogger<FileAttentionStore> _logger;
         private readonly string _filePath;
         private readonly List<AttentionBall> _attentionBalls = new();
+        private readonly List<AttentionLink> _attentionLinks = new();
         private readonly JsonSerializerOptions _jsonOptions = new()
         {
             WriteIndented = true
@@ -41,6 +42,20 @@ namespace Day24.AttentionMeshOS.Storage
             _attentionBalls.Add(attentionBall);
             SaveToFile();
 
+            
+        }
+
+        public void SaveLink(AttentionLink attentionLink)
+        {
+            _attentionLinks.Add(attentionLink);
+            SaveToFile();
+
+            _logger.LogInformation(
+                "Persisted AttentionLink from {FromId} to {ToId}.  Strength = {Strength}",
+                attentionLink.FromId,
+                attentionLink.ToId,
+                attentionLink.Strength);
+
         }
 
         public void Update(AttentionBall attentionBall)
@@ -59,8 +74,17 @@ namespace Day24.AttentionMeshOS.Storage
             return _attentionBalls;
         }
 
+        public IReadOnlyList<AttentionLink> GetLinks()
+        {
+            return _attentionLinks;
+        }
+
         private void LoadFromFile()
         {
+            _logger.LogInformation(
+                "LoadFromFile called."
+                );
+
             if (!File.Exists(_filePath))
             {
                 _logger.LogInformation(
@@ -73,11 +97,13 @@ namespace Day24.AttentionMeshOS.Storage
 
             var json = File.ReadAllText(_filePath);
 
-            var balls = JsonSerializer.Deserialize<List<AttentionBall>>(
-                json,
-                _jsonOptions);
 
-            if (balls == null)
+            var snapshot = JsonSerializer.Deserialize<AttentionStoreSnapshot>(
+                json,
+                _jsonOptions
+                );
+                       
+            if (snapshot is null) 
             {
                 _logger.LogWarning(
                     "Attention store file {path } was empty or invalid . Starting with new store.",
@@ -86,23 +112,36 @@ namespace Day24.AttentionMeshOS.Storage
             }
 
             _attentionBalls.Clear();
-            _attentionBalls.AddRange(balls);
+            _attentionLinks.Clear();
 
+            _attentionBalls.AddRange(snapshot.AttentionBalls);
+            _attentionLinks.AddRange(snapshot.AttentionLinks);
             _logger.LogInformation(
-                "Loaded {Count} AttentionBalls from file {Path}.", _attentionBalls.Count, _filePath);
+                "Loaded {ballcount} AttentionBalls and {linkCount} AttentionLinks from file {path}.",
+                _attentionBalls.Count,
+                _attentionLinks.Count,
+                _filePath);
         }
 
         private void SaveToFile()
         {
-            var json = JsonSerializer.Serialize(
+
+            var snapshot = new AttentionStoreSnapshot(
                 _attentionBalls,
+                _attentionLinks
+                );
+
+            var json = JsonSerializer.Serialize(
+                snapshot,
                 _jsonOptions);
 
             File.WriteAllText(_filePath, json ); 
 
             _logger.LogInformation(
-                "Persisted { Count }  AttentionBalls to file {path}.", 
-                _attentionBalls.Count, _filePath);
+                "Persisted {Ballcount} AttentionBalls and {linkCount} attentionLinks  to file {path}.",
+                _attentionBalls.Count,
+                _attentionLinks.Count,
+                _filePath);
         }
 
         public bool Delete(Guid attentionBallId)

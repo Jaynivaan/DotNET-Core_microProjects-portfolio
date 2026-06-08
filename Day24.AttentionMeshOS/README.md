@@ -457,7 +457,37 @@ AttentionBall =>found In Store
 => store Updated =>file Persisted
 
 Hence version 1.7.1 the freewill release mechanism..
------
+---------------------------
+version 1.7.2 
+----------------------------
+
+
+System currently calculates the relationship strength between attentionBalls during Mesh construction.
+
+but those are just temporary and not persisting.  once response is generated the relationship information dissapears
+
+meaning balls are weak or strong only at the time of appearence. than that is forgotten till they reappear. 
+
+its vital for the system to be aware of long-term attention relationships.
+
+this very useful for building auto release, as well for improving mesh self awareness.
+
+today system start to persist attention links.
+
+core Purpose  is to preserve relationship between balls information.
+
+till now attentionball was important because of its weight
+from now it can also be important because of its connections.
+
+
+AttentionBall => similiarity evaluation => AttentionLink 
+
+=> Persist relation ship 
+
+
+hence version 1.7.2 persisting attention links.
+------------------------------------------------------------------------------------
+
 
 
 
