@@ -17,6 +17,9 @@ namespace Day24.AttentionMeshOS.Storage
         private readonly string _filePath;
         private readonly List<AttentionBall> _attentionBalls = new();
         private readonly List<AttentionLink> _attentionLinks = new();
+        private readonly List<ReinforcementEvent> _reinforcementEvents = new();
+
+
         private readonly JsonSerializerOptions _jsonOptions = new()
         {
             WriteIndented = true
@@ -58,6 +61,18 @@ namespace Day24.AttentionMeshOS.Storage
 
         }
 
+        public void SaveReinforcementEvent (ReinforcementEvent reinforcementEvent)
+        {
+            _reinforcementEvents.Add(reinforcementEvent);
+            SaveToFile();
+
+            _logger.LogInformation(
+                "Persisted Reinforcement event for attentionBall {id}. Weight {oldweight} => {new weight}.",
+                reinforcementEvent.AttentionBallId,
+                reinforcementEvent.PreviousWeight,
+                reinforcementEvent.NewWeight);
+        }
+
         public void Update(AttentionBall attentionBall)
         {
             var index = _attentionBalls.FindIndex(
@@ -77,6 +92,11 @@ namespace Day24.AttentionMeshOS.Storage
         public IReadOnlyList<AttentionLink> GetLinks()
         {
             return _attentionLinks;
+        }
+
+        public IReadOnlyList<ReinforcementEvent> GetReinforcementEvents()
+        {
+            return _reinforcementEvents;
         }
 
         private void LoadFromFile()
@@ -113,13 +133,17 @@ namespace Day24.AttentionMeshOS.Storage
 
             _attentionBalls.Clear();
             _attentionLinks.Clear();
+            _reinforcementEvents.Clear();
 
             _attentionBalls.AddRange(snapshot.AttentionBalls);
             _attentionLinks.AddRange(snapshot.AttentionLinks);
+            _reinforcementEvents.AddRange(snapshot.ReinforcementEvents);
+
             _logger.LogInformation(
-                "Loaded {ballcount} AttentionBalls and {linkCount} AttentionLinks from file {path}.",
+                "Loaded {ballcount} AttentionBalls , {linkCount} AttentionLinks and {Events count } Reinforcement Events from file  {path}.",
                 _attentionBalls.Count,
                 _attentionLinks.Count,
+                _reinforcementEvents.Count,
                 _filePath);
         }
 
@@ -128,7 +152,8 @@ namespace Day24.AttentionMeshOS.Storage
 
             var snapshot = new AttentionStoreSnapshot(
                 _attentionBalls,
-                _attentionLinks
+                _attentionLinks,
+                _reinforcementEvents
                 );
 
             var json = JsonSerializer.Serialize(

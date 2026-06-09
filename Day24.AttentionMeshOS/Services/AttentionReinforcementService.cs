@@ -11,18 +11,24 @@ namespace Day24.AttentionMeshOS.Services
     public class AttentionReinforcementService: IAttentionReinforcementService
     {
         private readonly ILogger<AttentionReinforcementService> _logger;
+        private readonly IAttentionStore _store;
+       
         private readonly AttentionOptions _options;
 
         public AttentionReinforcementService (
             IOptions<AttentionOptions> options,
-            ILogger<AttentionReinforcementService> logger)
+            IAttentionStore store,
+            ILogger<AttentionReinforcementService> logger
+            )
         {
             _options = options.Value;
+            _store = store;
             _logger = logger;
         }
 
         public AttentionBall Reinforce(AttentionBall attentionBall)
         {
+
             var oldWeight = attentionBall.AttentionWeight;
 
             var newWeight =
@@ -33,9 +39,19 @@ namespace Day24.AttentionMeshOS.Services
                 oldWeight,
                 newWeight);
 
+            var roundedNewWeight = Math.Round(newWeight, 3);
+
+            var reinforcementEvent = new ReinforcementEvent(
+                attentionBall.Id,
+                oldWeight,
+                roundedNewWeight,
+                DateTimeOffset.UtcNow);
+
+            _store.SaveReinforcementEvent(reinforcementEvent);
+
             return attentionBall with
             {
-                AttentionWeight = Math.Round(newWeight, 3),
+                AttentionWeight = roundedNewWeight,
                 ReinforcementCount = attentionBall.ReinforcementCount + 1,
                 LastAccessedAt = DateTimeOffset.UtcNow,
                 UpdatedAt = DateTimeOffset.UtcNow

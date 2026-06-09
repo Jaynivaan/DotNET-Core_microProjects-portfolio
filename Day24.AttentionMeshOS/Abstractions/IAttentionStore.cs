@@ -13,9 +13,13 @@ namespace Day24.AttentionMeshOS.Abstractions
 
         void Update(AttentionBall attentionBall);
 
+        void SaveReinforcementEvent(ReinforcementEvent reinforcementEvent);
+
         IReadOnlyList<AttentionBall> GetAll();
 
         IReadOnlyList<AttentionLink> GetLinks();
+
+        IReadOnlyList<ReinforcementEvent> GetReinforcementEvents();
 
         bool Delete(Guid attentionBallId);
 

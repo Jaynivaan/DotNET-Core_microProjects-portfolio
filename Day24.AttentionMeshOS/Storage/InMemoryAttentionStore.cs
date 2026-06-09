@@ -13,6 +13,8 @@ namespace Day24.AttentionMeshOS.Storage
 
         private readonly List<AttentionLink> _attentionLinks = new();
 
+        private readonly List<ReinforcementEvent> _reinforcementEvents = new();
+
         public void Save(AttentionBall attentionBall)
         {
             _attentionBalls.Add(attentionBall);
@@ -24,6 +26,11 @@ namespace Day24.AttentionMeshOS.Storage
             _attentionLinks.Add(attentionLink);
         }
 
+        public void SaveReinforcementEvent( ReinforcementEvent reinforcementEvent)
+        {
+            _reinforcementEvents.Add(reinforcementEvent);
+
+        }
 
         public void Update(AttentionBall attentionBall)
         {
@@ -48,6 +55,10 @@ namespace Day24.AttentionMeshOS.Storage
             return _attentionLinks;
         }
 
+        public IReadOnlyList<ReinforcementEvent> GetReinforcementEvents()
+        {
+            return _reinforcementEvents;
+        }
 
         public bool Delete(Guid attentionBallId)
         {

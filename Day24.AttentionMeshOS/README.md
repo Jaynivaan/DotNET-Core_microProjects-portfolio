@@ -233,6 +233,37 @@ attention boost rate used =>
 stronger active focus.
 
 hence version 1.4.0 Attention Reinforcement engine..
+-------------
+version 1.4.1
+--------------
+This version is an upgrade adding towards reinforcement utility of the system.
+
+The purpose is to begin recording reinforcement events
+so that future versions can reason about attention ball velocity,
+activity patterns and long term trends.
+
+core reality about this upgrade is that attention is not only defined by 
+its strength and connections but also by its movement.
+
+a highly relevant attentionball from six months ago may be less relevant 
+than an active attentionball which is rapidly reinforced during last week.
+
+```
+Reinforcement => ReinforcementEvent
+
+=> Persistence => Historical Analysis
+
+```
+
+A history of the attention ball reinforcement explains its journey.
+
+without history system see ball only as a static object.
+
+with history system begins to observe sttention as a spinning ball.
+
+hence deriving version 1.4.1 reinforcement history foundation.
+
+
 
 =====================================================
 Version 1.5.0
@@ -487,6 +518,19 @@ AttentionBall => similiarity evaluation => AttentionLink
 
 hence version 1.7.2 persisting attention links.
 ------------------------------------------------------------------------------------
+
+----------------------------
+Version	1.7.3
+____________________________
+
+(retro upgrading needed for this implementation ..
+till system is ready,
+this featureincrement is on a StaleState)
+
+attention auto release policy
+
+---------------------------------------------
+
 
 
 
