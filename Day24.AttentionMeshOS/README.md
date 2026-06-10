@@ -263,6 +263,14 @@ with history system begins to observe sttention as a spinning ball.
 
 hence deriving version 1.4.1 reinforcement history foundation.
 
+------------------
+Version 1.4.2
+------------------
+attention velocity now have a options file inside Options.
+Getsections: AttentionVelocityHours 
+
+updated the interface and models correspondingly.
+
 
 
 =====================================================
@@ -308,6 +316,10 @@ system will expose GET/attention/state
   this version implemented teh health check that .net diagnostics provides..
   hence observability part of this programme completed for now..
 -------------------------------------------------
+Version.1.5.3
+---------------
+attention Velocity also now observable via state endpoint.
+
 ============================================================
 version 1.6.0
 ============================================================

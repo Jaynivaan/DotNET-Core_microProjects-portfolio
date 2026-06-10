@@ -135,9 +135,9 @@ namespace Day24.AttentionMeshOS.Storage
             _attentionLinks.Clear();
             _reinforcementEvents.Clear();
 
-            _attentionBalls.AddRange(snapshot.AttentionBalls);
-            _attentionLinks.AddRange(snapshot.AttentionLinks);
-            _reinforcementEvents.AddRange(snapshot.ReinforcementEvents);
+            _attentionBalls.AddRange(snapshot.AttentionBalls ?? new List<AttentionBall>());
+            _attentionLinks.AddRange(snapshot.AttentionLinks ?? new List<AttentionLink>());
+            _reinforcementEvents.AddRange(snapshot.ReinforcementEvents ?? new List<ReinforcementEvent>());
 
             _logger.LogInformation(
                 "Loaded {ballcount} AttentionBalls , {linkCount} AttentionLinks and {Events count } Reinforcement Events from file  {path}.",

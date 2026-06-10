@@ -12,6 +12,7 @@ namespace Day24.AttentionMeshOS.Models
         bool IsAnchor,
         bool IsStaleAnchor,
         DateTimeOffset LastAccessedAt,
-        DateTimeOffset UpdatedAt
+        DateTimeOffset UpdatedAt,
+        AttentionBallVelocity Velocity
         );
 }

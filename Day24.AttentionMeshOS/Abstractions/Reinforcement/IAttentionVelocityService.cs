@@ -7,9 +7,9 @@ namespace Day24.AttentionMeshOS.Abstractions
     public interface IAttentionVelocityService
     {
         AttentionBallVelocity CalculateVelocity(
-            Guid attentionBallId,
-
-            TimeSpan window
+            
+            Guid attentionBallId
+            
             );
     }
 }

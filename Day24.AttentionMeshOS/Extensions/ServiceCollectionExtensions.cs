@@ -14,6 +14,7 @@ namespace Day24.AttentionMeshOS.Extensions
         {
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
+            services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
 
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();

@@ -1,7 +1,8 @@
 //gs
 using Day24.AttentionMeshOS.Models;
+using Day24.AttentionMeshOS.Options;
 using Day24.AttentionMeshOS.Abstractions;
-
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -11,21 +12,27 @@ namespace Day24.AttentionMeshOS.Services
     {
         private readonly IAttentionStore _store;
         private readonly ILogger<AttentionVelocityService> _logger;
-
+        private readonly AttentionVelocityOptions _options;
         public AttentionVelocityService(
             IAttentionStore store,
-            ILogger <AttentionVelocityService>  logger 
+            ILogger <AttentionVelocityService>  logger,
+            IOptions<AttentionVelocityOptions> options
             )
         {
             _store = store;
             _logger = logger;
+            _options = options.Value;
         }
 
         public AttentionBallVelocity CalculateVelocity(
-            Guid attentionBallId,
-            TimeSpan window
+            
+            Guid attentionBallId
+            
             )
         {
+            var window = TimeSpan.FromHours(
+                _options.VelocityWindowHours
+                );
             var windowEnd = DateTimeOffset.UtcNow;
 
             var windowStart = windowEnd.Subtract( window );

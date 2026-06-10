@@ -10,15 +10,18 @@ namespace Day24.AttentionMeshOS.Services
         private readonly ILogger<AttentionStateService> _logger;
         private readonly IAttentionStore _store;
         private readonly IAnchorStalenessService _stalenessService;
+        private readonly IAttentionVelocityService _velocityService;
 
         public AttentionStateService(
             IAttentionStore store,
             ILogger<AttentionStateService> logger,
-            IAnchorStalenessService stalenessService)
+            IAnchorStalenessService stalenessService,
+            IAttentionVelocityService velocityService)
         {
             _logger = logger;
             _store = store;
             _stalenessService = stalenessService;
+            _velocityService = velocityService;
         }
         public AttentionStateResponse GetState()
         {
@@ -31,7 +34,9 @@ namespace Day24.AttentionMeshOS.Services
                     ball.IsAnchor,
                     _stalenessService.IsStale(ball),
                     ball.LastAccessedAt,
-                    ball.UpdatedAt))
+                    ball.UpdatedAt,
+                    _velocityService.CalculateVelocity(ball.Id))
+                )
                 .ToList();
 
             _logger.LogInformation(
