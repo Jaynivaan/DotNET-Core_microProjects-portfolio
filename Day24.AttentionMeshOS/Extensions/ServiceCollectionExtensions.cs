@@ -15,6 +15,8 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
+            services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
+
 
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
@@ -32,7 +34,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IAnchorDemotionService, AnchorDemotionService>();
             services.AddSingleton<IAttentionReleaseService, AttentionReleaseService>();
             services.AddSingleton<IAttentionVelocityService, AttentionVelocityService>();
-
+            services.AddSingleton<IAttentionReleaseCandidateService, AttentionReleaseCandidateService>();
             return services;
 
         }

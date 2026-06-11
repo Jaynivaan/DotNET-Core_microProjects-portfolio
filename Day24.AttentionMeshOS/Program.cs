@@ -20,6 +20,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapAttentionEndpoints();
+app.MapReleaseEndpoints();
 app.MapHealthChecks("/health");
 app.Run();
 

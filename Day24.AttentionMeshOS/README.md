@@ -1,3 +1,4 @@
+-+
 ##gs
 
 #Day24.AttentionMeshOS
@@ -537,12 +538,39 @@ ____________________________
 
 (retro upgrading needed for this implementation ..
 till system is ready,
-this featureincrement is on a StaleState)
+this version was full of recaliberating the whole project..
+reorganized the file structure based on its nature.)
 
-attention auto release policy
 
 ---------------------------------------------
+===================================================
+Version 1.8.0
+====================================================
 
+now system have information on strength, connection scores, and velocity
+now system is capable enough to evolve the awareness muscle for auto release.
+
+The mesh should be able to identify attentionBalls that appear ready for release..
+and mark them as release candidates..
+
+
+release logic:
+```
+
+low attentionWeight +
+low Velocity +
+!anchor +
+Weak relationship network +
+stale access pattern... (no active last access)
+
+
+```
+
+this create foundation for any further release mechanics of system.,
+
+hence version 1.8.0 Attention Auto Release Awareness.
+
+----------------------------------------------------------------------------------
 
 
 

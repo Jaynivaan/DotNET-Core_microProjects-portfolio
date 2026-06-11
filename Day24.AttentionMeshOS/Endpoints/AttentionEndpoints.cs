@@ -1,6 +1,7 @@
 //gs
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -9,7 +10,7 @@ namespace Day24.AttentionMeshOS.Endpoints
 {
     public static class AttentionEndpoints
     {
-        public static void MapAttentionEndpoints(this WebApplication app)
+        public static IEndpointRouteBuilder MapAttentionEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapPost("/attention/shot",
                 (AttentionRequest request,
@@ -56,25 +57,7 @@ namespace Day24.AttentionMeshOS.Endpoints
                 .WithTags("Anchors")
                 .Produces<IReadOnlyList<AnchorAttentionResponse>>(StatusCodes.Status200OK);
 
-            app.MapDelete(
-                "/attention/{id:guid}",
-                (
-                    Guid id,
-                    IAttentionReleaseService releaseService) =>
-                {
-                    var released = releaseService.Release(id);
-
-                    return released
-                        ? Results.Ok( $"AttentionBall {id} released.")
-                        : Results.NotFound( $"AttentionBall {id} not found. ");
-                })
-                .WithName("ReleaseAttentionBall")
-                .WithSummary("Release an AttentionBall from  the active Mesh")
-                .WithDescription(
-                    "Removes an attentionBall from attentionMesh and persists the change.")
-                .WithTags("Attention")
-                .Produces(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status404NotFound);
+            return app;
 
         }
     }
