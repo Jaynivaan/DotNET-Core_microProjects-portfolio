@@ -134,7 +134,24 @@ version1.1
 userInput => AttentionBall => RelatedBalls =>Attentionmesh =>Smarter Persistence shot
 
 ***AttentionMeshOS version 1.1 : Connected Attention.
+-------------------------------
+version 1.1.1
+------------------
+untilnow the system started directly from an attentionball..
 
+where the original user input was lost after interpretation.
+
+Today  the architecture evolved by introducing  a dedicated Raw Input layer.
+
+from where the attention balls gets projected out ..
+
+because the interpretations may evolve over time 
+still system while inits ego hold accountability to showcase the evidence 
+
+of  every impressions the world applied as raw inputs..
+
+hence version 1.1.1 persistence of raw input
+the Layer 0.
 ====================================================
 version 1.2
 ====================================================

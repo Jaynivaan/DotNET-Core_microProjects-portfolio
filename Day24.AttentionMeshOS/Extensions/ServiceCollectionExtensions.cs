@@ -19,6 +19,7 @@ namespace Day24.AttentionMeshOS.Extensions
 
 
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
+            services.AddSingleton<IRawAttentionInputStore, FileRawAttentionInputStore>();
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
             services.AddSingleton<IAttentionEngine, AttentionEngine>();

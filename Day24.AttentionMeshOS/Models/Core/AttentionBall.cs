@@ -5,6 +5,7 @@ namespace Day24.AttentionMeshOS.Models
 {
     public sealed record AttentionBall(
         Guid Id,
+        Guid RawInputId,
         string CurrentAim,
         string ActiveProject,
         string MustNotForget,

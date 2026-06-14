@@ -12,7 +12,7 @@ namespace Day24.AttentionMeshOS.Endpoints
     {
         public static IEndpointRouteBuilder MapAttentionEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("/attention/shot",
+            app.MapPost("/attention/input",
                 (AttentionRequest request,
                 IAttentionEngine attentionEngine )=>
                 {
@@ -22,11 +22,23 @@ namespace Day24.AttentionMeshOS.Endpoints
 
                 }
             )
-                .WithName("CreateAttentionShot")
-                .WithSummary("This endpoint creates a new attention shot based on the user input.")
-                .WithDescription("This endpoint allows users to create a new attention shot by providing their input.")
-                .WithTags("Attention")
+                .WithName("AttentionInput")
+                .WithSummary("Accepts raw attention input and generates a persistence shot.")
+                .WithDescription("Stores the raw input , creates an attentionBall builds mesh and returns a persistence shot")
+                .WithTags("Input")
                 .Produces<AttentionResponse>(StatusCodes.Status200OK);
+
+            app.MapGet("/attention/inputs",
+                (IRawAttentionInputStore store) =>
+                {
+                    return Results.Ok(store.GetAll());
+
+                })
+                .WithName("Get Attention Inputs")
+                .WithSummary("Returns stores Raw attentionInputs")
+                .WithDescription("Returns All raw inputs received by the attention system.")
+                .WithTags("Input");
+
 
             app.MapGet("/attention/State",
                 (IAttentionStateService stateService) =>

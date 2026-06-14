@@ -9,25 +9,34 @@ namespace Day24.AttentionMeshOS.Services
 {
     public sealed class AttentionEngine : IAttentionEngine
     {
+
         private readonly ILogger<AttentionEngine> _logger;
-        private readonly ITextSignalClassifier _classifier;
+
         private readonly IAttentionStore _store;
+        private readonly IRawAttentionInputStore _rawInputStore;
+
+        private readonly ITextSignalClassifier _classifier;
+        
         private readonly IPersistenceShotBuilder _shotBuilder;
         private readonly IAttentionMeshBuilder _meshBuilder;
         private readonly IAttentionAnchorService _anchorService;
 
         public AttentionEngine(
             ILogger<AttentionEngine> logger,
-            ITextSignalClassifier classifier,
+            
+            IRawAttentionInputStore rawInputStore,
             IAttentionStore store,
+
+            ITextSignalClassifier classifier,
             IPersistenceShotBuilder shotBuilder,
             IAttentionMeshBuilder meshBuilder,
             IAttentionAnchorService anchorService
 
             )
         {
-            _classifier = classifier;
+            _rawInputStore = rawInputStore;
             _store = store;
+            _classifier = classifier;
             _shotBuilder = shotBuilder;
             _meshBuilder = meshBuilder;
             _logger = logger;
@@ -40,6 +49,15 @@ namespace Day24.AttentionMeshOS.Services
                 "Processing attention request: {userInput}",
                 userInput);
 
+            var rawInput = new RawAttentionInput(
+                Guid.NewGuid(),
+                userInput,
+                "POST /attention/input",
+                DateTimeOffset.UtcNow);
+
+            _rawInputStore.Save(rawInput);
+
+
             var aspirations = _classifier.DetectAspirations(userInput);
 
             var tendencies = _classifier.DetectTendencies(userInput);
@@ -48,10 +66,11 @@ namespace Day24.AttentionMeshOS.Services
 
             var attentionBall = new AttentionBall(
                 Guid.NewGuid(),
+                rawInput.Id,
                 userInput,
-                "Day24.AttentionMeshOS",
-                "Avoid raw Memory dumping",
-                "Continue building the attention system",
+                "project name if any",
+                "Context must earn Persistence.",
+                "Take the next meaningful action",
                 10,
                 1.0,
                 0,
