@@ -15,6 +15,8 @@ namespace Day24.AttentionMeshOS.Services
         private readonly IAttentionStore _store;
         private readonly IRawAttentionInputStore _rawInputStore;
 
+        private readonly IEnumerable<IInputProcessor> _inputProcessors;
+
         private readonly ITextSignalClassifier _classifier;
         
         private readonly IPersistenceShotBuilder _shotBuilder;
@@ -27,6 +29,8 @@ namespace Day24.AttentionMeshOS.Services
             IRawAttentionInputStore rawInputStore,
             IAttentionStore store,
 
+            IEnumerable<IInputProcessor> inputProcessors,
+
             ITextSignalClassifier classifier,
             IPersistenceShotBuilder shotBuilder,
             IAttentionMeshBuilder meshBuilder,
@@ -36,6 +40,7 @@ namespace Day24.AttentionMeshOS.Services
         {
             _rawInputStore = rawInputStore;
             _store = store;
+            _inputProcessors = inputProcessors;
             _classifier = classifier;
             _shotBuilder = shotBuilder;
             _meshBuilder = meshBuilder;
@@ -56,6 +61,45 @@ namespace Day24.AttentionMeshOS.Services
                 DateTimeOffset.UtcNow);
 
             _rawInputStore.Save(rawInput);
+
+            var inputContext = new InputProcessingContext(rawInput);
+
+            foreach (var processor in _inputProcessors.OrderBy(
+               processor => processor.ExecutionOrder
+                ))
+            {
+                processor.ProcessAsync (inputContext)
+                    .GetAwaiter ().GetResult ();
+            }
+
+            if (!inputContext.IsApprovedForEngine)
+            {
+                var invalidRawInput = rawInput with
+                {
+                    IsValid = false,
+                    ValidationErrors = inputContext.ValidationResult.Errors
+                };
+
+                _rawInputStore.Update(invalidRawInput);
+
+                _logger.LogWarning(
+                    "RawInput {RawInputId} rejected before AttentionBall creation.",
+                    rawInput.Id
+                    );
+                return new AttentionResponse(
+                    "invalid input",
+                    "AttentionMeshOS",
+                    "Raw input was preserved, but validation failed.",
+                    "Provide a valid input.",
+                    new List<string>(),
+                    inputContext.ValidationResult.Errors,
+                    new List<RelatedContextResponse>(),
+                    string.Join(
+                        Environment.NewLine,
+                        inputContext.ValidationResult.Errors));
+                        
+                   
+            }
 
 
             var aspirations = _classifier.DetectAspirations(userInput);

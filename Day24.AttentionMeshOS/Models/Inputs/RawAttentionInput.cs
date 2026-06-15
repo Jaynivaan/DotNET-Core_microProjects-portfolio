@@ -6,6 +6,8 @@ namespace Day24.AttentionMeshOS.Models
         Guid Id,
         string Text,
         string Source,
-        DateTimeOffset RecievedAt
+        DateTimeOffset RecievedAt,
+        bool IsValid = true,
+        IReadOnlyList<string>? ValidationErrors = null
         );
 }

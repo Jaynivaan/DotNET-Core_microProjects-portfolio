@@ -25,6 +25,23 @@ namespace Day24.AttentionMeshOS.Storage
                 rawInput.Id);
         }
 
+        public void Update (RawAttentionInput rawInput)
+        {
+            var index = _inputs.FindIndex(
+                input => input.Id == rawInput.Id);
+
+            if (index == -1 )
+            {
+                return;
+            }
+
+            _inputs[index] = rawInput;
+
+            _logger.LogInformation(
+                "RawAttentionInput Updated: {RawInputId}",
+                rawInput.Id);
+        }
+
         public IReadOnlyList<RawAttentionInput>GetAll()
         {
             _logger.LogInformation(

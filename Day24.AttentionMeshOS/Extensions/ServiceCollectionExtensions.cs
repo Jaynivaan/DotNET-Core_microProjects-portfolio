@@ -14,12 +14,15 @@ namespace Day24.AttentionMeshOS.Extensions
         {
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
+            services.Configure<AttentionInputValidationOptions>(configuration.GetSection("AttentionInputValidation"));
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
             services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
 
 
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<IRawAttentionInputStore, FileRawAttentionInputStore>();
+            services.AddSingleton<RawAttentionInputValidator>();
+            services.AddSingleton<IInputProcessor, InputValidationProcessor>();
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
             services.AddSingleton<IAttentionEngine, AttentionEngine>();

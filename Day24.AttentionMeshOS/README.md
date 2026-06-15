@@ -152,6 +152,45 @@ of  every impressions the world applied as raw inputs..
 
 hence version 1.1.1 persistence of raw input
 the Layer 0.
+
+------------------------------------
+version 1.1.2
+-----------------------
+1.1.1 version added the facilitation to store the input as is and make that as a base layer..
+
+and attentionballs emerge out from them..
+
+however the raw input should not directly be evolving like that..
+
+so this versions system adding a validation processor which is configurable through options.
+
+This will stop empty inputs, whitespace inputs, too shortinputs, too large inputs..
+
+The purpose is to make a layer that decides whether a stored raw input is allowed  to enter attentionengine.
+
+important principles system following:
+
+- Raw input is evidence..
+- attentionball is interpretation.
+
+but only valid input should become attentionball..
+
+energy flow 
+
+```
+Raw input => stored
+
+=> validation Processor
+
+=>if valid input => AttentionBall
+
+=> if not valid its labelled invalid and stored.
+
+```
+
+for achieving this system is adding FluentValidation package today..
+
+hence version 1.1.2 input validation processor.
 ====================================================
 version 1.2
 ====================================================

@@ -6,6 +6,8 @@ namespace Day24.AttentionMeshOS.Abstractions
     {
         void Save(RawAttentionInput rawInput);
 
+        void Update(RawAttentionInput rawInput);
+
         IReadOnlyList<RawAttentionInput> GetAll();
     }
 }
