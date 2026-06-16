@@ -191,6 +191,39 @@ Raw input => stored
 for achieving this system is adding FluentValidation package today..
 
 hence version 1.1.2 input validation processor.
+
+-------------------------------
+version 1.1.3
+-------------------------------
+till yesterday the processing execution was still handled inside attention engine ..
+today..System implementing processor control and input processor orchestrator..
+
+to be very simple the goal is to move the input processor execution from attentionengine
+to a dedicated orchestration layer..
+
+processor contrl is verysimple 
+it just tells the pipeline whether execution should
+
+```
+continue 
+or 
+shortcircuit
+```
+
+Important principle:
+
+Attention shouuld not know how each processor runs..
+but just only should ask: IsApprovedForEngine =true.
+
+The orchestrator layer controls processor order and processor execution.
+
+this prepares the system ready to add the processors in future too.
+
+this version also add a cleaner response model for invalid input so 
+that the invalid input return responses are delivered responsibly by the system.
+
+Hence version 1.1.3 processor control and processor orchestration layer.
+
 ====================================================
 version 1.2
 ====================================================

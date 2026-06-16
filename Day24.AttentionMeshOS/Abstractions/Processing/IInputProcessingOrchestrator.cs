@@ -3,12 +3,11 @@ using Day24.AttentionMeshOS.Models;
 
 namespace Day24.AttentionMeshOS.Abstractions
 {
-    public interface IInputProcessor
+    public interface  IInputProcessingOrchestrator
     {
-        int ExecutionOrder { get; }
-
-        Task <ProcessorControl> ProcessAsync(
+        Task<ProcessorControl> ProcessAsync(
             InputProcessingContext context,
+
             CancellationToken cancellationToken = default);
     }
 }

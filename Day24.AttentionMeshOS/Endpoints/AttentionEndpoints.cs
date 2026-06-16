@@ -16,9 +16,13 @@ namespace Day24.AttentionMeshOS.Endpoints
                 (AttentionRequest request,
                 IAttentionEngine attentionEngine )=>
                 {
-                    var response = attentionEngine.Process(request.UserInput);
-
-                    return Results.Ok(response);
+                    var result = attentionEngine.Process(request.UserInput);
+                    if (!result .IsSuccess )
+                    {
+                        return Results.BadRequest(
+                            result.InvalidInputResponse);
+                    }
+                    return Results.Ok(result.Response);
 
                 }
             )

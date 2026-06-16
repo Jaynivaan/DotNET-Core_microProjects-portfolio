@@ -28,7 +28,7 @@ namespace  Day24.AttentionMeshOS.Services
             _validator = validator;
         }
 
-        public async Task ProcessAsync(
+        public async Task<ProcessorControl> ProcessAsync(
             InputProcessingContext context,
             CancellationToken cancellationToken = default
             )
@@ -39,7 +39,7 @@ namespace  Day24.AttentionMeshOS.Services
                     "Input validation skipped for RawInput {RawInputId}.",
                     context.RawInput.Id);
 
-                return;
+                return ProcessorControl.Continue;
             }
 
             var validationResult = await _validator.ValidateAsync(
@@ -58,6 +58,7 @@ namespace  Day24.AttentionMeshOS.Services
                     "RawInput {RawInputId} passed validation.",
                     context.RawInput.Id
                     );
+                return ProcessorControl.Continue;
             }          
 
             else
@@ -66,6 +67,8 @@ namespace  Day24.AttentionMeshOS.Services
                     "RawInput {RawInputId} failed validation with {ErrorCount} errors.",
                     context.RawInput.Id,
                     context.ValidationResult.Errors.Count);
+
+                return ProcessorControl.ShortCircuit;
             }
         }
     }

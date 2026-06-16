@@ -15,7 +15,8 @@ namespace Day24.AttentionMeshOS.Services
         private readonly IAttentionStore _store;
         private readonly IRawAttentionInputStore _rawInputStore;
 
-        private readonly IEnumerable<IInputProcessor> _inputProcessors;
+        
+        private readonly IInputProcessingOrchestrator _inputProcessingOrchestrator;
 
         private readonly ITextSignalClassifier _classifier;
         
@@ -29,7 +30,8 @@ namespace Day24.AttentionMeshOS.Services
             IRawAttentionInputStore rawInputStore,
             IAttentionStore store,
 
-            IEnumerable<IInputProcessor> inputProcessors,
+            
+            IInputProcessingOrchestrator inputProcessingOrchestrator,
 
             ITextSignalClassifier classifier,
             IPersistenceShotBuilder shotBuilder,
@@ -38,17 +40,22 @@ namespace Day24.AttentionMeshOS.Services
 
             )
         {
+            _logger = logger;
+
             _rawInputStore = rawInputStore;
             _store = store;
-            _inputProcessors = inputProcessors;
+
+            
+            _inputProcessingOrchestrator = inputProcessingOrchestrator;
+            
             _classifier = classifier;
             _shotBuilder = shotBuilder;
             _meshBuilder = meshBuilder;
-            _logger = logger;
+            
             _anchorService = anchorService;
         }
 
-        public AttentionResponse Process(string userInput)
+        public AttentionProcessResult Process(string userInput)
         {
             _logger.LogInformation(
                 "Processing attention request: {userInput}",
@@ -64,13 +71,11 @@ namespace Day24.AttentionMeshOS.Services
 
             var inputContext = new InputProcessingContext(rawInput);
 
-            foreach (var processor in _inputProcessors.OrderBy(
-               processor => processor.ExecutionOrder
-                ))
-            {
-                processor.ProcessAsync (inputContext)
-                    .GetAwaiter ().GetResult ();
-            }
+          
+            _inputProcessingOrchestrator
+                .ProcessAsync(inputContext)
+                .GetAwaiter().GetResult();
+
 
             if (!inputContext.IsApprovedForEngine)
             {
@@ -86,19 +91,14 @@ namespace Day24.AttentionMeshOS.Services
                     "RawInput {RawInputId} rejected before AttentionBall creation.",
                     rawInput.Id
                     );
-                return new AttentionResponse(
-                    "invalid input",
-                    "AttentionMeshOS",
-                    "Raw input was preserved, but validation failed.",
-                    "Provide a valid input.",
-                    new List<string>(),
-                    inputContext.ValidationResult.Errors,
-                    new List<RelatedContextResponse>(),
-                    string.Join(
-                        Environment.NewLine,
+                return new AttentionProcessResult(
+                    false,
+                    null,
+                    new InvalidInputResponse(
+                        rawInput.Id,
+                        "Input validation failed.",
                         inputContext.ValidationResult.Errors));
-                        
-                   
+                                          
             }
 
 
@@ -154,18 +154,19 @@ namespace Day24.AttentionMeshOS.Services
             _logger.LogInformation(
                 "PersistenceShot generated Successfully");
 
-            return new AttentionResponse(
-                attentionBall.CurrentAim,
-                attentionBall.ActiveProject,
-                attentionBall.MustNotForget,
-                attentionBall.NextMove,
-                aspirations.Select(x=> x.Name).ToList(),
-                tendencies.Select(x=> x.Name).ToList(),
-                //mesh.RelatedBalls
-                //    .Select(x => x.CurrentAim).ToList(),
-                relatedContext,
-                shot.Text
-                );
+            return new AttentionProcessResult(
+                true,
+                new AttentionResponse(
+                    attentionBall.CurrentAim,
+                    attentionBall.ActiveProject,
+                    attentionBall.MustNotForget,
+                    attentionBall.NextMove,
+                    aspirations.Select(x => x.Name).ToList(),
+                    tendencies.Select(x => x.Name).ToList(),
+                    relatedContext,
+                    shot.Text),
+                null);
+               
         }
     }
 }
