@@ -224,6 +224,68 @@ that the invalid input return responses are delivered responsibly by the system.
 
 Hence version 1.1.3 processor control and processor orchestration layer.
 
+-------------------------------
+version 1.1.4
+----------------
+
+this version focus on the processing pipelineOption control and API clarity..
+
+the processing pipeline should be configurable.
+
+The host application should be able to enable or disable the input processing from the config
+
+*** global PipeControl
+AttentionProcessingOptions.
+allows the app to enable or disable pipe as whole..
+
+***Processor level control
+Each processor owns its own config options.
+
+AttentionInputValidationOptions ( we already have this)
+XProcessorOptions
+YProcessorOptions
+ZProcessorOptions
+
+
+ever processor can be independently enabled/disabled or configured..
+
+```
+
+RawInput => 
+
+InputProcessingOrchestrator =>
+
+InputValidationProcessor =>
+
+XProcessor =>
+
+YProcessor =>
+
+ZProcessor =>
+
+AttentionEngine =>
+
+Mesh
+
+```
+
+the code already manages orchestration according to the execution order..
+
+the processControl bridges the processors continuity/breakpoint.
+
+This version also implemented text normalizaion... (enblable /disablable from appsettings.json)
+
+Important Principle;
+
+the processing pipeline behaviour should be very transparent..
+
+hence Global Pipecontrol + ProcessorControl + TextNormalizaion processor.version 1.1.4
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+
+
+
 ====================================================
 version 1.2
 ====================================================

@@ -14,16 +14,27 @@ namespace Day24.AttentionMeshOS.Extensions
         {
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
+
+            //InputProcessingPipeline config
+            services.Configure<AttentionProcessingOptions>(configuration.GetSection("ProcessingPipeline"));
             services.Configure<AttentionInputValidationOptions>(configuration.GetSection("AttentionInputValidation"));
+            services.Configure<TextNormalizationOptions>(configuration.GetSection("TextNormalization"));
+
+
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
             services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
 
-
+            //store
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<IRawAttentionInputStore, FileRawAttentionInputStore>();
-            services.AddSingleton<RawAttentionInputValidator>();
+
+            //Input Processor Pipeline abstractions and Services.
             services.AddSingleton<IInputProcessor, InputValidationProcessor>();
             services.AddSingleton<IInputProcessingOrchestrator, InputProcessingOrchestrator>();
+            services.AddSingleton<RawAttentionInputValidator>();
+            services.AddSingleton<IInputProcessor, TextNormalizationProcessor>();
+            
+            
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
             services.AddSingleton<IAttentionEngine, AttentionEngine>();

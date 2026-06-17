@@ -1,7 +1,9 @@
 //gs
+using Day24.AttentionMeshOS.Options;
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Abstractions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Linq;
 
 namespace Day24.AttentionMeshOS.Services
@@ -10,14 +12,22 @@ namespace Day24.AttentionMeshOS.Services
     {
         private readonly IEnumerable<IInputProcessor> _processors;
 
+        private readonly AttentionProcessingOptions _options;
+
         private readonly ILogger<InputProcessingOrchestrator> _logger;
 
         public InputProcessingOrchestrator(
             IEnumerable<IInputProcessor> processors,
+
+            IOptions<AttentionProcessingOptions> options,
+
             ILogger<InputProcessingOrchestrator> logger
             )
         {
             _processors = processors;
+
+            _options = options.Value;
+
             _logger = logger;
         }
 
@@ -26,6 +36,17 @@ namespace Day24.AttentionMeshOS.Services
             CancellationToken cancellationToken = default)
 
         {
+            if (!_options.Enabled)
+            {
+                _logger.LogWarning(
+                    "Input Processing pipeline disabled by configuration.");
+
+                _logger.LogInformation(
+                    "  Skipped all input processors.");
+
+                return ProcessorControl.Continue;
+            }
+
             foreach ( var processor in _processors.OrderBy(
                           processor  => processor.ExecutionOrder))
             {

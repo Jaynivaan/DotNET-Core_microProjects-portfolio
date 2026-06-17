@@ -101,17 +101,20 @@ namespace Day24.AttentionMeshOS.Services
                                           
             }
 
+            var effectiveInput =
+                inputContext.NormalizedInput?.NormalizedText
+                ?? userInput;
 
-            var aspirations = _classifier.DetectAspirations(userInput);
+            var aspirations = _classifier.DetectAspirations(effectiveInput);
 
-            var tendencies = _classifier.DetectTendencies(userInput);
+            var tendencies = _classifier.DetectTendencies(effectiveInput);
 
-            var isAnchor = _anchorService.ShouldCreateAnchor(userInput);
+            var isAnchor = _anchorService.ShouldCreateAnchor(effectiveInput);
 
             var attentionBall = new AttentionBall(
                 Guid.NewGuid(),
                 rawInput.Id,
-                userInput,
+                effectiveInput,
                 "project name if any",
                 "Context must earn Persistence.",
                 "Take the next meaningful action",

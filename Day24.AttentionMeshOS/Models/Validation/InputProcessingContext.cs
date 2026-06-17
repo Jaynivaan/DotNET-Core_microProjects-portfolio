@@ -10,9 +10,13 @@ namespace Day24.AttentionMeshOS.Models
 
         public bool IsApprovedForEngine => ValidationResult.IsValid;
 
+        public NormalizedInput? NormalizedInput { get; set; }
+
         public InputProcessingContext (RawAttentionInput rawInput)
         {
             RawInput = rawInput;
         }
+
+        
     }
 }
