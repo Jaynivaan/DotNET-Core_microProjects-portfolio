@@ -12,6 +12,8 @@ namespace Day24.AttentionMeshOS.Models
 
         public NormalizedInput? NormalizedInput { get; set; }
 
+        public NoiseReducedInput? NoiseReducedInput { get; set; }
+
         public InputProcessingContext (RawAttentionInput rawInput)
         {
             RawInput = rawInput;

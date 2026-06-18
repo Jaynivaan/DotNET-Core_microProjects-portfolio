@@ -282,8 +282,20 @@ the processing pipeline behaviour should be very transparent..
 hence Global Pipecontrol + ProcessorControl + TextNormalizaion processor.version 1.1.4
 
 -----------------------------------------------------------
------------------------------------------------------------
+version 1.1.5
 
+-----------------------------------------------------------
+The purpose of this next processor is to reduce low value text noise
+before the input reaches attentionengine.
+
+important principle: 
+raw input must never be modified.
+Noise reduction Only enriches teh InputProcessing Context
+with a cleaner version of input..
+the noise reduction is configurable at varied levels..
+
+end goal is to reduce obvious noise with out overengineering the pipe..,
+hence version 1.1.5 NoiseReductionProcessor..
 
 
 ====================================================
