@@ -7,6 +7,7 @@ namespace Day24.AttentionMeshOS.Models
         Guid Id,
         Guid RawInputId,
         string CurrentAim,
+        IReadOnlyList<string>Keywords,
         string ActiveProject,
         string MustNotForget,
         string NextMove,

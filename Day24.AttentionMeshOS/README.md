@@ -297,6 +297,18 @@ the noise reduction is configurable at varied levels..
 end goal is to reduce obvious noise with out overengineering the pipe..,
 hence version 1.1.5 NoiseReductionProcessor..
 
+----------------
+version 1.1.6
+----------------------
+
+now the system is capable of validation, normalization and noise reducing the input
+
+now system is adding Keyword extraction processor,
+
+purpose is to extract meaningful words from processed text.
+ keyword extration operates on cleanest text available.
+
+ and base on simple frequency based extraction.
 
 ====================================================
 version 1.2

@@ -9,6 +9,7 @@ namespace Day24.AttentionMeshOS.Models
         string ActiveProject,
         string MustNotForget,
         string NextMove,
+        IReadOnlyList<string>Keywords,
         IReadOnlyList<string>Aspirations,
         IReadOnlyList<string>Tendencies,
         IReadOnlyList<RelatedContextResponse> RelatedContext,

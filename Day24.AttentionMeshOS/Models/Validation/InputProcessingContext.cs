@@ -14,6 +14,13 @@ namespace Day24.AttentionMeshOS.Models
 
         public NoiseReducedInput? NoiseReducedInput { get; set; }
 
+        public KeywordExtractionResult? KeywordExtractionResult { get; set; }
+
+        public string EffectiveText =>
+            NoiseReducedInput?.ReducedText
+            ?? NormalizedInput?.NormalizedText
+            ?? RawInput.Text;
+
         public InputProcessingContext (RawAttentionInput rawInput)
         {
             RawInput = rawInput;

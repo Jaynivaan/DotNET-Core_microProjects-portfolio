@@ -101,9 +101,7 @@ namespace Day24.AttentionMeshOS.Services
                                           
             }
 
-            var effectiveInput =
-                inputContext.NormalizedInput?.NormalizedText
-                ?? userInput;
+            var effectiveInput = inputContext.EffectiveText;
 
             var aspirations = _classifier.DetectAspirations(effectiveInput);
 
@@ -111,10 +109,15 @@ namespace Day24.AttentionMeshOS.Services
 
             var isAnchor = _anchorService.ShouldCreateAnchor(effectiveInput);
 
+            var keywords =
+                inputContext.KeywordExtractionResult?.Keywords.ToList()
+                ?? new List<string>();
+
             var attentionBall = new AttentionBall(
                 Guid.NewGuid(),
                 rawInput.Id,
                 effectiveInput,
+                keywords,
                 "project name if any",
                 "Context must earn Persistence.",
                 "Take the next meaningful action",
@@ -164,6 +167,7 @@ namespace Day24.AttentionMeshOS.Services
                     attentionBall.ActiveProject,
                     attentionBall.MustNotForget,
                     attentionBall.NextMove,
+                    attentionBall.Keywords,
                     aspirations.Select(x => x.Name).ToList(),
                     tendencies.Select(x => x.Name).ToList(),
                     relatedContext,
