@@ -16,6 +16,8 @@ namespace Day24.AttentionMeshOS.Services
 
         public int ExecutionOrder => 2;
 
+        public bool IsCritical => false;
+
         public TextNormalizationProcessor(
             ILogger<TextNormalizationProcessor> logger,
             IOptions<TextNormalizationOptions> options

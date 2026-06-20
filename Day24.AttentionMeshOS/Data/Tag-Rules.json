@@ -1,0 +1,16 @@
+{
+  "dotnet": [ "technology", "dotnet" ],
+  "csharp": [ "technology", "csharp" ],
+  "webapi": [ "backend" ],
+
+  "attention": [ "attention-system" ],
+  "mesh": [ "attention-system" ],
+  "context": [ "context" ],
+  "memory": [ "memory" ],
+  "pipeline": [ "processing" ],
+  "validation": [ "processing" ],
+  "normalization": [ "processing" ],
+  "noise": [ "processing" ],
+  "keyword": [ "metadata" ],
+  "keywords": [ "metadata" ]
+}

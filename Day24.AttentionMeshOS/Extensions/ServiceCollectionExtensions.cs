@@ -21,7 +21,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.Configure<TextNormalizationOptions>(configuration.GetSection("TextNormalization"));
             services.Configure<NoiseReductionOptions>(configuration.GetSection("NoiseReduction"));
             services.Configure<KeywordExtractionOptions>(configuration.GetSection("KeywordExtracion"));
-
+            services.Configure<TagExtractionOptions>(configuration .GetSection("TagExtraction"));
             services.Configure<PostProcessingGuardOptions>(configuration.GetSection("PostProcessingGuard"));
 
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
@@ -38,10 +38,11 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IInputProcessor, TextNormalizationProcessor>();
             services.AddSingleton<IInputProcessor, NoiseReductionProcessor>();
             services.AddSingleton<IInputProcessor, KeywordExtractionProcessor>();
+            services.AddSingleton<IInputProcessor, TagExtractionProcessor>();
 
 
             services.AddSingleton<IInputProcessor, PostProcessingGuardProcessor>();
-
+            services.AddSingleton<ITagRuleProvider, TagRuleProvider>();
             
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();

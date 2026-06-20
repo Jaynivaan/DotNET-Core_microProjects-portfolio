@@ -15,6 +15,8 @@ namespace Day24.AttentionMeshOS.Services
 
         public int ExecutionOrder => 4;
 
+        public bool IsCritical => false;
+
         public KeywordExtractionProcessor(
             ILogger<KeywordExtractionProcessor> logger,
             IOptions<KeywordExtractionOptions> options

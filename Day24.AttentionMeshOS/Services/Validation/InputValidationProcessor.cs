@@ -15,6 +15,8 @@ namespace  Day24.AttentionMeshOS.Services
 
         public int ExecutionOrder => 1;
 
+        public bool IsCritical => true;
+
         public InputValidationProcessor(
             ILogger<InputValidationProcessor> logger,
             IOptions<AttentionInputValidationOptions> options,

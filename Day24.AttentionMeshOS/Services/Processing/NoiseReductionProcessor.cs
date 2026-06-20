@@ -15,6 +15,8 @@ namespace Day24.AttentionMeshOS.Services
 
         public int ExecutionOrder => 3;
 
+        public bool IsCritical => false;
+
         public NoiseReductionProcessor(
             ILogger<NoiseReductionProcessor> logger,
             IOptions<NoiseReductionOptions> options

@@ -7,6 +7,8 @@ namespace Day24.AttentionMeshOS.Abstractions
     {
         int ExecutionOrder { get; }
 
+        bool IsCritical { get; }
+
         Task <ProcessorControl> ProcessAsync(
             InputProcessingContext context,
             CancellationToken cancellationToken = default);

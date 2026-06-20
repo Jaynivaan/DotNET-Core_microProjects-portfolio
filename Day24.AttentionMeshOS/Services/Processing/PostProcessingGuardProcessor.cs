@@ -14,6 +14,8 @@ namespace Day24.AttentionMeshOS.Services
 
         public int ExecutionOrder => 99;
 
+        public bool IsCritical => true;
+
         public PostProcessingGuardProcessor(
             ILogger<PostProcessingGuardProcessor> logger,
             IOptions<PostProcessingGuardOptions> options

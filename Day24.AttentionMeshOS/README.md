@@ -309,6 +309,19 @@ purpose is to extract meaningful words from processed text.
  keyword extration operates on cleanest text available.
 
  and base on simple frequency based extraction.
+ ---------------------
+ version 1.1.7
+ -----------------------
+ 
+ convert extracted keywords into stable metadata tags..
+ key words and tags serve different purposes.
+ keywords represent concepts discovered directlyfrom the input.
+ but Tags represent classifications derived from those keywords.
+
+ Important Principle:
+ rule based mappings based on external config source
+ the underlying goal is to create stable metadata without introducing nlp.
+
 
 ====================================================
 version 1.2

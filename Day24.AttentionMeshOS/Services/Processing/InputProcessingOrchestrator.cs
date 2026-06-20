@@ -50,21 +50,49 @@ namespace Day24.AttentionMeshOS.Services
             foreach ( var processor in _processors.OrderBy(
                           processor  => processor.ExecutionOrder))
             {
-                _logger.LogInformation(
-                    "Executing Input Processor {ProcessorName}.",
-                    processor.GetType().Name);
 
-                var result = await processor.ProcessAsync(
+                try
+                {
+                    _logger.LogInformation(
+                        "Executing Input Processor {ProcessorName}.",
+                        processor.GetType().Name);
+
+                    var result = await processor.ProcessAsync(
                     context,
                     cancellationToken);
-                
-                if ( result == ProcessorControl.ShortCircuit)
-                {
-                    _logger.LogWarning(
-                        "Input processing short-circuited by {ProcessorName}.",
-                        processor.GetType().Name);
-                    return ProcessorControl.ShortCircuit;
+
+                    if (result == ProcessorControl.ShortCircuit)
+                    {
+                        _logger.LogWarning(
+                            "Input processing short-circuited by {ProcessorName}.",
+                            processor.GetType().Name);
+
+                        return ProcessorControl.ShortCircuit;
+                    }
                 }
+
+                catch (Exception ex)
+                {
+                    if (processor.IsCritical)
+                    {
+                        _logger.LogError(
+                            ex,
+                            "Critical Input Processor {ProcessorName} failed.",
+                            processor.GetType().Name);
+
+                        context.ValidationResult.Errors.Add(
+                        $"Critical input processor Failed: {processor.GetType().Name}"
+                        );
+
+                        return ProcessorControl.ShortCircuit;
+                    }
+                    _logger.LogWarning(
+                        ex,
+                        "Non-critical input processor {ProcessorName} failed. Continuing pipeline.",
+                        processor.GetType().Name);
+
+                }               
+                
             }
 
             return ProcessorControl.Continue;
