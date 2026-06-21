@@ -13,10 +13,14 @@ namespace Day24.AttentionMeshOS.Endpoints
         public static IEndpointRouteBuilder MapAttentionEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapPost("/attention/input",
-                (AttentionRequest request,
-                IAttentionEngine attentionEngine )=>
+                async (AttentionRequest request,
+                IAttentionEngine attentionEngine,
+                CancellationToken cancellationToken )=>
                 {
-                    var result = attentionEngine.Process(request.UserInput);
+                    var result = await attentionEngine.ProcessAsync(
+                        request.UserInput,
+                        cancellationToken);
+
                     if (!result .IsSuccess )
                     {
                         return Results.BadRequest(

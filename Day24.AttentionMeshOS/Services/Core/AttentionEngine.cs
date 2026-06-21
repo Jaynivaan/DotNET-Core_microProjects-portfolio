@@ -55,7 +55,9 @@ namespace Day24.AttentionMeshOS.Services
             _anchorService = anchorService;
         }
 
-        public AttentionProcessResult Process(string userInput)
+        public async Task<AttentionProcessResult> ProcessAsync(
+            string userInput,
+            CancellationToken cancellationToken = default)
         {
             _logger.LogInformation(
                 "Processing attention request: {userInput}",
@@ -71,10 +73,12 @@ namespace Day24.AttentionMeshOS.Services
 
             var inputContext = new InputProcessingContext(rawInput);
 
-          
-            _inputProcessingOrchestrator
-                .ProcessAsync(inputContext)
-                .GetAwaiter().GetResult();
+
+            await _inputProcessingOrchestrator.ProcessAsync(
+                inputContext,
+                cancellationToken
+                );
+                
 
 
             if (!inputContext.IsApprovedForEngine)

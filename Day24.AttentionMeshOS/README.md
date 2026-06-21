@@ -321,6 +321,32 @@ purpose is to extract meaningful words from processed text.
  Important Principle:
  rule based mappings based on external config source
  the underlying goal is to create stable metadata without introducing nlp.
+ -----------------------
+ version 1.1.8
+ -------------------
+
+ now the system has keywords and rulebasedtags
+
+ now system need a processor for making the input ready of vector.
+
+ The main purpose is to prepare processed data for
+ vector embedd systems.
+
+ this processor dont make vector but just prepare a semantic representation which can
+ later be easily consumed by a embedding model.
+ this is model 
+ comprised of effective text, keywords and tags as a embedding ready structure.
+
+ Important Principle:
+ this is just systamatic preparation processor.
+ 
+ embedding generation will be different loosely coupled subsystem.
+
+ system by the achievement of this version will be 
+ able to create clean semantic payload text that 
+ any embedding model can consume.
+
+ hence deriving VectorPreparationProcessor
 
 
 ====================================================

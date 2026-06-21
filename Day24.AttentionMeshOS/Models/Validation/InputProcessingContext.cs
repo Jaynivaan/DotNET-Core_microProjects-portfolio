@@ -18,6 +18,8 @@ namespace Day24.AttentionMeshOS.Models
 
         public TagExtractionResult? TagExtractionResult { get; set; }
 
+        public VectorPreparationResult? VectorPreparationResult { get; set; }
+
         public string EffectiveText =>
             NoiseReducedInput?.ReducedText
             ?? NormalizedInput?.NormalizedText

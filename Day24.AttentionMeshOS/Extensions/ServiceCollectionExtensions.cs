@@ -22,6 +22,8 @@ namespace Day24.AttentionMeshOS.Extensions
             services.Configure<NoiseReductionOptions>(configuration.GetSection("NoiseReduction"));
             services.Configure<KeywordExtractionOptions>(configuration.GetSection("KeywordExtracion"));
             services.Configure<TagExtractionOptions>(configuration .GetSection("TagExtraction"));
+            services.Configure<VectorPreparationOptions>(configuration.GetSection("VectorPreparation"));
+
             services.Configure<PostProcessingGuardOptions>(configuration.GetSection("PostProcessingGuard"));
 
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
@@ -39,7 +41,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IInputProcessor, NoiseReductionProcessor>();
             services.AddSingleton<IInputProcessor, KeywordExtractionProcessor>();
             services.AddSingleton<IInputProcessor, TagExtractionProcessor>();
-
+            services.AddSingleton<IInputProcessor, VectorPreparationProcessor>();
 
             services.AddSingleton<IInputProcessor, PostProcessingGuardProcessor>();
             services.AddSingleton<ITagRuleProvider, TagRuleProvider>();

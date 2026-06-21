@@ -5,6 +5,9 @@ namespace Day24.AttentionMeshOS.Abstractions
 {
     public interface IAttentionEngine
     {
-        AttentionProcessResult Process(string userInput);
+        Task<AttentionProcessResult> ProcessAsync(
+            string userInput,
+            CancellationToken cancellationToken = default 
+            );
     }
 }
