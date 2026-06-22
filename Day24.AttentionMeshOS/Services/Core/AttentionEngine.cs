@@ -14,12 +14,13 @@ namespace Day24.AttentionMeshOS.Services
 
         private readonly IAttentionStore _store;
         private readonly IRawAttentionInputStore _rawInputStore;
-
+        private readonly IAttentionBallMetadataStore _metadataStore;
         
         private readonly IInputProcessingOrchestrator _inputProcessingOrchestrator;
 
         private readonly ITextSignalClassifier _classifier;
-        
+
+        private readonly IAttentionBallMetadataFactory _metadataFactory;
         private readonly IPersistenceShotBuilder _shotBuilder;
         private readonly IAttentionMeshBuilder _meshBuilder;
         private readonly IAttentionAnchorService _anchorService;
@@ -29,11 +30,12 @@ namespace Day24.AttentionMeshOS.Services
             
             IRawAttentionInputStore rawInputStore,
             IAttentionStore store,
-
+            IAttentionBallMetadataStore metadataStore,
             
             IInputProcessingOrchestrator inputProcessingOrchestrator,
 
             ITextSignalClassifier classifier,
+            IAttentionBallMetadataFactory metadataFactory,
             IPersistenceShotBuilder shotBuilder,
             IAttentionMeshBuilder meshBuilder,
             IAttentionAnchorService anchorService
@@ -44,10 +46,13 @@ namespace Day24.AttentionMeshOS.Services
 
             _rawInputStore = rawInputStore;
             _store = store;
+            _metadataStore = metadataStore;
+
 
             
             _inputProcessingOrchestrator = inputProcessingOrchestrator;
             
+            _metadataFactory = metadataFactory;
             _classifier = classifier;
             _shotBuilder = shotBuilder;
             _meshBuilder = meshBuilder;
@@ -137,6 +142,13 @@ namespace Day24.AttentionMeshOS.Services
                 );
 
             _store.Save( attentionBall);
+
+            var metadata = _metadataFactory.Create(
+                attentionBall,
+                inputContext
+                );
+
+            _metadataStore .Save( metadata );
 
             var mesh = _meshBuilder.Build(attentionBall);
 

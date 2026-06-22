@@ -26,12 +26,20 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.Configure<PostProcessingGuardOptions>(configuration.GetSection("PostProcessingGuard"));
 
+            //sematics
+            services.Configure<HyperVectorOptions>(configuration.GetSection("HyperVector"));
+
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
             services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
+
+
+            //services
 
             //store
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<IRawAttentionInputStore, FileRawAttentionInputStore>();
+            services.AddSingleton<IAttentionBallMetadataStore, FileAttentionBallMetadataStore>();
+
 
             //Input Processor Pipeline abstractions and Services.
             services.AddSingleton<IInputProcessor, InputValidationProcessor>();
@@ -45,6 +53,11 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.AddSingleton<IInputProcessor, PostProcessingGuardProcessor>();
             services.AddSingleton<ITagRuleProvider, TagRuleProvider>();
+
+            //semantics
+            services.AddSingleton<IHyperVectorEncoder, HyperVectorEncoder>();
+            services.AddSingleton<IAttentionBallMetadataFactory, AttentionBallMetadataFactory>();
+
             
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
