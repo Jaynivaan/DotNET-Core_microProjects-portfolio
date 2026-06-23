@@ -54,7 +54,7 @@ namespace Day24.AttentionMeshOS.Services
 
 
             _logger.LogInformation(
-                "Attention resonance calculated {SourceId} -> {TargetId}. Text= {TextScore:F4}, HyperVector = {HyperVectorScore:F4}, BundledMeshResonance = {BundledMeshResonance:F4}",
+                "Attention resonance calculated {SourceId} -> {TargetId}. Text= {TextScore:F4}, HyperVector = {HyperVectorScore:F4}, BundledMeshECHO = {BundledMeshEcho:F4}",
                 source.Id,
                 target.Id,
                 textScore,
