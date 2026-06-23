@@ -785,8 +785,48 @@ this create foundation for any further release mechanics of system.,
 hence version 1.8.0 Attention Auto Release Awareness.
 
 ----------------------------------------------------------------------------------
-test1
---
+version 1.9
++++++++++++++++++++
+
+system now added semantic layer.. which intakes  vectorpreparation result and 
+spit out high dimentional vectors and this is persisted as
+metadata .. 
+this hyper vector encoding has options at
+its levels
+
+
+
+```
+enable
+dimensions
+sparse
+
+
+```
+by integrating this system now hold a native semantic layer.
+system can now prepare vector ready semantic payloads.
+encode semantic data into high dimentional vectors.
+Generate semantic fingerprints
+Persist semantic metadata beside attentionBalls
+
+
+---------------------------------------------------------
+version 1.9.1
+------------
+system is adding a service to upgrade the existing MeshBuilder.cs file.
+currently its just depending only on text overlap..
+this was very useful to determine the mesh relativity till now ..
+
+but as system now have semantic values handy..
+system is computing hypervectorResonance ... thus the attention weight incrementation will tell a deeper story..
+
+
+Important principle:
+we are improving the awareness degree of the mesh 
+semantic  layer now feeds  the mesh insteady of living as a separate entity..
+
+hence version semantic native resonance echos....
+---------------------------------------------------------------------
 
 
  

@@ -9,7 +9,8 @@ namespace Day24.AttentionMeshOS.Services
     {
         private readonly ILogger<AttentionMeshBuilder> _logger;
         private readonly IAttentionStore _store;
-        private readonly ITextSimilarityService _similarityService;
+        //private readonly ITextSimilarityService _similarityService;
+        private readonly IAttentionResonanceService _resonanceService;
         private readonly IAttentionDecayService _decayService;
         private readonly IAttentionReinforcementService _reinforcementService;
         private readonly IAttentionPromotionService _promotionService;
@@ -18,7 +19,8 @@ namespace Day24.AttentionMeshOS.Services
         public AttentionMeshBuilder(
             ILogger<AttentionMeshBuilder> logger,
             IAttentionStore store,
-            ITextSimilarityService similarityService,
+            //ITextSimilarityService similarityService,
+            IAttentionResonanceService resonanceService,
             IAttentionDecayService decayService,
             IAttentionReinforcementService reinforcementService,
             IAttentionPromotionService promotionService,
@@ -27,7 +29,8 @@ namespace Day24.AttentionMeshOS.Services
         {
             _logger = logger;
             _store = store;
-            _similarityService = similarityService;
+            //_similarityService = similarityService;
+            _resonanceService = resonanceService;
             _decayService = decayService;
             _reinforcementService = reinforcementService;
             _promotionService = promotionService;
@@ -44,10 +47,17 @@ namespace Day24.AttentionMeshOS.Services
             {
                 var decayedBall = _decayService.ApplyDecay(ball);
 
-                var similarity = _similarityService.CalculateSimilarity(
-                    activeBall.CurrentAim, decayedBall.CurrentAim);
+                var resonance = _resonanceService.CalculateResonance(
+                    activeBall,
+                    decayedBall);
 
-                var processedBall = similarity > 0
+                _logger.LogInformation(
+                    "Mesh resonance {sourceId} -> {TargetId} = {Score:F4}",
+                    activeBall.Id,
+                    decayedBall.Id,
+                    resonance);
+
+                var processedBall = resonance > 0
                     ? _reinforcementService.Reinforce(decayedBall)
                     : decayedBall;
 
@@ -60,7 +70,7 @@ namespace Day24.AttentionMeshOS.Services
                 return new
                 {
                     Ball = processedBall,
-                    Score = similarity * processedBall.AttentionWeight               
+                    Score = resonance * processedBall.AttentionWeight               
                 };
 
             })
@@ -79,7 +89,7 @@ namespace Day24.AttentionMeshOS.Services
             .Select(item  => new AttentionLink(
                 activeBall.Id,
                 item.Ball.Id,
-                "Keyword Overlap Similarity",
+                "Semantic Resonance",
                 item.Score,
                 DateTimeOffset.UtcNow 
                 ))

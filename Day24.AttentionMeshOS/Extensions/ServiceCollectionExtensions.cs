@@ -28,10 +28,11 @@ namespace Day24.AttentionMeshOS.Extensions
 
             //sematics
             services.Configure<HyperVectorOptions>(configuration.GetSection("HyperVector"));
+            services.Configure<ResonanceOptions>(configuration.GetSection("Resonance"));
 
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
             services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
-
+            
 
             //services
 
@@ -57,6 +58,8 @@ namespace Day24.AttentionMeshOS.Extensions
             //semantics
             services.AddSingleton<IHyperVectorEncoder, HyperVectorEncoder>();
             services.AddSingleton<IAttentionBallMetadataFactory, AttentionBallMetadataFactory>();
+            services.AddSingleton<IResonanceCalculator, ResonanceCalculator>();
+            services.AddSingleton<IAttentionResonanceService, AttentionResonanceService>();
 
             
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
