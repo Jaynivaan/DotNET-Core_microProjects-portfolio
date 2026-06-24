@@ -1,4 +1,5 @@
 //gs
+using System.Linq;
 using System.Text.Json;
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
@@ -72,6 +73,46 @@ namespace Day24.AttentionMeshOS.Storage
                 _inputs.Count);
 
             return _inputs;
+        }
+
+        public bool Delete(Guid rawInputId)
+        {
+            var rawInput = _inputs
+                .FirstOrDefault(input => input.Id == rawInputId);
+            
+            if (rawInput == null)
+            {
+                _logger.LogWarning(
+                    "RawInput {RawinputId} not found.",
+                    rawInputId);
+
+                return false;
+            }
+            _inputs.Remove(rawInput);
+
+            SaveToFile();
+
+            _logger.LogInformation(
+                "RawInput {RawInputId} deleted.",
+                rawInputId);
+
+            return true;
+
+        }
+
+        public int DeleteAll()
+        {
+            var deletedCount = _inputs.Count;
+
+            _inputs.Clear();
+
+            SaveToFile();
+
+            _logger.LogWarning(
+                "Deleted all RawInputs. Count {Count}. ",
+                deletedCount);
+
+            return deletedCount;
         }
 
         private void LoadFromFile()

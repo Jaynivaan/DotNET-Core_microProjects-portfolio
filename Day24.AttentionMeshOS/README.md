@@ -715,8 +715,55 @@ AttentionBall =>found In Store
 => store Updated =>file Persisted
 
 Hence version 1.7.1 the freewill release mechanism..
+
+
+-----
+version 1.7.2
+-
+Attention which is derived from raw data also need deletion capability.
+
+Removing only attention balls while leaving derived artifacts behind create fragmentation with in mesh
+
+so implementing deletion of raw input with optional cascading.
+
+core flow
+
+DELETE /attention/raw-input/{id}
+```
+
+RawInput found? =>
+
+Associated attentionBalls identified =>
+
+Derived Artifacts evaluated =>
+
+default or optional cascade release execution =>
+
+StoreUpdated =>
+
+File Persisted.
+
+```
+
+cascade options upon selection will remove
+- attentionBalls
+- ReinforcementEvents
+- AttentionLinks
+-any other associated data persisting ..
+
+
+while system preserve 
+Release confirmationlogs
+Audit data
+
+important principle:
+Delete the memory.
+preserve only proof of release.
+prevent orphaned attention structures in mesh
+
+Hence version 1.7.2 Optional cascade RawInput deletion 
 ---------------------------
-version 1.7.2 
+version 1.7.3
 ----------------------------
 
 
@@ -743,17 +790,10 @@ AttentionBall => similiarity evaluation => AttentionLink
 => Persist relation ship 
 
 
-hence version 1.7.2 persisting attention links.
+hence version 1.7.3 persisting attention links.
 ------------------------------------------------------------------------------------
 
-----------------------------
-Version	1.7.3
-____________________________
 
-(retro upgrading needed for this implementation ..
-till system is ready,
-this version was full of recaliberating the whole project..
-reorganized the file structure based on its nature.)
 
 
 ---------------------------------------------

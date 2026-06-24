@@ -9,5 +9,9 @@ namespace Day24.AttentionMeshOS.Abstractions
         void Update(RawAttentionInput rawInput);
 
         IReadOnlyList<RawAttentionInput> GetAll();
+
+        bool Delete(Guid rawInputId);
+
+        int DeleteAll();
     }
 }

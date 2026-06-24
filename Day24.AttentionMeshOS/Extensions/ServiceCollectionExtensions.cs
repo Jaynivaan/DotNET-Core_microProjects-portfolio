@@ -75,9 +75,12 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IAttentionPromotionService, AttentionPromotionService>();
             services.AddSingleton<IAnchorStalenessService, AnchorStalenessService>();
             services.AddSingleton<IAnchorDemotionService, AnchorDemotionService>();
-            services.AddSingleton<IAttentionReleaseService, AttentionReleaseService>();
+            
             services.AddSingleton<IAttentionVelocityService, AttentionVelocityService>();
+
             services.AddSingleton<IAttentionReleaseCandidateService, AttentionReleaseCandidateService>();
+            services.AddSingleton<IAttentionReleaseService, AttentionReleaseService>();
+            services.AddSingleton<IRawInputReleaseService, RawInputReleaseService>();
             return services;
 
         }

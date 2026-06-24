@@ -192,5 +192,38 @@ namespace Day24.AttentionMeshOS.Storage
             return true;
             
         }
+
+        public int DeleteByRawInputId(Guid rawInputId)
+        {
+            var relatedBallIds = _attentionBalls
+                .Where(ball => ball.RawInputId == rawInputId)
+                .Select(ball => ball.Id)
+                .ToList();
+
+            foreach ( var ballId in relatedBallIds )
+            {
+                Delete(ballId);
+
+            }
+            return relatedBallIds.Count;
+        }
+
+        public int DeleteAll()
+        {
+
+            var deletedCount = _attentionBalls.Count;
+
+            _attentionBalls.Clear();
+            _attentionLinks.Clear();
+            _reinforcementEvents.Clear();
+
+            SaveToFile();
+
+            _logger.LogWarning(
+                "All AttentionBalls, links, and reinforcement events deleted. DeletedCount: {DeletedCount}.",
+                deletedCount);
+
+            return deletedCount;
+        }
     }
 }

@@ -23,6 +23,10 @@ namespace Day24.AttentionMeshOS.Abstractions
 
         bool Delete(Guid attentionBallId);
 
+        int DeleteAll();
+
+        int DeleteByRawInputId(Guid rawInputId);
+
         
         
     }

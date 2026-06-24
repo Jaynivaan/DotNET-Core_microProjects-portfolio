@@ -36,7 +36,7 @@ namespace Day24.AttentionMeshOS.Endpoints
                 .WithTags("Input")
                 .Produces<AttentionResponse>(StatusCodes.Status200OK);
 
-            app.MapGet("/attention/inputs",
+            app.MapGet("/attention/raw-inputs",
                 (IRawAttentionInputStore store) =>
                 {
                     return Results.Ok(store.GetAll());

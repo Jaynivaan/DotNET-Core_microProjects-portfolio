@@ -50,5 +50,29 @@ namespace Day24.AttentionMeshOS.Storage
 
             return _inputs;
         }
+
+        public bool Delete(Guid rawInputId)
+        {
+            var rawInput = _inputs
+                .FirstOrDefault(input => input.Id == rawInputId);
+
+            if ( rawInput is null )
+            {
+                return false;
+            }
+
+            _inputs.Remove(rawInput);
+
+            return true;
+
+        }
+
+        public int DeleteAll()
+        {
+            var deletedCount = _inputs.Count;
+            _inputs.Clear();
+
+            return deletedCount;
+        }
     }
 }
