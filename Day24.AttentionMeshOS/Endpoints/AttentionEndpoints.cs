@@ -36,6 +36,39 @@ namespace Day24.AttentionMeshOS.Endpoints
                 .WithTags("Input")
                 .Produces<AttentionResponse>(StatusCodes.Status200OK);
 
+            app.MapPost("/attention/bulk-input",
+                async (
+                    BulkInputRequest request,
+                    IBulkInputProcessor bulkInputProcessor,
+                    CancellationToken cancellationToken) =>
+                {
+
+                    var response = await bulkInputProcessor.ProcessAsync(
+                        request,
+                        cancellationToken);
+                    if (response.TotalChunks == 0)
+                    {
+                        return Results.BadRequest(response);
+                    }
+
+                    if (response.SuccessfulChunks == response.TotalChunks)
+                    {
+                        return Results.Ok(response);
+                    }
+
+                    return Results.Json(
+                        response,
+                        statusCode: StatusCodes.Status207MultiStatus);
+                })
+                .WithName("BulkInputEndpoint")
+                .WithSummary("Accept large text input and processes it as multiple attention units.")
+                .WithDescription("Splits large text into configured chunks, processes each chunk through  the standard attention input processing pipeline and returns a consolidated processing summary.")
+                .WithTags("Input")
+                .Produces<BulkInputResponse>(StatusCodes.Status200OK)
+                .Produces<BulkInputResponse>(StatusCodes.Status207MultiStatus)
+                .Produces<BulkInputResponse>(StatusCodes.Status400BadRequest);
+
+
             app.MapGet("/attention/raw-inputs",
                 (IRawAttentionInputStore store) =>
                 {

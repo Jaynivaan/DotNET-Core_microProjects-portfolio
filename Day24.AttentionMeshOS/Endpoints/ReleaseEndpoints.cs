@@ -99,6 +99,41 @@ namespace Day24.AttentionMeshOS.Endpoints
                 .Produces<DeleteResponse>(StatusCodes.Status200OK)
                 .Produces<DeleteResponse>(StatusCodes.Status400BadRequest);
 
+            group.MapDelete("/raw-inputs/{id:guid}/cascade",
+                (Guid id,
+                bool confirm,
+                IRawInputReleaseService releaseService) =>
+                {
+                    var response = releaseService.CascadeRelease(id, confirm);
+
+                    return response.Succeeded
+                        ? Results.Ok(response)
+                        : Results.NotFound(response);
+                })
+                .WithName("CascadeReleaseRawInput")
+                .WithSummary("Cascade release a raw input.")
+                .WithDescription("Delete one RawInput and all associated attentionBalls, attentionLinks and AttentionReinforcement events.. requires confirm = true.")
+                .WithTags("Release")
+                .Produces<DeleteResponse>(StatusCodes.Status200OK)
+                .Produces<DeleteResponse>(StatusCodes.Status400BadRequest);
+
+            group.MapDelete("/raw-inputs/cascade",
+                (bool confirm,
+                IRawInputReleaseService releaseService) =>
+                {
+                    var response = releaseService.CascadeReleaseAll(confirm);
+
+                    return response.Succeeded
+                        ? Results.Ok(response)
+                        : Results.NotFound(response);
+                })
+                .WithName("CascadedReleaseAllRawInputs")
+                .WithSummary("Cascade release all raw attention inputs")
+                .WithDescription("Deletes all RawInputs associated attetentionBalls, links , reinforcementEvents.  Requires confirm = true.")
+                .WithTags("Release")
+                .Produces<DeleteResponse>(StatusCodes.Status200OK)
+                .Produces<DeleteResponse>(StatusCodes.Status400BadRequest); 
+
 
                 
             return app;

@@ -14,7 +14,27 @@ namespace Day24.AttentionMeshOS.Extensions
         {
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
+            //===================================================================================
+            // bulk ingestion boudary setting and startup validation
+            //=======================================================================================
+            services.AddOptions<BulkIngestionOptions>()
+                 .Bind(configuration.GetSection("BulkIngestion"))
+                 .Validate(o => o.MaxInputCharacters > 0)
+                 .Validate(o => o.MaxChunkCharacters > 0)
+                 .Validate(o => o.MaxChunkCharacters <= o.MaxInputCharacters)
+                 .Validate(o => o.ChunkOverlapCharacters >= 0)
+                 .Validate(o => o.ChunkOverlapCharacters <= o.MaxChunkCharacters)
+                 .Validate(o => o.MaxChunksPerRequest > 0)
+                 .Validate(o => 
+                    o.MaxInputCharacters / o.MaxChunkCharacters
+                        <= o.MaxChunksPerRequest,
+                        "Configured chunk limits can exceed the Maximum allowed  chunk count.")
+                 .ValidateOnStart();
 
+
+            //==============================================================================
+
+            
             //InputProcessingPipeline config
             services.Configure<AttentionProcessingOptions>(configuration.GetSection("ProcessingPipeline"));
             services.Configure<AttentionInputValidationOptions>(configuration.GetSection("AttentionInputValidation"));
@@ -43,6 +63,9 @@ namespace Day24.AttentionMeshOS.Extensions
 
 
             //Input Processor Pipeline abstractions and Services.
+            services.AddSingleton<IChunkingService, ChunkingService>();
+            services.AddSingleton<IBulkInputProcessor, BulkInputProcessor>();
+
             services.AddSingleton<IInputProcessor, InputValidationProcessor>();
             services.AddSingleton<IInputProcessingOrchestrator, InputProcessingOrchestrator>();
             services.AddSingleton<RawAttentionInputValidator>();

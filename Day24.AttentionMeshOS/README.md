@@ -120,6 +120,65 @@ time for this small project
 180min
 
 ```
+-------------------
+version 1.0.1
+---------------
+system adding BulkTextinputProcessor
+this will come with cofig options to requlate chunks 
+this processor triggered when the associated bulk entry endpoint recieves post.
+ 
+ this endpoint will be accepting 
+ - Large free form text
+- Documents format
+- Application Logs
+- ChatHistory
+- Meetingnotes
+- Knowledge base exports
+(as text input)
+
+
+flow
+```
+POST /attention/bulk-input =>
+
+Request Validation =>
+
+Chunking Service =>
+
+BulkInputProcessor =>
+
+Existing InputProcessing pipeline where processor live =>
+
+AttentionEngine
+
+```
+
+chunking Service:
+
+Responsible only for deterministic text segmentation.
+
+options values controlled service..
+
+Responsibilities:
+
+= split large text into manageable chunks
+= preserves paragraph boundaries when ever possible
+= Maintain overlap as per config
+= back fall splitting strategies..
+
+fallback order:
+1. Para
+2. sentence
+3. character boundary.
+
+
+handles failures by explicit catching..
+each chunk processed independently no state is shared between chunks..
+
+end with a summary of processing 
+
+
+hence version 1.0.1 bulk input processing engine..
 
 ========================================
 version 1.1
