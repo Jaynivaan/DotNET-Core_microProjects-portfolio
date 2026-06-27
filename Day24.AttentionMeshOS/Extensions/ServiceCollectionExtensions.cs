@@ -3,6 +3,8 @@ using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Services;
 using Day24.AttentionMeshOS.Storage;
 using Day24.AttentionMeshOS.Options;
+using System.Security.Cryptography.Xml;
+using Microsoft.Extensions.Options;
 
 namespace Day24.AttentionMeshOS.Extensions
 {
@@ -12,6 +14,12 @@ namespace Day24.AttentionMeshOS.Extensions
             IServiceCollection services,
             IConfiguration configuration)
         {
+
+
+            //===============================================================================
+            //=========================//ConfigOptions//==========================
+            //=========================================================================
+
 
             services.Configure<AttentionOptions>(configuration.GetSection("Attention"));
             //===================================================================================
@@ -52,10 +60,16 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
             services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
-            
 
-            //services
+            //AMEAPATC
+            //========
+            services.Configure<CrystallizationOptions>(configuration.GetSection("Crystallization"));
 
+
+
+            //=============================================================================================
+            //============================//services//====================================================
+                //==================================================================================
             //store
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<IRawAttentionInputStore, FileRawAttentionInputStore>();
@@ -84,7 +98,34 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IResonanceCalculator, ResonanceCalculator>();
             services.AddSingleton<IAttentionResonanceService, AttentionResonanceService>();
 
-            
+            //=================
+            //AEMAPATC
+            //---------
+            services.AddSingleton<CrystallizationRuntime>(provider =>
+            {
+                var options = provider
+                    .GetRequiredService<IOptions<CrystallizationOptions>>()
+                    .Value;
+
+                var birthStore = provider
+                    .GetRequiredService<IDynamicTagBirthStore>();
+                return new CrystallizationRuntime(
+                    options,
+                    birthStore);
+            });
+
+            services.AddSingleton<AttentionEnergyRouter>();
+            services.AddSingleton<CentroidUpdater>();
+            services.AddSingleton<SignedTernaryResonanceCalculator>();
+            services.AddSingleton<SlotSelectionEngine>();
+            services.AddSingleton<SignalVocabularyUpdater>();
+            services.AddSingleton<DynamicTagNameBuilder>();
+            services.AddSingleton<DynamicTagBirthFactory>();
+            services.AddSingleton<IDynamicTagBirthStore, InMemoryDynamicTagBirthStore>();
+
+            services.AddSingleton<ICrystallizationEngine, CrystallizationEngine>();
+            services.AddSingleton<IInputProcessor,CrystallizationProcessor> ();
+            //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();
             services.AddSingleton<IAttentionEngine, AttentionEngine>();

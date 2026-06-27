@@ -908,9 +908,40 @@ encode semantic data into high dimentional vectors.
 Generate semantic fingerprints
 Persist semantic metadata beside attentionBalls
 
+-----------------------------------------------------------
+version 1.9.1
+-----------------------------------------
+
+system introduces a new and vital layer AEM-APAC
+
+This extablished the foundation for native self organizing semantic formations..
+
+instead of treating every signal equally, the system now naturally processes each bit of data through 
+
+```
+Dormant
+
+cold 
+
+warm
+
+hot 
+
+crystallized 
+
+````
+
+allowing repeated attention patterns to earn higher fidelity 
+which then help crystalized nonbiased generic tags.
+
+
+This system estabilishes foundation the intelligence and adaptive precision for the system..
+
+hence version AEM-APATC
+
 
 ---------------------------------------------------------
-version 1.9.1
+version 1.9.2
 ------------
 system is adding a service to upgrade the existing MeshBuilder.cs file.
 currently its just depending only on text overlap..
