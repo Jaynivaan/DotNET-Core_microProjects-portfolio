@@ -12,8 +12,6 @@ namespace Day24.AttentionMeshOS.Services
     {
         private readonly IEnumerable<IInputProcessor> _processors;
 
-       //rivate readonly ICrystallizationEngine _crystallizationEngine;
-
         private readonly AttentionProcessingOptions _options;
 
         private readonly ILogger<InputProcessingOrchestrator> _logger;
@@ -21,17 +19,13 @@ namespace Day24.AttentionMeshOS.Services
         public InputProcessingOrchestrator(
             IEnumerable<IInputProcessor> processors,
 
-          //ICrystallizationEngine crystallizationEngine,
-
             IOptions<AttentionProcessingOptions> options,
 
             ILogger<InputProcessingOrchestrator> logger
             )
         {
             _processors = processors;
-
-            //rystallizationEngine = crystallizationEngine ?? throw new ArgumentNullException(nameof(crystallizationEngine));
-
+        
             _options = options.Value;
 
             _logger = logger;
@@ -69,9 +63,7 @@ namespace Day24.AttentionMeshOS.Services
 
                     if (result == ProcessorControl.ShortCircuit)
                     {
-                        _logger.LogWarning(
-                            "Input processing short-circuited by {ProcessorName}.",
-                            processor.GetType().Name);
+                        _logger.LogPipelineProcessor(processor.GetType().Name);
 
                         return ProcessorControl.ShortCircuit;
                     }
@@ -99,9 +91,7 @@ namespace Day24.AttentionMeshOS.Services
 
                 }               
                 
-            }
-
-           
+            }         
 
             return ProcessorControl.Continue;
         }

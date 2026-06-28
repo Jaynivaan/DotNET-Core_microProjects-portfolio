@@ -7,7 +7,7 @@ using Day24.AttentionMeshOS.Abstractions;
 
 namespace Day24.AttentionMeshOS.Storage
 {
-    public sealed class InMemoryDynamicTagBirthStore : IDynamicTagBirthStore
+    public sealed class InMemoryDynamicTagRegistry: IDynamicTagRegistry
     {
         private readonly Dictionary<string, DynamicTagBirth> _birthRegistry = new(StringComparer.Ordinal);
 
@@ -15,7 +15,7 @@ namespace Day24.AttentionMeshOS.Storage
 
         public void Register(DynamicTagBirth birth)
         {
-            if (string.IsNullOrWhiteSpace(birth.Name))
+            if ( birth is null || string.IsNullOrWhiteSpace(birth.Name))
             {
                 return;
             }
@@ -28,6 +28,9 @@ namespace Day24.AttentionMeshOS.Storage
                 }
 
                 _birthRegistry.Add(birth.Name, birth);
+
+               
+
             }
         }
 
@@ -69,6 +72,14 @@ namespace Day24.AttentionMeshOS.Storage
             }
         }
 
+        public int GetCount()
+        {
+            lock ( _lockHandle)
+            {
+                return _birthRegistry.Count;
+            }
+        }
+
         public bool Exists(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -85,7 +96,10 @@ namespace Day24.AttentionMeshOS.Storage
 
         public void Clear()
         {
-            _birthRegistry.Clear();
+            lock (_lockHandle)
+            {
+                _birthRegistry.Clear();
+            }
         }
     }
 }

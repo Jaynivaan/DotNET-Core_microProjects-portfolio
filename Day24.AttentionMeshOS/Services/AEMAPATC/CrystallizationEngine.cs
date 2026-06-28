@@ -1,9 +1,9 @@
 //gs
 using System;
 using Microsoft.Extensions.Logging;
-
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
+using Day24.AttentionMeshOS.Services;
 
 namespace Day24.AttentionMeshOS.Services
 {
@@ -74,19 +74,28 @@ namespace Day24.AttentionMeshOS.Services
             {
                 birth = FinalizeBirth(slot);
 
+                _runtime.IncrementCrystallizations();
+
+                _logger.LogRegistryBirth(
+                   birth.Name,
+                   birth.BirthEnergy,
+                   birth.BirthStrength,
+                   birth.BirthMass);
+
                 _logger.LogInformation(
                     "Dynamic Tag birth completed. CorrelationId = {CorrelationID}, BirthID = {BirthId}, Name ={Name}, Resonance = {Resonance}.",
                     context.CorrelationId,
                     birth.Id,
                     birth.Name,
                     Math.Round(resonance, 4));
-
             }
 
             return ComposeResult(
                 slot,
                 resonance,
                 birth);
+
+            
         }
 
         private ProtoTagCentroidSlot? ExecuteSelection(
@@ -127,12 +136,24 @@ namespace Day24.AttentionMeshOS.Services
                 slot,
                 resonance);
 
+            if(_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogEnergyUpdate(
+                    slot.SlotId,
+                    resonance,
+                    slot.AttentionEnergy,
+                    slot.SignalStrength,
+                    slot.EnergyState.ToString());
+            }
+
             _centroidUpdater.UpdateAccumulator(
                 slot,
                 context.TernaryMask,
                 _runtime.Options.MaxCentroidInertia);
 
             _centroidUpdater.ProjectMask(slot);
+
+            LogCentroidState(slot);
 
             _vocabularyUpdater.Update(
                 slot,
@@ -145,6 +166,17 @@ namespace Day24.AttentionMeshOS.Services
                 slot.AccumulationCount,
                 _runtime.Options.WarmPromotionCount,
                 _runtime.Options.HotPromotionCount);
+
+            if(_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogLifecycleTransition(
+                    slot.SlotId,
+                    slot.EnergyState.ToString(),
+                    slot.AccumulationCount,
+                    slot.AttentionEnergy,
+                    slot.SignalStrength,
+                    resonance);
+            }
 
             if ( previousState != slot.EnergyState )
             {
@@ -214,7 +246,7 @@ namespace Day24.AttentionMeshOS.Services
             DynamicTagBirth birth = _birthFactory.Create(
                 tagName,
                 slot);
-            _runtime.BirthStore.Register(birth);
+            _runtime.BirthRegistry.Register(birth);
             slot.Reset();
             return birth;
         }
@@ -258,8 +290,42 @@ namespace Day24.AttentionMeshOS.Services
                     ResonanceScore: 0f);
         }
 
+        private void LogCentroidState(ProtoTagCentroidSlot slot)
+        {
+            int positive = 0;
+            int neutral = 0;
+            int negative = 0;
 
+            for ( int i = 0; i < slot.TernaryMask.Length; i++ )
+            {
+                sbyte value = slot.TernaryMask[i];
 
+                if( value > 0 )
+                {
+                    positive++;
+                }
+                else if (value < 0 )
+                {
+                   negative++;
+                }
+                else
+                {
+                    neutral++;
+                }
+            }
+
+            if ( _logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogCentroidUpdate(
+                    slot.SlotId,
+                    slot.AccumulationCount,
+                    _runtime.Options.MaxCentroidInertia,
+                    positive,
+                    neutral,
+                    negative );
+            }
+
+        }
     }
 
 }

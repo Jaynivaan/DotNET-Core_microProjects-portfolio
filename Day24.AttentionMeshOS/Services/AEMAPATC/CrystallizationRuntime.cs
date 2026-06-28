@@ -13,19 +13,19 @@ namespace Day24.AttentionMeshOS.Services
 
         public CrystallizationOptions Options { get; }
 
-        public IDynamicTagBirthStore BirthStore { get; }
+        public IDynamicTagRegistry BirthRegistry { get; }
 
         public int SlotCount => Slots.Length;
 
         public CrystallizationRuntime(
             CrystallizationOptions options,
-            IDynamicTagBirthStore birthStore)
+            IDynamicTagRegistry birthRegistry)
         {
             ArgumentNullException.ThrowIfNull(options);
-            ArgumentNullException.ThrowIfNull(birthStore);
+            ArgumentNullException.ThrowIfNull(birthRegistry);
 
             Options = options;
-            BirthStore = birthStore;
+            BirthRegistry = birthRegistry;
 
             int slotCount = options.SlotCount <= 0 
                 ? 512
@@ -43,6 +43,16 @@ namespace Day24.AttentionMeshOS.Services
                     centroidDimensions,
                     StringComparer.Ordinal);
             }
+        }
+        private long _totalCrystallizations;
+        public long TotalCrystallizations
+        {
+            get => Interlocked.Read(ref _totalCrystallizations);
+            
+        }
+        public void IncrementCrystallizations()
+        {
+            Interlocked.Increment(ref _totalCrystallizations);
         }
     }
 }

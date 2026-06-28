@@ -63,7 +63,17 @@ namespace Day24.AttentionMeshOS.Extensions
 
             //AMEAPATC
             //========
-            services.Configure<CrystallizationOptions>(configuration.GetSection("Crystallization"));
+            services
+                .AddOptions<CrystallizationOptions>()
+                .Bind(configuration.GetSection("Crystallization"))
+                .ValidateDataAnnotations()
+                .Validate(
+                    options => options.ColdThreshold < options.WarmThreshold,
+                    "AEM-APATC configuration error: ColdThreshold must be less than WarmThreshold.")
+                .Validate(
+                    options => options.WarmPromotionCount < options.HotPromotionCount,
+                    "AEM-APATC configuration error: WarmPromotionCount must be less than HotPromotionCount.")
+                .ValidateOnStart();
 
 
 
@@ -108,7 +118,7 @@ namespace Day24.AttentionMeshOS.Extensions
                     .Value;
 
                 var birthStore = provider
-                    .GetRequiredService<IDynamicTagBirthStore>();
+                    .GetRequiredService<IDynamicTagRegistry>();
                 return new CrystallizationRuntime(
                     options,
                     birthStore);
@@ -121,10 +131,21 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<SignalVocabularyUpdater>();
             services.AddSingleton<DynamicTagNameBuilder>();
             services.AddSingleton<DynamicTagBirthFactory>();
-            services.AddSingleton<IDynamicTagBirthStore, InMemoryDynamicTagBirthStore>();
+            services.AddSingleton<IDynamicTagRegistry, InMemoryDynamicTagRegistry>();
 
             services.AddSingleton<ICrystallizationEngine, CrystallizationEngine>();
             services.AddSingleton<IInputProcessor,CrystallizationProcessor> ();
+
+
+            //==============================================
+            //Aem-Apatc Health
+            //=========================
+            services.AddSingleton<IRuntimeSnapshotProvider, RuntimeSnapshotProvider>();
+            services.AddSingleton<IRuntimeHealthProvider, RuntimeHealthProvider> ();
+            services.AddSingleton<IRuntimeStatisticsProvider, RuntimeStatisticsProvider> ();
+            services.AddSingleton<IPerformanceBenchmarkProvider, PerformanceBenchmarkProvider>();
+
+
             //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();

@@ -21,6 +21,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapAttentionEndpoints();
 app.MapReleaseEndpoints();
+app.MapAemApatcEndpoints();
 app.MapHealthChecks("/health");
 app.Run();
 

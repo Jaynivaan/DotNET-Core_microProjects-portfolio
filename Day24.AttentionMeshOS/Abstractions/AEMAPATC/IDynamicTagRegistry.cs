@@ -4,13 +4,15 @@ using Day24.AttentionMeshOS.Models;
 
 namespace Day24.AttentionMeshOS.Abstractions
 {
-    public interface IDynamicTagBirthStore
+    public interface IDynamicTagRegistry
     {
         void Register(DynamicTagBirth birth);
 
         IReadOnlyList<DynamicTagBirth> GetAll();
 
         DynamicTagBirth? Get(string name);
+
+        int GetCount();
 
         bool Exists(string name);
 
