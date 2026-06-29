@@ -60,9 +60,9 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.Configure<AttentionVelocityOptions>(configuration.GetSection("AttentionVelocity"));
             services.Configure<AttentionReleaseOptions>(configuration.GetSection("AttentionRelease"));
-
-            //AMEAPATC
-            //========
+            //============================================================================
+            //AEMAPATC-options
+            //===========================================================================
             services
                 .AddOptions<CrystallizationOptions>()
                 .Bind(configuration.GetSection("Crystallization"))
@@ -74,8 +74,10 @@ namespace Day24.AttentionMeshOS.Extensions
                     options => options.WarmPromotionCount < options.HotPromotionCount,
                     "AEM-APATC configuration error: WarmPromotionCount must be less than HotPromotionCount.")
                 .ValidateOnStart();
-
-
+            //==============================================================================
+            //AEM-ESGF-options
+            //=============================================================================
+            services.Configure<GravityOptions>(configuration.GetSection("Gravity"));
 
             //=============================================================================================
             //============================//services//====================================================
@@ -108,9 +110,9 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IResonanceCalculator, ResonanceCalculator>();
             services.AddSingleton<IAttentionResonanceService, AttentionResonanceService>();
 
-            //=================
-            //AEMAPATC
-            //---------
+            //========================================================================================
+            //AEMAPATC- services registrations
+            //--------------------------------------------------------------------------------------
             services.AddSingleton<CrystallizationRuntime>(provider =>
             {
                 var options = provider
@@ -138,13 +140,23 @@ namespace Day24.AttentionMeshOS.Extensions
 
 
             //==============================================
-            //Aem-Apatc Health
-            //=========================
+            //Aem-Apatc Health vitals
+            //================================================================
             services.AddSingleton<IRuntimeSnapshotProvider, RuntimeSnapshotProvider>();
             services.AddSingleton<IRuntimeHealthProvider, RuntimeHealthProvider> ();
             services.AddSingleton<IRuntimeStatisticsProvider, RuntimeStatisticsProvider> ();
             services.AddSingleton<IPerformanceBenchmarkProvider, PerformanceBenchmarkProvider>();
 
+            //===================================================================
+            //AEM-ESGF- service registrations
+            //====================================================================
+            services.AddSingleton<IGravityRuntime, GravityRuntime>();
+            services.AddSingleton<IGravityRegistry, GravityRegistry>();
+            services.AddSingleton<GravityFieldSelectionEngine>();
+            services.AddSingleton<GravityProximityCalculator>();
+            services.AddSingleton<GravityMembershipManager>();
+            services.AddSingleton<GravityFieldSignatureUpdater>();
+            services.AddSingleton<GravityFieldFactory>();
 
             //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
