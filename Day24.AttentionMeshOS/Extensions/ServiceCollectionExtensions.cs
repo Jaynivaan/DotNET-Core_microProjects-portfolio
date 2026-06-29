@@ -157,6 +157,8 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<GravityMembershipManager>();
             services.AddSingleton<GravityFieldSignatureUpdater>();
             services.AddSingleton<GravityFieldFactory>();
+            services.AddSingleton<IGravityFormationEngine, GravityFormationEngine>();
+
 
             //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
