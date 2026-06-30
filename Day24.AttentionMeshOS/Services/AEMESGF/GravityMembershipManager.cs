@@ -16,19 +16,33 @@ namespace Day24.AttentionMeshOS.Services
                 return false;
             }
 
-            if (field.ParticipatingDynamicTagIds.Contains(dynamicTagId))
+            if (field.Participations.TryGetValue(
+                dynamicTagId,
+                out var participation))
             {
+                participation.LastReinforcedAt = DateTimeOffset.UtcNow;
+                participation.ReinforcementCount++;
+
                 field.LastEvolvedAt = DateTimeOffset.UtcNow;
                 return true;
             }
 
-            if (field.ParticipatingDynamicTagIds.Count >=
+            if (field.Participations.Count >=
                 options.MaxDynamicTagsPerField)
             {
                 return false;
             }
 
-            field.ParticipatingDynamicTagIds.Add(dynamicTagId);
+            field.Participations.Add(
+                dynamicTagId,
+                new DynamicTagParticipation
+                {
+                    DynamicTagId = dynamicTagId,
+                    JoinedAt = DateTimeOffset.UtcNow,
+                    LastReinforcedAt = DateTimeOffset.UtcNow,
+                    ReinforcementCount =1
+                });
+
             field.LastEvolvedAt = DateTimeOffset.UtcNow;
 
             return true;
@@ -43,7 +57,7 @@ namespace Day24.AttentionMeshOS.Services
             }
 
             bool removed = 
-                field.ParticipatingDynamicTagIds.Remove(dynamicTagId);
+                field.Participations.Remove(dynamicTagId);
 
             if (removed)
             {
@@ -62,7 +76,7 @@ namespace Day24.AttentionMeshOS.Services
                 return false;
             }
 
-            return field.ParticipatingDynamicTagIds.Contains( dynamicTagId);
+            return field.Participations.ContainsKey( dynamicTagId);
         }
     }
 

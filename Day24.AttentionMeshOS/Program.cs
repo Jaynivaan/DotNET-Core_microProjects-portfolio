@@ -18,10 +18,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
 app.MapAttentionEndpoints();
 app.MapReleaseEndpoints();
 app.MapAemApatcEndpoints();
+app.MapGravityEndpoints();
 app.MapHealthChecks("/health");
 app.Run();
 

@@ -26,7 +26,7 @@ namespace Day24.AttentionMeshOS.Models
 
         public sbyte[] FieldSignature { get; }
 
-        public List<Guid> ParticipatingDynamicTagIds { get; }
+        public Dictionary<Guid, DynamicTagParticipation> Participations { get; }
 
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
@@ -40,7 +40,7 @@ namespace Day24.AttentionMeshOS.Models
 
             FieldSignature = new sbyte[centroidDimensions];
 
-            ParticipatingDynamicTagIds = new List<Guid>(maxParticipatingTags);
+            Participations = new Dictionary<Guid, DynamicTagParticipation>(maxParticipatingTags);
         }
 
     }

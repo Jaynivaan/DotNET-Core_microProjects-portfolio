@@ -39,19 +39,22 @@ namespace Day24.AttentionMeshOS.Options
         [Range(0.0f, 1.0f)]
         public float VocabularyWeight { get; set; } = 0.30f;
 
-        [Range(0.0f, 100.0f)]
+        [Range(0.0f, 10.0f)]
         public float BaseParticipationMass { get; set; } = 1.0f;
 
-        [Range(0.0f, 100.0f)]
+        [Range(0.0f, 10.0f)]
         public float ResonanceMassWeight { get; set; } = 1.0f;
 
-        [Range(0.0f, 100.0f)]
+        [Range(0.0f, 10.0f)]
         public float EnergyMassWeight { get; set; } = 0.50f;
 
-        [Range(0.0f, 100.0f)]
+        [Range(0.0f, 10.0f)]
         public float StabilityMassWeight { get; set; } = 0.50f;
 
         [Range(1, 100)]
         public int MaxGravityInertia { get; set; } = 3;
+
+        [Range(1.0f, 10000.0f)]
+        public float MaxSemanticMass { get; set; } = 100.0f;
     }
 }

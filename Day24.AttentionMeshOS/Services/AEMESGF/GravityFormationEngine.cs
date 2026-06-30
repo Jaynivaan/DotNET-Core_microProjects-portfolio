@@ -11,7 +11,9 @@ namespace Day24.AttentionMeshOS.Services
         private readonly GravityFieldSelectionEngine _selectionEngine;
         private readonly GravityMembershipManager _membershipManager;
         private readonly GravityFieldSignatureUpdater _signatureUpdater;
+        private readonly ISemanticMassEngine _semanticMassEngine;
         private readonly GravityFieldFactory _factory;
+        private readonly IGravityLifecycleManager _lifecycleManager;
         private readonly GravityOptions _options;
 
 
@@ -19,13 +21,17 @@ namespace Day24.AttentionMeshOS.Services
             GravityFieldSelectionEngine selectionEngine,
             GravityMembershipManager membershipManager,
             GravityFieldSignatureUpdater signatureUpdater,
+            ISemanticMassEngine semanticMassEngine,
             GravityFieldFactory factory,
+            IGravityLifecycleManager lifecycleManager,
             IOptions<GravityOptions> options )
         {
             _selectionEngine = selectionEngine;
             _membershipManager = membershipManager;
             _signatureUpdater = signatureUpdater;
+            _semanticMassEngine = semanticMassEngine;
             _factory = factory;
+            _lifecycleManager = lifecycleManager;
             _options = options.Value;
         }
 
@@ -37,6 +43,8 @@ namespace Day24.AttentionMeshOS.Services
             if ( selection.MatchFound &&
                 selection.Field is not null)
             {
+                GravityFieldNode field = selection.Field;
+
                 _membershipManager.AddParticipant(
                     selection.Field,
                     context.DynamicTagId,
@@ -47,18 +55,29 @@ namespace Day24.AttentionMeshOS.Services
                     context.TernarySignature,
                     _options);
 
+                SemanticMassResult matchedMassResult =
+                    _semanticMassEngine.UpdateMass(
+                    selection.Field,
+                    context,
+                    selection.ProximityScore);
+
+                GravityLifecycleEvaluationResult lifecycleResult =
+                    _lifecycleManager.Evaluate(field);
+
+
+
                 return new GravityFormationResult(
                     WasProcessed: true,
                     FieldCreated: false,
                     FieldMatched: true,
-                    GravityFieldId: selection.Field.FieldId,
+                    GravityFieldId: field.FieldId,
                     ProximityScore: selection.ProximityScore,
-                    LifecycleState: selection.Field.LifecycleState);
+                    LifecycleState: lifecycleResult.CurrentState);
             }
 
-            GravityFieldNode? field = _factory.Create(context);
+            GravityFieldNode? newField = _factory.Create(context);
 
-            if ( field is null )
+            if ( newField is null )
             {
                 return new GravityFormationResult(
                     WasProcessed: false,
@@ -69,13 +88,23 @@ namespace Day24.AttentionMeshOS.Services
                     LifecycleState: GravityFieldLifecycleState.Dormant);
             }
 
+            SemanticMassResult createdMassResult =
+                    _semanticMassEngine.UpdateMass(
+                    newField,
+                    context,
+                    1.0f);
+
+            GravityLifecycleEvaluationResult createdLifecycleResult =
+                _lifecycleManager.Evaluate(newField);
+                            
+
             return new GravityFormationResult(
                 WasProcessed: true,
                 FieldCreated: true,
                 FieldMatched: false,
-                GravityFieldId: field.FieldId,
-                ProximityScore: 0f,
-                LifecycleState: field.LifecycleState);
+                GravityFieldId: newField.FieldId,
+                ProximityScore: 1.0f,
+                LifecycleState: createdLifecycleResult.CurrentState);
         }
     }
 }

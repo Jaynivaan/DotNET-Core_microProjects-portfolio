@@ -133,7 +133,7 @@ namespace Day24.AttentionMeshOS.Services
             field.StabilityScore = 0f;
             field.FieldRadius = 0f;
 
-            field.ParticipatingDynamicTagIds.Clear();
+            field.Participations.Clear();
 
             Array.Clear(field.GravityAccumulator);
             Array.Clear(field.FieldSignature);
@@ -152,7 +152,7 @@ namespace Day24.AttentionMeshOS.Services
             field.StabilityScore = 0f;
             field.FieldRadius = 0f;
 
-            field.ParticipatingDynamicTagIds.Clear();
+            field.Participations.Clear();
 
             Array.Clear(field.GravityAccumulator);
             Array.Clear(field.FieldSignature);

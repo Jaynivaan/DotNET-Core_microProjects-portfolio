@@ -158,6 +158,11 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<GravityFieldSignatureUpdater>();
             services.AddSingleton<GravityFieldFactory>();
             services.AddSingleton<IGravityFormationEngine, GravityFormationEngine>();
+            services.AddSingleton<ISemanticMassEngine, SemanticMassEngine>();
+            services.AddSingleton<IGravityLifecycleManager, GravityLifecycleManager>();
+            services.AddSingleton<ParticipationMetricsProvider>();
+            services.AddSingleton<GravityRuntimeAggregator>();
+            services.AddSingleton<IGravitySnapshotProvider, GravitySnapshotProvider> ();
 
 
             //=====================
