@@ -15,11 +15,12 @@ namespace Day24.AttentionMeshOS.Services
 
         public GravityRuntimeAggregate CalculateMetrics()
         {
-            ReadOnlySpan<GravityFieldNode> fields = _runtime.Fields;
+            IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
 
             int count = 0;
             float totalMass = 0f;
             int activeMemberships = 0;
+            HashSet<Guid> uniqueDynamicTagIds = new();
             float stabilitySum = 0f;
             float radiusSum = 0f;
 
@@ -30,7 +31,7 @@ namespace Day24.AttentionMeshOS.Services
             DateTimeOffset newestTime = DateTimeOffset.MinValue;
             float maxMass = -1f;
 
-            for (int i = 0; i < fields.Length; i++)
+            for (int i = 0; i < fields.Count; i++)
             {
                 GravityFieldNode field = fields[i];
 
@@ -44,6 +45,11 @@ namespace Day24.AttentionMeshOS.Services
 
                 int currentMembers = field.Participations.Count;
                 activeMemberships += currentMembers;
+
+                foreach (var participation in  field.Participations.Values)
+                {
+                    uniqueDynamicTagIds.Add(participation.DynamicTagId);
+                }
 
                 stabilitySum += field.StabilityScore;
                 radiusSum += field.FieldRadius;
@@ -65,6 +71,12 @@ namespace Day24.AttentionMeshOS.Services
                     strongestFieldId = field.FieldId;
                 }
             }
+
+            double averageMembershipsPerDynamicTag = 
+                uniqueDynamicTagIds.Count > 0
+                    ? (double)activeMemberships / uniqueDynamicTagIds.Count
+                    : 0;
+
             return new GravityRuntimeAggregate(
                 count,
                 totalMass,
@@ -73,7 +85,8 @@ namespace Day24.AttentionMeshOS.Services
                 newestFieldId,
                 strongestFieldId,
                 count > 0 ? stabilitySum / count : 0f,
-                count > 0 ? radiusSum / count : 0f);
+                count > 0 ? radiusSum / count : 0f,
+                averageMembershipsPerDynamicTag);
         }
     }
 }

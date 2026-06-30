@@ -9,6 +9,7 @@ namespace Day24.AttentionMeshOS.Models
         Guid? NewestFieldId,
         Guid? StrongestFieldId,
         float AverageStability,
-        float AverageRadius
+        float AverageRadius,
+        double AverageMembershipsPerDynamicTag
         );
 }

@@ -20,6 +20,8 @@ namespace Day24.AttentionMeshOS.Models
 
         public VectorPreparationResult? VectorPreparationResult { get; set; }
 
+        public CrystallizationResult? CrystallizationResult { get; set; }
+
         public string EffectiveText =>
             NoiseReducedInput?.ReducedText
             ?? NormalizedInput?.NormalizedText

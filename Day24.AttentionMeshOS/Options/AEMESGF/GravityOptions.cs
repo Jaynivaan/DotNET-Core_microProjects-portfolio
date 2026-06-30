@@ -1,12 +1,12 @@
 //gs
 
 using System.ComponentModel.DataAnnotations;
-///defines the config for the emergent Semantic gravity field subsystem.
+
 namespace Day24.AttentionMeshOS.Options
 {
     public sealed class GravityOptions
     {
-
+        ///defines the config for the emergent Semantic gravity field subsystem.
         public bool Enabled { get; set; } = true;
 
         [Range(1, 4096)]

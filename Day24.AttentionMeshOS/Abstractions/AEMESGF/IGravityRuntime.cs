@@ -4,7 +4,7 @@ namespace Day24.AttentionMeshOS.Abstractions
 {
     public interface IGravityRuntime
     {
-        GravityFieldNode[] Fields { get; }
+        IReadOnlyList<GravityFieldNode> Fields { get; }        
 
         int FieldCount { get; }
 

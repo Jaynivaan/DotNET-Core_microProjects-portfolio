@@ -1,4 +1,5 @@
 //gs
+using System;
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Services;
 using Day24.AttentionMeshOS.Storage;
@@ -77,7 +78,24 @@ namespace Day24.AttentionMeshOS.Extensions
             //==============================================================================
             //AEM-ESGF-options
             //=============================================================================
-            services.Configure<GravityOptions>(configuration.GetSection("Gravity"));
+            services
+                .AddOptions<GravityOptions>()
+                .Bind(configuration.GetSection("Gravity"))
+                .ValidateDataAnnotations()
+                .Validate(
+                    options => options.FieldFormationThreshold <= options.MergeThreshold,
+                    "AEM-ESGF configuration error: FieldFormationThreshold must be less than or equal to MergeThreshold.")
+                .Validate(
+                    options => options.ResonanceThreshold <= options.MergeThreshold,
+                    "AEM-ESGF configuration error: ResonanceThreshold must be less than or equal to MergeThreshold.")
+                .Validate(
+                    options => Math.Abs (
+                        options.SignedTernaryWeight + options.VocabularyWeight - 1.0f) < 0.001f,
+                    "AEM-ESGF configuration error: SignedTernaryWeight and VocabularyWeight must be total 1.0.")
+                .Validate(
+                    options => options.MaxSemanticMass >= options.BaseParticipationMass,
+                    "AEM-ESGF configuration error: MaxSemanticMass must be greater than or equal to BaseParticipationMass.")
+                .ValidateOnStart();
 
             //=============================================================================================
             //============================//services//====================================================
@@ -100,6 +118,9 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IInputProcessor, KeywordExtractionProcessor>();
             services.AddSingleton<IInputProcessor, TagExtractionProcessor>();
             services.AddSingleton<IInputProcessor, VectorPreparationProcessor>();
+
+            services.AddSingleton<IInputProcessor, CrystallizationProcessor>();
+            services.AddSingleton<IInputProcessor, GravityFormationProcessor>();
 
             services.AddSingleton<IInputProcessor, PostProcessingGuardProcessor>();
             services.AddSingleton<ITagRuleProvider, TagRuleProvider>();
@@ -136,7 +157,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IDynamicTagRegistry, InMemoryDynamicTagRegistry>();
 
             services.AddSingleton<ICrystallizationEngine, CrystallizationEngine>();
-            services.AddSingleton<IInputProcessor,CrystallizationProcessor> ();
+            
 
 
             //==============================================
@@ -162,7 +183,9 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IGravityLifecycleManager, GravityLifecycleManager>();
             services.AddSingleton<ParticipationMetricsProvider>();
             services.AddSingleton<GravityRuntimeAggregator>();
-            services.AddSingleton<IGravitySnapshotProvider, GravitySnapshotProvider> ();
+            services.AddSingleton<IGravitySnapshotProvider, GravitySnapshotProvider>();
+            services.AddSingleton<IGravityStatisticsProvider, GravityStatisticsProvider>();
+            services.AddSingleton<IGravityHealthProvider, GravityHealthProvider>();
 
 
             //=====================

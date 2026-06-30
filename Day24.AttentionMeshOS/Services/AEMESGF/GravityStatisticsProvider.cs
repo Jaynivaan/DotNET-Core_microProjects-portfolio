@@ -28,7 +28,8 @@ namespace Day24.AttentionMeshOS.Services
                     ? aggregate.TotalMass / aggregate.Count
                     : 0d,
                 MaximumObservedDensity: aggregate.LargestFieldCount,
-                AverageMembershipsPerDynamicTag: 0d);
+                AverageMembershipsPerDynamicTag: 
+                    aggregate.AverageMembershipsPerDynamicTag );
         }
     }
 }

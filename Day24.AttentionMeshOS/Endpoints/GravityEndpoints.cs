@@ -2,6 +2,7 @@
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Abstractions;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +17,7 @@ namespace Day24.AttentionMeshOS.Endpoints
 
             group.MapGet(
                 "/runtime",
-                (IGravitySnapshotProvider provider) =>
+                ([FromServices] IGravitySnapshotProvider provider) =>
                 {
                     return Results.Ok(provider.GetSnapshot());
                 })
@@ -28,7 +29,7 @@ namespace Day24.AttentionMeshOS.Endpoints
 
             group.MapGet(
                 "/statistics",
-                (IGravityStatisticsProvider provider) =>
+                ([FromServices] IGravityStatisticsProvider provider) =>
                 {
                     return Results.Ok(provider.GetStatistics());
                 })

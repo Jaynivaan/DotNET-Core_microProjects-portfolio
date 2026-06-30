@@ -43,6 +43,8 @@ namespace Day24.AttentionMeshOS.Services
 
             var Result = _crystallizationEngine.Process(crystallizationContext);
 
+            context.CrystallizationResult = Result;
+
             if (Result.WasCrystallized)
             {
                 _logger.LogInformation(

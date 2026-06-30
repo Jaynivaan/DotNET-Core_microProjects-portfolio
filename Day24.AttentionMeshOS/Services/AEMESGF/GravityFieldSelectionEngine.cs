@@ -40,12 +40,12 @@ namespace Day24.AttentionMeshOS.Services
                     false);
             }
 
-            ReadOnlySpan<GravityFieldNode> fields = _runtime.Fields;
+            IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
 
             GravityFieldNode? bestField = null;
             float bestScore = 0f;
 
-            for ( int i = 0; i < fields.Length; i++ )
+            for ( int i = 0; i < fields.Count; i++ )
             {
                 GravityFieldNode field = fields[i];
 

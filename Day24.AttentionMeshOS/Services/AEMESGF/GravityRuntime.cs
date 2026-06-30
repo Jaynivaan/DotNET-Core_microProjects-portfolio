@@ -14,12 +14,13 @@ namespace Day24.AttentionMeshOS.Services
         private readonly GravityOptions _options;
         private readonly object _lockHandle = new();
         private readonly DateTimeOffset _startedAt = DateTimeOffset.UtcNow;
+        private readonly GravityFieldNode[] _fields;
 
         private int _allocatedFieldCount;
-        
-        public GravityFieldNode[] Fields { get; }
 
-        public int FieldCount => Fields.Length;
+        public IReadOnlyList<GravityFieldNode> Fields => _fields;
+
+        public int FieldCount => _fields.Length;
 
         public TimeSpan Uptime => DateTimeOffset.UtcNow - _startedAt;
 
@@ -42,43 +43,42 @@ namespace Day24.AttentionMeshOS.Services
             _options = options.Value;
             _logger = logger;
 
-            Fields = new GravityFieldNode[_options.MaximumGravityFields];
+            _fields = new GravityFieldNode[_options.MaximumGravityFields];
 
-            for ( int i = 0; i < Fields.Length; i++ )
+            for ( int i = 0; i < _fields.Length; i++ )
             {
-                Fields[i] = new GravityFieldNode(
+                _fields[i] = new GravityFieldNode(
                     _options.CentroidDimensions,
-                    _options.MaxDynamicTagsPerField
-                    );
+                    _options.MaxDynamicTagsPerField );
             }
 
             _logger.LogInformation(
                 "AEMESGF Gravity Runtime initialized with {fieldCount} fields.",
-                Fields.Length);
+                _fields.Length);
         }
 
         public bool TryAllocateField(out GravityFieldNode? field)
         {
             lock ( _lockHandle)
             {
-                for ( int i = 0; i < Fields.Length; ++i )
+                for ( int i = 0; i < _fields.Length; i++ )
                 {
-                    GravityFieldNode Candidate = Fields[i];
+                    GravityFieldNode candidate = _fields[i];
 
-                    if (Candidate.IsAllocated)
+                    if (candidate.IsAllocated)
                     {
                         continue;
                     }
 
-                    InitializeField(Candidate);
+                    InitializeField(candidate);
 
                     _allocatedFieldCount++;
 
-                    field = Candidate;
+                    field = candidate;
 
                     _logger.LogInformation(
                         "Gravity Field allocated. FieldId = {FieldId}.",
-                        Candidate.FieldId);
+                        candidate.FieldId);
 
                     return true;
                 }
@@ -96,9 +96,9 @@ namespace Day24.AttentionMeshOS.Services
         {
             lock (_lockHandle)
             {
-                for ( int i = 0; i < Fields.Length; i++)
+                for ( int i = 0; i < _fields.Length; i++)
                 {
-                    GravityFieldNode field = Fields[i];
+                    GravityFieldNode field = _fields[i];
 
                     if (!field.IsAllocated || field.FieldId != fieldId)
                     {
