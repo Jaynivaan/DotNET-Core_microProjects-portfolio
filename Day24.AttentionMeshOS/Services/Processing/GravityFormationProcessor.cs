@@ -75,16 +75,17 @@ namespace Day24.AttentionMeshOS.Services
             GravityFormationResult result = _gravityFormationEngine.Process(formationContext);
 
             if (result.FieldCreated)
-            {
-                _logger.LogInformation(
-                    "AEM-ESGF gravity field created: {GravityFieldId}",
-                    result.GravityFieldId);
+            {                
+                AemEsgfTelemetry.GravityFieldCreated(
+                    _logger,
+                    result.GravityFieldId!.Value);
             }
             else if ( result.FieldMatched)
             {
-                _logger.LogInformation(
-                    "AEM-ESGF DynamicTag matched GravityField: {GravityFieldId}",
-                    result.GravityFieldId);
+
+                AemEsgfTelemetry.GravityFieldMatched(
+                    _logger,
+                    result.GravityFieldId!.Value);
             }
             return Task.FromResult(ProcessorControl.Continue);
         }

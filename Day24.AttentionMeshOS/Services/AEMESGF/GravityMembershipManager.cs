@@ -1,11 +1,20 @@
 //gs
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Day24.AttentionMeshOS.Services
 {
     public sealed class GravityMembershipManager
     {
+        private readonly ILogger<GravityMembershipManager> _logger;
+
+        public GravityMembershipManager(
+            ILogger<GravityMembershipManager> logger)
+        {
+            _logger = logger;
+        }
+
         public bool AddParticipant(
             GravityFieldNode field,
             Guid dynamicTagId,
@@ -22,6 +31,12 @@ namespace Day24.AttentionMeshOS.Services
             {
                 participation.LastReinforcedAt = DateTimeOffset.UtcNow;
                 participation.ReinforcementCount++;
+
+                AemEsgfTelemetry.ParticipationReinforced(
+                _logger,
+                field.FieldId,
+                dynamicTagId,
+                participation.ReinforcementCount);
 
                 field.LastEvolvedAt = DateTimeOffset.UtcNow;
                 return true;

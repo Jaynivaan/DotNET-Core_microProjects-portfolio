@@ -71,9 +71,9 @@ namespace Day24.AttentionMeshOS.Services
 
             if ( bestField is null )
             {
-                _logger.LogInformation(
-                    "No Matching Gravity Field found for DynamicTagId={DynamicTagId}.",
-                    context.DynamicTagId);
+                AemEsgfTelemetry.GravityFieldSelectionFailed(
+                _logger,
+                context.DynamicTagId);
 
                 return new GravityFieldSelectionResult(
                     null,
@@ -81,12 +81,12 @@ namespace Day24.AttentionMeshOS.Services
                     false);
             }
 
-            _logger.LogInformation(
-                "Gravity Field Selected. DynamicTagId={DynamicTagId}, FieldId={FieldId}, Proximity={Proximity}.",
+            AemEsgfTelemetry.GravityFieldSelected(
+                _logger,
                 context.DynamicTagId,
                 bestField.FieldId,
                 Math.Round(bestScore, 4));
-            
+
             return new GravityFieldSelectionResult(
                 bestField,
                 bestScore,

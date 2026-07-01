@@ -1,11 +1,17 @@
 //gs
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Options;
+using Microsoft.Extensions.Logging;
+
 
 namespace Day24.AttentionMeshOS.Services
 {
     public sealed class GravityFieldSignatureUpdater
     {
+        private readonly ILogger<GravityFieldSignatureUpdater> _logger;
+
+        public GravityFieldSignatureUpdater(ILogger<GravityFieldSignatureUpdater> logger) { _logger = logger; }
+
         public void Update(
             GravityFieldNode field,
             ReadOnlySpan<sbyte> signature,
@@ -48,6 +54,10 @@ namespace Day24.AttentionMeshOS.Services
             }
 
             field.LastEvolvedAt = DateTimeOffset.UtcNow;
+
+            AemEsgfTelemetry.GravityFieldSignatureUpdated(
+                _logger,
+                field.FieldId);
         }
     }
 }

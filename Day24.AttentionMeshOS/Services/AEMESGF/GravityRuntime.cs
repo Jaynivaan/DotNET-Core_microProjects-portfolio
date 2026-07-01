@@ -52,8 +52,8 @@ namespace Day24.AttentionMeshOS.Services
                     _options.MaxDynamicTagsPerField );
             }
 
-            _logger.LogInformation(
-                "AEMESGF Gravity Runtime initialized with {fieldCount} fields.",
+            AemEsgfTelemetry.GravityRuntimeInitialized(
+                _logger,
                 _fields.Length);
         }
 
@@ -76,8 +76,8 @@ namespace Day24.AttentionMeshOS.Services
 
                     field = candidate;
 
-                    _logger.LogInformation(
-                        "Gravity Field allocated. FieldId = {FieldId}.",
+                    AemEsgfTelemetry.GravityFieldAllocated(
+                        _logger,
                         candidate.FieldId);
 
                     return true;
@@ -86,8 +86,7 @@ namespace Day24.AttentionMeshOS.Services
 
             field = null;
 
-            _logger.LogWarning(
-                "Gravity field allocation failed.  Runtime slab is full. ");
+            AemEsgfTelemetry.GravityRuntimeFull(_logger);
 
             return false;
         }
@@ -112,8 +111,8 @@ namespace Day24.AttentionMeshOS.Services
                         _allocatedFieldCount--;
                     }
 
-                    _logger.LogInformation(
-                        "Gravity Field reset. FieldId={FieldId}.",
+                    AemEsgfTelemetry.GravityFieldReset(
+                        _logger,
                         fieldId);
 
                     return true;
