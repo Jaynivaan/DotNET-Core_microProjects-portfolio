@@ -139,6 +139,7 @@ namespace Day24.AttentionMeshOS.Services
 
             field.CreatedAt = DateTimeOffset.UtcNow;
             field.LastEvolvedAt = field.CreatedAt;
+            field.Physics.Reset(field.CreatedAt);
         }
 
         private static void ResetNode(GravityFieldNode field)
@@ -158,6 +159,7 @@ namespace Day24.AttentionMeshOS.Services
 
             field.CreatedAt = DateTimeOffset.UtcNow;
             field.LastEvolvedAt = field.CreatedAt;
+            field.Physics.Reset(field.CreatedAt);
         }
     }
 }

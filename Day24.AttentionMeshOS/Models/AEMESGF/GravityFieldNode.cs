@@ -32,6 +32,8 @@ namespace Day24.AttentionMeshOS.Models
 
         public DateTimeOffset LastEvolvedAt { get; set; } = DateTimeOffset.UtcNow;
 
+        public SemanticPhysicsState Physics { get; } = new();
+
         public GravityFieldNode(
             int centroidDimensions,
             int maxParticipatingTags)

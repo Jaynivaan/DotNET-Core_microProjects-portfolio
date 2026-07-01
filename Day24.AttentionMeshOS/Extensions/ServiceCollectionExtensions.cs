@@ -97,9 +97,24 @@ namespace Day24.AttentionMeshOS.Extensions
                     "AEM-ESGF configuration error: MaxSemanticMass must be greater than or equal to BaseParticipationMass.")
                 .ValidateOnStart();
 
+
+            //==============================================================================
+            //AEM-SPF-options
+            //=============================================================================
+            services
+                .AddOptions<SemanticPhysicsOptions>()
+                .Bind(configuration.GetSection("SemanticPhysics"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+
+
+
+
+
             //=============================================================================================
             //============================//services//====================================================
-                //==================================================================================
+            //==================================================================================
             //store
             services.AddSingleton<IAttentionStore, FileAttentionStore>();
             services.AddSingleton<IRawAttentionInputStore, FileRawAttentionInputStore>();
@@ -187,6 +202,10 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<IGravityStatisticsProvider, GravityStatisticsProvider>();
             services.AddSingleton<IGravityHealthProvider, GravityHealthProvider>();
 
+            //==============================================================================
+            //AEM-SPF service registrations
+            //=============================================================================
+            services.AddSingleton<ISemanticPhysicsFramework, SemanticPhysicsFramework>();
 
             //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
