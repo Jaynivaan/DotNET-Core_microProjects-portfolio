@@ -36,6 +36,10 @@ namespace Day24.AttentionMeshOS.Options
         [Range(0.0f, 10.0f)]
         public float RadiusExpansionRate { get; set; } = 1.0f;
 
+        [Range(0.0f, 10.0f)]
+        public float RadiusContractionRate { get; set; } = 1.0f;
+
+
         [Range(0.0f, 100.0f)]
         public float MinimumRadius { get; set; } = 0.1f;
 

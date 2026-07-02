@@ -9,7 +9,16 @@ namespace Day24.AttentionMeshOS.Models
         double AverageFieldSize,
         double AverageSemanticMass,
         double MaximumObservedDensity,
-        double AverageMembershipsPerDynamicTag
+        double AverageMembershipsPerDynamicTag,
+
+        //physics statistics
+        int PhysicsEvaluations,
+        float HighestEnergyObserved,
+        float HighestPotentialObserved,
+        float HighestMomentumObserved,
+        float AverageAttentionEnergy,
+        float AveragePotential,
+        float AverageMomentum
 
         );
 }

@@ -25,7 +25,17 @@ namespace Day24.AttentionMeshOS.Services
                 aggregate.NewestFieldId,
                 aggregate.StrongestFieldId,
                 aggregate.AverageStability,
-                aggregate.AverageRadius);
+                aggregate.AverageRadius,
+
+                //physics snapshot data
+                aggregate.AverageAttentionEnergy,
+                aggregate.AverageAttractionPotential,
+                aggregate.AverageSemanticMomentum,
+                aggregate.HighestPotentialFieldId,
+                aggregate.FastestRisingFieldId,
+                aggregate.WeakestActiveFieldId
+
+                );
         }
     }
 }

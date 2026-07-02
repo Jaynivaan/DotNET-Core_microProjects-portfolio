@@ -29,7 +29,17 @@ namespace Day24.AttentionMeshOS.Services
                     : 0d,
                 MaximumObservedDensity: aggregate.LargestFieldCount,
                 AverageMembershipsPerDynamicTag: 
-                    aggregate.AverageMembershipsPerDynamicTag );
+                    aggregate.AverageMembershipsPerDynamicTag,
+                
+                //physics statistics
+                PhysicsEvaluations: aggregate.Count,
+                HighestEnergyObserved: aggregate.HighestEnergyObserved,
+                HighestPotentialObserved: aggregate.HighestPotentialObserved,
+                HighestMomentumObserved: aggregate.HighestMomentumObserved,
+                AverageAttentionEnergy: aggregate.AverageAttentionEnergy,
+                AveragePotential: aggregate.AverageAttractionPotential,
+                AverageMomentum: aggregate.AverageSemanticMomentum
+                );
         }
     }
 }

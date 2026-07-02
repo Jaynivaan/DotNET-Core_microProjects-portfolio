@@ -9,6 +9,14 @@ namespace Day24.AttentionMeshOS.Models
         Guid? NewestFeildId,
         Guid? StrongestFeildId,
         float AverageStability,
-        float AverageFieldRadius
+        float AverageFieldRadius,
+
+        //physics snapshot
+        float AverageAttentionEnergy,
+        float AverageAttractionPotential,
+        float AverageSemanticMomentum,
+        Guid? HighestPotentialFieldId,
+        Guid? FastestRisingFieldId,
+        Guid? WeakestActiveFieldId
         );
 }

@@ -105,11 +105,35 @@ namespace Day24.AttentionMeshOS.Extensions
                 .AddOptions<SemanticPhysicsOptions>()
                 .Bind(configuration.GetSection("SemanticPhysics"))
                 .ValidateDataAnnotations()
+                .Validate(
+                    options => options.MinimumEnergy <= options.MaximumEnergy,
+                    "AEM-SPF configuration error: MinimumEnergy must be less than or equal to MaximumEnergy.")
+                .Validate(
+                    options => options.MinimumStability <= options.MaximumStability,
+                    "AEM-SPF configuration error: MinimumStability must be less than or equal to MaximumStability.")
+                .Validate(
+                    options => options.MinimumRadius <= options.MaximumRadius,
+                    "AEM-SPF configuration error : MinimumRadius must be less than or equal to MaximumRadius")
+                .Validate(
+                    options => options.MomentumSensitivity > 0f,
+                    "AEM-SPF configuration error: Momentum Sensitivity must be greater than zero.")
+                .Validate(
+                    options => options.PotentialRadiusPenalty >= 0f,
+                    "AEM-SPF configuration error : PotentialRadiusPenalty must be non-negative.")
+                .Validate(
+                    options => 
+                        options.PotentialMassWeight >= 0f &&
+                        options.PotentialEnergyWeight >= 0f && 
+                        options.PotentialStabilityWeight >= 0f ,
+                    "AEM-SPF configuration error: Potential weights must be non-negative.")
+                .Validate(
+                    options =>
+                        options.PotentialMassWeight > 0f||
+                        options.PotentialEnergyWeight > 0f ||
+                        options.PotentialStabilityWeight > 0f,
+                    "AEM-SPF configuration error: At least one Potential weight must be greater than zero.")
+
                 .ValidateOnStart();
-
-
-
-
 
 
             //=============================================================================================
@@ -206,6 +230,12 @@ namespace Day24.AttentionMeshOS.Extensions
             //AEM-SPF service registrations
             //=============================================================================
             services.AddSingleton<ISemanticPhysicsFramework, SemanticPhysicsFramework>();
+
+            services.AddSingleton<ISemanticPhysicsLaw, AttentionEnergyLaw>();
+            services.AddSingleton<ISemanticPhysicsLaw, StabilityLaw>();
+            services.AddSingleton<ISemanticPhysicsLaw, RadiusLaw>();
+            services.AddSingleton<ISemanticPhysicsLaw, AttractionPotentialLaw>();
+            services.AddSingleton<ISemanticPhysicsLaw, SemanticMomentumLaw>(); 
 
             //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();

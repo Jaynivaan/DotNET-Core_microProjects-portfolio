@@ -112,6 +112,103 @@ namespace Day24.AttentionMeshOS.Services
             Message = "Gravity Runtime slab is full. Field allocation failed.")]
         public static partial void GravityRuntimeFull(
             ILogger logger);
+
+
+
+        // AEMSPF Physics Telemetry
+        [LoggerMessage(
+            EventId = 3013,
+            Level = LogLevel.Information,
+            Message = "Physics evaluation started. FieldId={FieldId}, SemanticMass={SemanticMass}, ResonanceScore={ResonanceScore}.")]
+        public static partial void PhysicsEvaluationStarted(
+        ILogger logger,
+        Guid fieldId,
+        float semanticMass,
+        float resonanceScore);
+
+        [LoggerMessage(
+            EventId = 3014,
+            Level = LogLevel.Information,
+            Message = "Physics evaluation completed. FieldId={FieldId}, Energy={Energy}, Stability={Stability}, Radius={Radius}, Potential={Potential}, Momentum={Momentum}.")]
+        public static partial void PhysicsEvaluationCompleted(
+        ILogger logger,
+        Guid fieldId,
+        float energy,
+        float stability,
+        float radius,
+        float potential,
+        float momentum);
+
+        [LoggerMessage(
+            EventId = 3015,
+            Level = LogLevel.Information,
+            Message = "Attention Energy updated. FieldId={FieldId}, PreviousEnergy={PreviousEnergy}, CurrentEnergy={CurrentEnergy}.")]
+        public static partial void AttentionEnergyUpdated(
+        ILogger logger,
+        Guid fieldId,
+        float previousEnergy,
+        float currentEnergy);
+
+        [LoggerMessage(
+            EventId = 3016,
+            Level = LogLevel.Information,
+            Message = "Stability updated. FieldId={FieldId}, PreviousStability={PreviousStability}, CurrentStability={CurrentStability}.")]
+        public static partial void StabilityUpdated(
+        ILogger logger,
+        Guid fieldId,
+        float previousStability,
+        float currentStability);
+
+        [LoggerMessage(
+            EventId = 3017,
+            Level = LogLevel.Information,
+            Message = "Radius updated. FieldId={FieldId}, PreviousRadius={PreviousRadius}, CurrentRadius={CurrentRadius}.")]
+        public static partial void RadiusUpdated(
+        ILogger logger,
+        Guid fieldId,
+        float previousRadius,
+        float currentRadius);
+
+        [LoggerMessage(
+            EventId = 3018,
+            Level = LogLevel.Information,
+            Message = "Attraction Potential calculated. FieldId={FieldId}, Potential={Potential}.")]
+        public static partial void AttractionPotentialCalculated(
+        ILogger logger,
+        Guid fieldId,
+        float potential);
+
+        [LoggerMessage(
+            EventId = 3019,
+            Level = LogLevel.Information,
+            Message = "Semantic Momentum calculated. FieldId={FieldId}, Momentum={Momentum}.")]
+        public static partial void SemanticMomentumCalculated(
+        ILogger logger,
+        Guid fieldId,
+        float momentum);
+
+        [LoggerMessage(
+            EventId = 3020,
+            Level = LogLevel.Information,
+            Message = "Previous physics state captured. FieldId={FieldId}.")]
+        public static partial void PreviousPhysicsStateCaptured(
+        ILogger logger,
+        Guid fieldId);
+
+        [LoggerMessage(
+            EventId = 3021,
+            Level = LogLevel.Information,
+            Message = "Physics state committed. FieldId={FieldId}, Energy={Energy}, Stability={Stability}, Radius={Radius}, Potential={Potential}, Momentum={Momentum}.")]
+        public static partial void PhysicsStateCommitted(
+        ILogger logger,
+        Guid fieldId,
+        float energy,
+        float stability,
+        float radius,
+        float potential,
+        float momentum);
+
+
     }
 
 }

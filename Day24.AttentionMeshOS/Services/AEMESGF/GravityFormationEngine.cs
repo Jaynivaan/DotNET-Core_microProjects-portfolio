@@ -3,6 +3,7 @@ using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Options;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Day24.AttentionMeshOS.Services
 {
@@ -14,8 +15,11 @@ namespace Day24.AttentionMeshOS.Services
         private readonly ISemanticMassEngine _semanticMassEngine;
         private readonly GravityFieldFactory _factory;
         private readonly IGravityLifecycleManager _lifecycleManager;
+        private readonly ISemanticPhysicsFramework _physicsFramework;
+        private readonly ParticipationMetricsProvider _participationMetricsProvider;
         private readonly GravityOptions _options;
-
+        private readonly SemanticPhysicsOptions _physicsOptions;
+        private readonly ILogger<GravityFormationEngine> _logger;
 
         public GravityFormationEngine(
             GravityFieldSelectionEngine selectionEngine,
@@ -24,7 +28,11 @@ namespace Day24.AttentionMeshOS.Services
             ISemanticMassEngine semanticMassEngine,
             GravityFieldFactory factory,
             IGravityLifecycleManager lifecycleManager,
-            IOptions<GravityOptions> options )
+            ISemanticPhysicsFramework physicsFramework,
+            ParticipationMetricsProvider participationMetricsProvider,
+            IOptions<GravityOptions> options,
+            IOptions<SemanticPhysicsOptions> physicsOptions,
+            ILogger<GravityFormationEngine>logger)
         {
             _selectionEngine = selectionEngine;
             _membershipManager = membershipManager;
@@ -32,7 +40,11 @@ namespace Day24.AttentionMeshOS.Services
             _semanticMassEngine = semanticMassEngine;
             _factory = factory;
             _lifecycleManager = lifecycleManager;
+            _physicsFramework = physicsFramework;
+            _participationMetricsProvider = participationMetricsProvider;
             _options = options.Value;
+            _physicsOptions = physicsOptions.Value;
+            _logger = logger;
         }
 
         public GravityFormationResult Process ( GravityFormationContext context )
@@ -64,7 +76,10 @@ namespace Day24.AttentionMeshOS.Services
                 GravityLifecycleEvaluationResult lifecycleResult =
                     _lifecycleManager.Evaluate(field);
 
-
+                EvaluateAndCommitPhysics(
+                    field,
+                    selection.ProximityScore,
+                    lifecycleResult.CurrentState);
 
                 return new GravityFormationResult(
                     WasProcessed: true,
@@ -96,6 +111,11 @@ namespace Day24.AttentionMeshOS.Services
 
             GravityLifecycleEvaluationResult createdLifecycleResult =
                 _lifecycleManager.Evaluate(newField);
+
+            EvaluateAndCommitPhysics(
+                newField,
+                1.0f,
+                createdLifecycleResult.CurrentState);
                             
 
             return new GravityFormationResult(
@@ -105,6 +125,59 @@ namespace Day24.AttentionMeshOS.Services
                 GravityFieldId: newField.FieldId,
                 ProximityScore: 1.0f,
                 LifecycleState: createdLifecycleResult.CurrentState);
+        }
+
+        private void EvaluateAndCommitPhysics(
+            GravityFieldNode field,
+            float resonanceScore,
+            GravityFieldLifecycleState lifecycleState)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            ParticipationMetrics participationMetrics =
+                _participationMetricsProvider.GetMetrics(field);
+
+            SemanticPhysicsContext physicsContext =
+                new SemanticPhysicsContext(
+                    field,
+                    field.Physics,
+                    participationMetrics,
+                    field.SemanticMass,
+                    resonanceScore,
+                    lifecycleState,
+                    _physicsOptions,
+                    now);
+
+            SemanticPhysicsResult physicsResult = 
+                _physicsFramework.Evaluate(physicsContext);
+
+            field.Physics.CapturePrevious(now);
+
+            AemEsgfTelemetry.PreviousPhysicsStateCaptured(
+                _logger,
+                field.FieldId);
+
+
+            field.Physics.AttentionEnergy = physicsResult.AttentionEnergy;
+            field.Physics.Stability = physicsResult.Stability;
+            field.Physics.Radius = physicsResult.Radius;
+            field.Physics.AttractionPotential = physicsResult.AttractionPotential;
+            field.Physics.SemanticMomentum = physicsResult.SemanticMomentum;
+
+            field.AttentionEnergy = physicsResult.AttentionEnergy;
+            field.StabilityScore = physicsResult.Stability;
+            field.FieldRadius = physicsResult.Radius;
+
+            field.LastEvolvedAt = now;
+
+            AemEsgfTelemetry.PhysicsStateCommitted(
+                _logger,
+                field.FieldId,
+                physicsResult.AttentionEnergy,
+                physicsResult.Stability,
+                physicsResult.Radius,
+                physicsResult.AttractionPotential,
+                physicsResult.SemanticMomentum);
         }
     }
 }
