@@ -122,6 +122,78 @@ namespace Day24.AttentionMeshOS.Services
             return false;
         }
 
+        public void RestoreRuntimeState( IReadOnlyList<GravityFieldRuntimeState> fields )
+        {
+            ArgumentNullException.ThrowIfNull(fields);
+
+            if ( fields.Count > _fields.Length)
+            {
+                throw new InvalidOperationException(
+                    "Saved gravity field count exceeds configured runtime capacity.");
+            }
+
+            lock(_lockHandle)
+            {
+                _allocatedFieldCount = 0;
+
+                for ( int i = 0; i < _fields.Length ; i++)
+                {
+                    ResetNode(_fields[i]);
+                }
+
+                for (int i = 0; i < fields.Count; i++)
+                {
+                    GravityFieldRuntimeState saved = fields[i];
+                    GravityFieldNode target = _fields[i];
+
+                    target.FieldId = saved.FieldId;
+                    target.IsAllocated = saved.IsAllocated;
+                    target.LifecycleState = saved.LifecycleState;
+                    target.SemanticMass = saved.SemanticMass;
+
+                    target.AttentionEnergy = 0f;
+                    target.StabilityScore = 0f;
+                    target.FieldRadius = 0f;
+
+                    Array.Clear(target.GravityAccumulator);
+                    Array.Copy(
+                        saved.GravityAccumulator,
+                        target.GravityAccumulator,
+                        Math.Min(saved.GravityAccumulator.Length, target.GravityAccumulator.Length));
+
+                    Array.Clear(target.FieldSignature);
+                    Array.Copy(
+                        saved.FieldSignature,
+                        target.FieldSignature,
+                        Math.Min(saved.FieldSignature.Length, target.FieldSignature.Length));
+
+                    target.Participations.Clear();
+
+                    foreach (DynamicTagParticipationState participant in saved.Participants)
+                    {
+                        target.Participations[participant.DynamicTagId] =
+                            new DynamicTagParticipation
+                            {
+                                DynamicTagId = participant.DynamicTagId,
+                                JoinedAt = participant.JoinedAt,
+                                LastReinforcedAt = participant.LastReinforcedAt,
+                                ReinforcementCount = participant.ReinforcementCount,
+                                EligibleForMigration = participant.EligibleForMigration,
+                                PreviousFieldId = participant.PreviousFieldId
+                            };
+                        target.CreatedAt = saved.CreatedAt;
+                        target.LastEvolvedAt = saved.LastEvolvedAt;
+                        target.Physics.Reset(saved.LastEvolvedAt);
+
+                        if (target.IsAllocated )
+                        {
+                            _allocatedFieldCount++;
+                        }
+                    }
+                }
+            }
+        }
+
         private static void InitializeField(GravityFieldNode field)
         {
             field.FieldId = Guid.NewGuid();

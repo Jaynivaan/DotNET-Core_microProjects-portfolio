@@ -15,5 +15,7 @@ namespace Day24.AttentionMeshOS.Abstractions
         bool TryAllocateField(out GravityFieldNode? field);
 
         bool ResetField(Guid fieldId);
+
+        void RestoreRuntimeState( IReadOnlyList<GravityFieldRuntimeState> fields );
     }
 }
