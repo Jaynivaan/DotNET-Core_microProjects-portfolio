@@ -1,6 +1,8 @@
 //gs
 using System;
+using Microsoft.Extensions.Options;
 using Day24.AttentionMeshOS.Abstractions;
+using Day24.AttentionMeshOS.Options;
 using Day24.AttentionMeshOS.Models;
 
 namespace Day24.AttentionMeshOS.Services
@@ -10,17 +12,26 @@ namespace Day24.AttentionMeshOS.Services
         private readonly IDynamicTagPersistenceSerializer _dynamicTags;
         private readonly IGravityRegistryPersistenceSerializer _gravityRegistry;
         private readonly IGravityRuntimePersistenceSerializer _gravityRuntime;
+        private readonly IAttentionMeshSaveStore _saveStore;
+        private readonly IPersistenceValidator _validator;
+        private readonly PersistenceOptions _options;
 
-        private AttentionMeshSaveFile? _lastSave;
+        //private AttentionMeshSaveFile? _lastSave;
 
         public PersistenceCoordinator(
             IDynamicTagPersistenceSerializer dynamicTags,
             IGravityRegistryPersistenceSerializer gravityRegistry,
-            IGravityRuntimePersistenceSerializer gravityRuntime)
+            IGravityRuntimePersistenceSerializer gravityRuntime,
+            IAttentionMeshSaveStore saveStore,
+            IPersistenceValidator validator,
+            IOptions<PersistenceOptions>options)
         {
             _dynamicTags = dynamicTags;
             _gravityRegistry = gravityRegistry;
             _gravityRuntime = gravityRuntime;
+            _saveStore = saveStore;
+            _validator = validator;
+            _options = options.Value;
 
         }
 
@@ -28,43 +39,49 @@ namespace Day24.AttentionMeshOS.Services
         {
             DateTimeOffset now = DateTimeOffset.UtcNow;
 
-            _lastSave = new AttentionMeshSaveFile(
+            var saveFile = new AttentionMeshSaveFile(
                 new SaveMetadata(
-                    FormatVersion: 1,
-                    RuntimeVersion: "AttentionMeshOS",
-                    PersistenceVersion: "1",
-                    SignatureLength: 64,
-                    SignatureSchemaVersion: 1,
-                    QuantizationVersion: 1,
-                    CreatedAt: now,
-                    SavedAt: now,
-                    SemanticIdentityMode: "Guid"),
+                    _options.FormatVersion,
+                    "AttentionMeshOS",
+                    "1",
+                    _options.SignatureLength,
+                    _options.SignatureSchemaVersion,
+                    _options.QuantizationVersion,
+                    now,
+                    now,
+                    "Guid"),
                 _dynamicTags.Capture(),
                 _gravityRegistry.Capture(),
                 _gravityRuntime.Capture(),
                 ReplayJournal: null);
+
+            _saveStore.Save(saveFile);
         }
 
         public void Restore()
         {
-            if ( _lastSave is null )
+            AttentionMeshSaveFile? saveFile = _saveStore.Load();
+
+            if ( saveFile is null )
             {
                 return;
             }
+            _validator.Validate( saveFile );
 
-            if ( _lastSave.DynamicTags is not null )
+
+            if ( saveFile.DynamicTags is not null )
             {
-                _dynamicTags.Restore(_lastSave.DynamicTags);
+                _dynamicTags.Restore(saveFile.DynamicTags);
             }
 
-            if ( _lastSave.GravityRegistry is not null )
+            if ( saveFile.GravityRegistry is not null )
             {
-                _gravityRegistry.Restore( _lastSave.GravityRegistry);
+                _gravityRegistry.Restore( saveFile.GravityRegistry);
             }
 
-            if ( _lastSave.GravityRuntime is not null )
+            if ( saveFile.GravityRuntime is not null )
             {
-                _gravityRuntime.Restore( _lastSave.GravityRuntime);
+                _gravityRuntime.Restore( saveFile.GravityRuntime);
             }
         }
     }

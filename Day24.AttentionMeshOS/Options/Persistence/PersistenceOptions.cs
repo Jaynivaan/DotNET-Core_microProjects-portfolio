@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Day24.AttentionMeshOS.Options
 {
-    public sealed class PeristenceOptions
+    public sealed class PersistenceOptions
     {
         public bool Enabled { get; set; } = true;
 
         [Required]
-        public string DataDirectory { get; set; } = "Peristence";
+        public string DataDirectory { get; set; } = "Persistence";
 
         [Required]
         public string SaveFileName { get; set; } = "amos.json";

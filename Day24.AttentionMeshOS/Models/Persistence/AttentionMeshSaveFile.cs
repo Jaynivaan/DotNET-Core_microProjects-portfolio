@@ -6,6 +6,6 @@ namespace Day24.AttentionMeshOS.Models
         DynamicTagRegistryState? DynamicTags,
         GravityRegistryState? GravityRegistry,
         GravityRuntimeState? GravityRuntime,
-        object? ReplayJournal
+        ReplayJournal? ReplayJournal
         );
 }
