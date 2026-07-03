@@ -5,8 +5,10 @@ namespace Day24.AttentionMeshOS.Abstractions
 {
     public interface ISemanticPhysicsPersistenceSerializer
     {
-        SemanticPhysicsStateRecord Capture();
+        SemanticPhysicsStateRecord Capture(SemanticPhysicsState state);
 
-        void Restore(SemanticPhysicsStateRecord record);
+        void Restore(
+            SemanticPhysicsState state,
+            SemanticPhysicsStateRecord record);
     }
 }

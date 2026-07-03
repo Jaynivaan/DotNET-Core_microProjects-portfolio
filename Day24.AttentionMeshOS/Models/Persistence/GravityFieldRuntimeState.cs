@@ -13,6 +13,7 @@ namespace Day24.AttentionMeshOS.Models
         sbyte[] FieldSignature,
         IReadOnlyList<DynamicTagParticipationState> Participants,
         DateTimeOffset CreatedAt,
-        DateTimeOffset LastEvolvedAt
+        DateTimeOffset LastEvolvedAt,
+        SemanticPhysicsStateRecord Physics
         );
 }

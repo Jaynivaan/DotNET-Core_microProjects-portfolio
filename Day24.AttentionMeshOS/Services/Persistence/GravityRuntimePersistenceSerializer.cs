@@ -9,11 +9,14 @@ namespace Day24.AttentionMeshOS.Services
     public sealed class GravityRuntimePersistenceSerializer : IGravityRuntimePersistenceSerializer
     {
         private readonly IGravityRuntime _runtime;
+        private readonly ISemanticPhysicsPersistenceSerializer _physicsSerializer;
 
         public  GravityRuntimePersistenceSerializer(
-            IGravityRuntime runtime)
+            IGravityRuntime runtime,
+            ISemanticPhysicsPersistenceSerializer physicsSerializer)
         {
             _runtime = runtime;
+            _physicsSerializer = physicsSerializer;
 
         }
         
@@ -40,7 +43,9 @@ namespace Day24.AttentionMeshOS.Services
                             participant.PreviousFieldId))
                         .ToArray(),
                     field.CreatedAt,
-                    field.LastEvolvedAt))
+                    field.LastEvolvedAt,
+                    _physicsSerializer.Capture(field.Physics)))
+                    
                 .ToArray();
 
             return new GravityRuntimeState(fields);
@@ -50,10 +55,32 @@ namespace Day24.AttentionMeshOS.Services
         {
             ArgumentNullException.ThrowIfNull(state);
 
-            _runtime.RestoreRuntimeState(
-                state.Fields
-                    .OrderBy(field => field.FieldId)
-                    .ToArray());
+            GravityFieldRuntimeState[] fields = state.Fields
+                .OrderBy(field => field.FieldId)
+                .ToArray();
+
+            _runtime.RestoreRuntimeState(fields);
+
+            foreach( GravityFieldRuntimeState savedField in fields )
+            {
+                GravityFieldNode? runtimeField = _runtime.Fields
+                    .FirstOrDefault(field => 
+                        field.IsAllocated &&
+                        field.FieldId == savedField.FieldId);
+
+                if (runtimeField is null )
+                {
+                    continue;
+                }
+
+                _physicsSerializer.Restore(
+                    runtimeField.Physics,
+                    savedField.Physics);
+
+                runtimeField.AttentionEnergy = runtimeField.Physics.AttentionEnergy;
+                runtimeField.StabilityScore = runtimeField.Physics.Stability;
+                runtimeField.FieldRadius = runtimeField.Physics.Radius;
+            }
         }
     }
 }
