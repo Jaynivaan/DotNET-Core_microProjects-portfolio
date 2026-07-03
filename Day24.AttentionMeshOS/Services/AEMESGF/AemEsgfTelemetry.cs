@@ -208,7 +208,92 @@ namespace Day24.AttentionMeshOS.Services
         float potential,
         float momentum);
 
+        //persistance logs
 
+        [LoggerMessage(
+            EventId = 3022,
+            Level = LogLevel.Information,
+            Message = "Persistence save started.FormatVersion={FormatVersion}.")]
+        public static partial void PersistenceSaveStarted(
+        ILogger logger,
+        int formatVersion);
+
+        [LoggerMessage(
+            EventId = 3023,
+            Level = LogLevel.Information,
+            Message = "Persistence save completed. FormatVersion={FormatVersion}.")]
+        public static partial void PersistenceSaveCompleted(
+        ILogger logger,
+        int formatVersion);
+
+        [LoggerMessage(
+            EventId = 3024,
+            Level = LogLevel.Error,
+            Message = "Persistence save failed.")]
+        public static partial void PersistenceSaveFailed(
+        ILogger logger,
+        Exception exception);
+
+        [LoggerMessage(
+            EventId = 3025,
+            Level = LogLevel.Information,
+            Message = "Persistence load started.")]
+        public static partial void PersistenceLoadStarted(
+        ILogger logger);
+
+        [LoggerMessage(
+            EventId = 3026,
+            Level = LogLevel.Information,
+            Message = "Persistence load completed. SaveFound={SaveFound}.")]
+        public static partial void PersistenceLoadCompleted(
+        ILogger logger,
+        bool saveFound);
+
+        [LoggerMessage(
+            EventId = 3027,
+            Level = LogLevel.Error,
+            Message = "Persistence load failed.")]
+        public static partial void PersistenceLoadFailed(
+        ILogger logger,
+        Exception exception);
+
+        [LoggerMessage(
+            EventId = 3028,
+            Level = LogLevel.Information,
+            Message = "Persistence Validation Started. FormatVersion={FormatVersion}.")]
+        public static partial void PersistenceValidationStarted(
+        ILogger logger,
+        int formatVersion);
+
+        [LoggerMessage(
+            EventId = 3029,
+            Level = LogLevel.Error,
+            Message = "Persistence validation failed.")]
+        public static partial void PersistenceValidationFailed(
+        ILogger logger,
+        Exception exception);
+
+        [LoggerMessage(
+            EventId = 3030,
+            Level = LogLevel.Information,
+            Message = "Persistence restore started.")]
+        public static partial void PersistenceRestoreStarted(
+        ILogger logger );
+
+        [LoggerMessage(
+            EventId = 3031,
+            Level = LogLevel.Information,
+            Message = "Persistence Restore completed.")]
+        public static partial void PersistenceRestoreCompleted(
+        ILogger logger );
+
+        [LoggerMessage(
+            EventId = 3032,
+            Level = LogLevel.Error,
+            Message = "Persistence restore failed.")]
+        public static partial void PersistenceRestoreFailed(
+        ILogger logger,
+        Exception exception);
     }
 
 }

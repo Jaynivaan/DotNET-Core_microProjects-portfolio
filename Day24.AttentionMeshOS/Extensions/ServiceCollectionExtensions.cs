@@ -135,6 +135,26 @@ namespace Day24.AttentionMeshOS.Extensions
 
                 .ValidateOnStart();
 
+            //===============================================================================
+            //Persistence-options
+            //===============================================================================
+            services
+                .AddOptions<PersistenceOptions>()
+                .Bind(configuration.GetSection("Persistence"))
+                .ValidateDataAnnotations()
+                .Validate(
+                    options => !string.IsNullOrWhiteSpace(options.DataDirectory),
+                    "Persistence configuration error: DataDirectory must not be empty.")
+                .Validate(
+                    options => !string.IsNullOrWhiteSpace(options.SaveFileName),
+                    "Persistence configuration error: SaveFileName must not be empty.")
+                .Validate(
+                    options => options.FormatVersion > 0,
+                    "Persistence configuration error: FormatVersion Must be greater than zero.")
+                .Validate(
+                    options => options.SignatureLength > 0,
+                    "Persistence configuration error: signature Length must be greater than zero.")
+                .ValidateOnStart();
 
             //=============================================================================================
             //============================//services//====================================================
@@ -235,7 +255,22 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<ISemanticPhysicsLaw, StabilityLaw>();
             services.AddSingleton<ISemanticPhysicsLaw, RadiusLaw>();
             services.AddSingleton<ISemanticPhysicsLaw, AttractionPotentialLaw>();
-            services.AddSingleton<ISemanticPhysicsLaw, SemanticMomentumLaw>(); 
+            services.AddSingleton<ISemanticPhysicsLaw, SemanticMomentumLaw>();
+
+            //---------------------------------------------------------------------------------
+            //Persistence registrations
+            //=====================================================================
+            services.AddSingleton<IPersistenceValidator, PersistenceValidator>();
+            services.AddSingleton<IAttentionMeshSaveStore, JsonAttentionMeshSaveStore>();
+
+            services.AddSingleton<IDynamicTagPersistenceSerializer, DynamicTagPersistenceSerializer>();
+            services.AddSingleton<IGravityRegistryPersistenceSerializer, GravityRegistryPersistenceSerializer>();
+            services.AddSingleton<IGravityRuntimePersistenceSerializer, GravityRuntimePersistenceSerializer>();
+            services.AddSingleton<ISemanticPhysicsPersistenceSerializer, SemanticPhysicsPersistenceSerializer>();
+
+            services.AddSingleton<PersistenceValidationHarness>();
+
+            services.AddSingleton<IPersistenceCoordinator, PersistenceCoordinator>();
 
             //=====================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
