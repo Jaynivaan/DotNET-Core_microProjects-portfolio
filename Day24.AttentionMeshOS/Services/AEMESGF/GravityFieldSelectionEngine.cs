@@ -10,18 +10,21 @@ namespace Day24.AttentionMeshOS.Services
     public sealed class GravityFieldSelectionEngine
     {
         private readonly IGravityRuntime _runtime;
+        private readonly ICandidateResolver _candidateResolver;
         private readonly GravityProximityCalculator _proximityCalculator;
         private readonly GravityOptions _options;
         private readonly ILogger<GravityFieldSelectionEngine> _logger;
 
         public GravityFieldSelectionEngine(
             IGravityRuntime runtime,
+            ICandidateResolver candidateResolver,
             GravityProximityCalculator proximityCalculator,
             IOptions<GravityOptions> options,
             ILogger<GravityFieldSelectionEngine> logger
             )
         {
             _runtime = runtime;
+            _candidateResolver = candidateResolver;
             _proximityCalculator = proximityCalculator;
             _options = options.Value;
             _logger = logger;
@@ -40,34 +43,48 @@ namespace Day24.AttentionMeshOS.Services
                     false);
             }
 
+            var candidateContext = new CandidateResolutionContext(
+                context.TernarySignature,
+                context.PresenceMask,
+                DateTimeOffset.UtcNow,
+                context.DynamicTagId);
+
+            CandidateResolutionResult CandidateResult = _candidateResolver.Resolve( candidateContext );
+
             IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
 
             GravityFieldNode? bestField = null;
             float bestScore = 0f;
 
-            for ( int i = 0; i < fields.Count; i++ )
+            foreach (CandidateFieldRef candidate in CandidateResult.Candidates )
             {
-                GravityFieldNode field = fields[i];
+                if ( candidate.RuntimeIndex < 0 ||
+                    candidate.RuntimeIndex >= fields.Count)
+                {
+                    continue;
+                }
 
-                if ( !field .IsAllocated )
+                GravityFieldNode field = fields[candidate.RuntimeIndex];
+
+                if (!field.IsAllocated ||
+                    field.FieldId != candidate.FieldId)
                 {
                     continue;
                 }
 
                 float proximity =
                     _proximityCalculator.Calculate(
-                    context,
-                    field,
-                    _options);
-                    
+                        context,
+                        field,
+                        _options);
 
-                if ( proximity >= _options.ResonanceThreshold  &&
+                if(proximity >= _options.ResonanceThreshold &&
                     proximity > bestScore)
                 {
                     bestScore = proximity;
                     bestField = field;
                 }
-            }
+            }           
 
             if ( bestField is null )
             {
