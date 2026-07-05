@@ -5,6 +5,7 @@ using System.Linq;
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Options;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Day24.AttentionMeshOS.Services
 {
@@ -12,14 +13,17 @@ namespace Day24.AttentionMeshOS.Services
     {
         private const string AllFieldsResolverName = "AllFields";
 
+        private readonly ILogger<CandidateResolverSelector> _logger;
         private readonly CandidateResolutionOptions _options;
         private readonly IReadOnlyDictionary<string, ICandidateResolver> _resolvers;
 
         public CandidateResolverSelector (
+            ILogger<CandidateResolverSelector> logger,
             IEnumerable<ICandidateResolver> resolvers,
             IOptions<CandidateResolutionOptions> options
             )
         {
+            _logger = logger;
             _options = options.Value;
 
             _resolvers = resolvers.ToDictionary(
@@ -33,6 +37,10 @@ namespace Day24.AttentionMeshOS.Services
                     _options.ResolverType,
                     out ICandidateResolver? configuredResolver ))
             {
+                AemEsgfTelemetry.CandidateResolverSelected(
+                    _logger,
+                    configuredResolver.Name);
+
                 return configuredResolver;
             }
 
@@ -40,6 +48,10 @@ namespace Day24.AttentionMeshOS.Services
                 AllFieldsResolverName,
                 out ICandidateResolver? fallbackResolver ) )
             {
+                AemEsgfTelemetry.CandidateResolverSelected(
+                    _logger,
+                    fallbackResolver.Name);
+
                 return fallbackResolver;
             }
 

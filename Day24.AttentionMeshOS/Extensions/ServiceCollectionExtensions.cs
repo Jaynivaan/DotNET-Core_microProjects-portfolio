@@ -276,6 +276,13 @@ namespace Day24.AttentionMeshOS.Extensions
             //CandidateResolution
             //--------
             services.AddSingleton<ICandidateResolver, AllFieldsCandidateResolver>();
+            services.AddSingleton<ICandidateResolver, FingerprintCandidateResolver>();
+            services.AddSingleton<CandidateFingerprintBuilder>();
+            services.AddSingleton<GravityFieldCandidateFingerprintProvider>();
+            services.AddSingleton<CandidateOrderingService>();
+            services.AddSingleton<CandidateResolutionMetricsProvider>();
+            services.AddSingleton<ICandidateResolutionSnapshotProvider, CandidateResolutionSnapshotProvider>();
+            services.AddSingleton<CandidateResolverSelector>();
 
 
             //===========================================================================

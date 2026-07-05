@@ -294,6 +294,54 @@ namespace Day24.AttentionMeshOS.Services
         public static partial void PersistenceRestoreFailed(
         ILogger logger,
         Exception exception);
+
+
+        //candidate resolution telemetry
+
+        [LoggerMessage(
+            EventId = 3033,
+            Level = LogLevel.Information,
+            Message = "Candidate Resolution started. Resolver={ResolverName}.")]
+        public static partial void CandidateResolutionStarted(
+        ILogger logger,
+        string resolverName);
+
+        [LoggerMessage(
+            EventId = 3034,
+            Level = LogLevel.Information,
+            Message = "Candidate Resolution completed.  Resolver={ResolverName}, CandidateCount={CandidateCount}, UsedFallback={UsedFallback}.")]
+        public static partial void CandidateResolutionCompleted(
+        ILogger logger,
+        string resolverName,
+        int candidateCount,
+        bool usedFallback);
+
+        [LoggerMessage(
+            EventId = 3035,
+            Level = LogLevel.Warning,
+            Message = "Candidate Resolution fallback used. Resolver={ResolverName}.")]
+        public static partial void CandidateFallbackUsed(
+        ILogger logger,
+        string resolverName);
+
+        [LoggerMessage(
+            EventId = 3036,
+            Level = LogLevel.Information,
+            Message = "Candidate Resolver selected. Resolver={ResolverName}.")]
+        public static partial void CandidateResolverSelected(
+        ILogger logger,
+        string resolverName);
+
+        [LoggerMessage(
+            EventId = 3037,
+            Level = LogLevel.Information,
+            Message = "Candidate Count bounded. Resolver={ResolverName}, OriginalCount={OriginalCount}, BoundedCount={BoundedCount}.")]
+        public static partial void CandidateCountBounded(
+        ILogger logger,
+        string resolverName,
+        int originalCount,
+        int boundedCount);
+
     }
 
 }

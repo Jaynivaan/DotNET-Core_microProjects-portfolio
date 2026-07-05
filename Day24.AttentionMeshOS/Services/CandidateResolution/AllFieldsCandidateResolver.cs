@@ -2,24 +2,34 @@
 using System.Collections.Generic;
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Abstractions;
+using Microsoft.Extensions.Logging;
+
 
 namespace Day24.AttentionMeshOS.Services
 {
     public sealed class AllFieldsCandidateResolver : ICandidateResolver
     {
+
+        private readonly ILogger<AllFieldsCandidateResolver> _logger;
         private readonly IGravityRuntime _runtime;
 
         public string Name => "AllFields";
 
         public AllFieldsCandidateResolver (
-            IGravityRuntime runtime)
+            IGravityRuntime runtime,
+            ILogger<AllFieldsCandidateResolver> logger )
         {
+            _logger = logger;
             _runtime = runtime;
         }
 
         public CandidateResolutionResult Resolve(
             CandidateResolutionContext context)
         {
+            AemEsgfTelemetry.CandidateResolutionStarted(
+                    _logger,
+                    Name);
+
             List<CandidateFieldRef> candidates = new();
 
             IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
@@ -37,6 +47,12 @@ namespace Day24.AttentionMeshOS.Services
                         field.FieldId,
                         i));
             }
+
+            AemEsgfTelemetry.CandidateResolutionCompleted(
+                    _logger,
+                    Name,
+                    candidates.Count,
+                    false);
 
             return new CandidateResolutionResult(
                 candidates,

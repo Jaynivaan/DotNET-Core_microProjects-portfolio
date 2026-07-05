@@ -6,11 +6,15 @@ using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Options;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Day24.AttentionMeshOS.Services
 {
     public sealed class FingerprintCandidateResolver    :   ICandidateResolver 
     {
+        private readonly CandidateOrderingService _orderingService;
+        private readonly CandidateResolutionMetricsProvider _metricsProvider;
+        private readonly ILogger<FingerprintCandidateResolver> _logger;
         private readonly IGravityRuntime _runtime;
         private readonly GravityFieldCandidateFingerprintProvider _provider;
         private readonly CandidateFingerprintBuilder _builder;
@@ -19,11 +23,17 @@ namespace Day24.AttentionMeshOS.Services
         public string Name => "Fingerprint";
 
         public FingerprintCandidateResolver(
+            CandidateOrderingService orderingService,
+            CandidateResolutionMetricsProvider metricsProvider,
+            ILogger<FingerprintCandidateResolver> logger,
             IGravityRuntime runtime,
             GravityFieldCandidateFingerprintProvider provider,
             CandidateFingerprintBuilder builder,
             IOptions<CandidateResolutionOptions> options)
         {
+            _orderingService = orderingService;
+            _metricsProvider= metricsProvider;
+            _logger = logger;
             _runtime = runtime;
             _provider = provider;
             _builder = builder;
@@ -35,13 +45,19 @@ namespace Day24.AttentionMeshOS.Services
         {
             ArgumentNullException.ThrowIfNull(context);
 
+            AemEsgfTelemetry.CandidateResolutionStarted(
+                    _logger,
+                    Name);
+
             CandidateFingerprint incoming =
                 _builder.Build(
                     context.IncomingSignature,
                     context.PresenceMask,
                     _options.FingerprintBlockSize);
 
-            List<CandidateFieldRef> candidates = new();
+
+            List<(CandidateFieldRef Candidate, int MatchStrength)> candidatePool = new();
+           //ist<CandidateFieldRef> candidates = new();
 
             IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
 
@@ -60,17 +76,19 @@ namespace Day24.AttentionMeshOS.Services
 
                 if ( IsMatch(incoming, fieldFingerprint))
                 {
-                    candidates.Add(
-                        new CandidateFieldRef(
-                            field.FieldId,
-                            i));
+                    // candidates.Add( new CandidateFieldRef( field.FieldId, i));
+                    candidatePool.Add(
+                        (new CandidateFieldRef(field.FieldId, i), incoming.BlockCount));
                 }
             }
 
-            if ( candidates.Count < _options.MinimumCandidateCount &&
+            IReadOnlyList<CandidateFieldRef> orderedCandidates =
+                _orderingService.Order(candidatePool);
+
+            if ( orderedCandidates.Count < _options.MinimumCandidateCount &&
                 _options.AllowFallbackToAllFields)
             {
-                candidates.Clear();
+                List<CandidateFieldRef> fallbackCandidates = new();
 
                 for ( int i = 0; i < fields.Count; i++)
                 {
@@ -81,21 +99,47 @@ namespace Day24.AttentionMeshOS.Services
                         continue;
                     }
 
-                    candidates.Add(
-                        new CandidateFieldRef(
-                            field.FieldId, i));
+                    //candidates.Add( new CandidateFieldRef(  field.FieldId, i));
+                    fallbackCandidates.Add(
+                         new CandidateFieldRef(field.FieldId, i));
                 }
 
+                AemEsgfTelemetry.CandidateFallbackUsed(
+                    _logger,
+                    Name);
+
+                AemEsgfTelemetry.CandidateResolutionCompleted(
+                    _logger,
+                    Name,
+                    fallbackCandidates.Count,
+                    true);
+
+                _metricsProvider.Record(
+                    Name,
+                    fallbackCandidates.Count,
+                    true);
+
                 return new CandidateResolutionResult(
-                    candidates,
-                    candidates.Count,
+                    fallbackCandidates,
+                    fallbackCandidates.Count,
                     UsedFallback: true,
                     ResolverName: Name);
             }
 
+            AemEsgfTelemetry.CandidateResolutionCompleted(
+                    _logger,
+                    Name,
+                    orderedCandidates.Count,
+                    false);
+
+            _metricsProvider.Record(
+                Name,
+                orderedCandidates.Count,         
+                false);            
+
             return new CandidateResolutionResult(
-                candidates,
-                candidates.Count,
+                orderedCandidates,
+                orderedCandidates.Count,
                 UsedFallback: false,
                 ResolverName: Name);
         }
