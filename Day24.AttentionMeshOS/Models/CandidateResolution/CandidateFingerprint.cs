@@ -18,7 +18,7 @@ namespace Day24.AttentionMeshOS.Models
             int blockSize
             )
         {
-            ArgumentNullException.ThrowIfNull(BlockCodes);
+            ArgumentNullException.ThrowIfNull(blockCodes);
 
             BlockCodes = blockCodes.ToArray();
 

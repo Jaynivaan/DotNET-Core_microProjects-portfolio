@@ -9,16 +9,18 @@ namespace Day24.AttentionMeshOS.Services
 {
     public sealed class AllFieldsCandidateResolver : ICandidateResolver
     {
-
+        private readonly CandidateResolutionMetricsProvider _metricsProvider;
         private readonly ILogger<AllFieldsCandidateResolver> _logger;
         private readonly IGravityRuntime _runtime;
 
         public string Name => "AllFields";
 
         public AllFieldsCandidateResolver (
+            CandidateResolutionMetricsProvider metricsProvider,
             IGravityRuntime runtime,
             ILogger<AllFieldsCandidateResolver> logger )
         {
+            _metricsProvider = metricsProvider;
             _logger = logger;
             _runtime = runtime;
         }
@@ -47,6 +49,11 @@ namespace Day24.AttentionMeshOS.Services
                         field.FieldId,
                         i));
             }
+
+            _metricsProvider.Record(
+                Name,
+                candidates.Count,
+                false);
 
             AemEsgfTelemetry.CandidateResolutionCompleted(
                     _logger,

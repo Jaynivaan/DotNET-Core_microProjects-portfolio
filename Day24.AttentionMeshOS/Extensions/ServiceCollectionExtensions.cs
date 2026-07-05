@@ -156,6 +156,35 @@ namespace Day24.AttentionMeshOS.Extensions
                     "Persistence configuration error: signature Length must be greater than zero.")
                 .ValidateOnStart();
 
+            //==========================================================================
+            //Candidate-ResolutionOptins
+            //===========================================================================
+            services
+                .AddOptions<CandidateResolutionOptions>()
+                .Bind(configuration.GetSection("CandidateResolution"))
+                .ValidateDataAnnotations()
+                .Validate(
+                    options => !string.IsNullOrWhiteSpace(options.ResolverType),
+                    "CandidateResolution configuration error: ResolverType must not be empty.")
+                .Validate(
+                    options =>
+                        string.Equals(options.ResolverType, "AllFields", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(options.ResolverType, "Fingerprint", StringComparison.OrdinalIgnoreCase),
+                    "Candidate Resolution Configuration error: Resolver Type must be either AllFields or Fingerprint.")
+                .Validate(
+                    options => options.FingerprintBlockSize > 0,
+                    "Candidate Resolution configuration error: FingerprintBlockSize must be greater than 0.")
+                .Validate(
+                    options => options.MinimumCandidateCount >= 0,
+                    "Candidate Resolution configuration error: Minimum Candidate count must be greater than or equal to 0.")
+                .Validate(
+                    options => options.MaximumCandidateCount > 0,
+                    "Candidate Resolution configuration error: Maximum Candidate Count must be greater than  0.")
+                .Validate(
+                    options => options.MaximumCandidateCount >= options.MinimumCandidateCount,
+                    "CandidateResolution configuration error : MaximumCandidateCount must be greater than or equal to minimum candidateCount.")
+                .ValidateOnStart();
+
             //=============================================================================================
             //============================//services//====================================================
             //==================================================================================
@@ -283,6 +312,7 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<CandidateResolutionMetricsProvider>();
             services.AddSingleton<ICandidateResolutionSnapshotProvider, CandidateResolutionSnapshotProvider>();
             services.AddSingleton<CandidateResolverSelector>();
+            services.AddSingleton<CandidateBenchmarkService>();
 
 
             //===========================================================================
