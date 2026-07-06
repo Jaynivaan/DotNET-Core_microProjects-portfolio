@@ -9,6 +9,8 @@ namespace Day24.AttentionMeshOS.Services
 {
     public sealed class GravityFormationEngine : IGravityFormationEngine
     {
+        private readonly IGravityRuntime _runtime;
+        private readonly BucketMaintenanceService _bucketMaintenanceService;
         private readonly GravityFieldSelectionEngine _selectionEngine;
         private readonly GravityMembershipManager _membershipManager;
         private readonly GravityFieldSignatureUpdater _signatureUpdater;
@@ -22,6 +24,8 @@ namespace Day24.AttentionMeshOS.Services
         private readonly ILogger<GravityFormationEngine> _logger;
 
         public GravityFormationEngine(
+            IGravityRuntime runtime,
+            BucketMaintenanceService bucketMaintenanceService,
             GravityFieldSelectionEngine selectionEngine,
             GravityMembershipManager membershipManager,
             GravityFieldSignatureUpdater signatureUpdater,
@@ -34,6 +38,8 @@ namespace Day24.AttentionMeshOS.Services
             IOptions<SemanticPhysicsOptions> physicsOptions,
             ILogger<GravityFormationEngine>logger)
         {
+            _runtime = runtime;
+            _bucketMaintenanceService = bucketMaintenanceService;
             _selectionEngine = selectionEngine;
             _membershipManager = membershipManager;
             _signatureUpdater = signatureUpdater;
@@ -57,19 +63,26 @@ namespace Day24.AttentionMeshOS.Services
             {
                 GravityFieldNode field = selection.Field;
 
+                sbyte[] previousSignature = field.FieldSignature.ToArray();
+
+
                 _membershipManager.AddParticipant(
-                    selection.Field,
+                    field,
                     context.DynamicTagId,
                     _options);
 
                 _signatureUpdater.Update(
-                    selection.Field,
+                    field,
                     context.TernarySignature,
                     _options);
 
+                UpdateBucketMembership(
+                    field,
+                    previousSignature);
+
                 SemanticMassResult matchedMassResult =
                     _semanticMassEngine.UpdateMass(
-                    selection.Field,
+                    field,
                     context,
                     selection.ProximityScore);
 
@@ -103,11 +116,14 @@ namespace Day24.AttentionMeshOS.Services
                     LifecycleState: GravityFieldLifecycleState.Dormant);
             }
 
+            RegisterBucketMembership(newField);
+
+
             SemanticMassResult createdMassResult =
                     _semanticMassEngine.UpdateMass(
-                    newField,
-                    context,
-                    1.0f);
+                        newField,
+                        context,
+                        1.0f);
 
             GravityLifecycleEvaluationResult createdLifecycleResult =
                 _lifecycleManager.Evaluate(newField);
@@ -125,6 +141,68 @@ namespace Day24.AttentionMeshOS.Services
                 GravityFieldId: newField.FieldId,
                 ProximityScore: 1.0f,
                 LifecycleState: createdLifecycleResult.CurrentState);
+        }
+
+        private void RegisterBucketMembership(
+            GravityFieldNode field)
+        {
+            int runtimeIndex = FindRuntimeIndex(field);
+
+            if ( runtimeIndex <  0 )
+            {
+                return;
+            }
+
+            CandidateFieldRef candidate =
+                new CandidateFieldRef(
+                    field.FieldId,
+                    runtimeIndex);
+
+            _bucketMaintenanceService.RegisterField(
+                candidate,
+                field.FieldSignature,
+                field.FieldSignature);
+                
+        }
+
+        private void UpdateBucketMembership(
+            GravityFieldNode field,
+            sbyte[] previousSignature)
+        {
+            int runtimeIndex = FindRuntimeIndex(field);
+
+            if (runtimeIndex < 0 )
+            {
+                return;
+            }
+
+            CandidateFieldRef candidate = (
+                new CandidateFieldRef(
+                    field.FieldId,
+                    runtimeIndex));
+
+            _bucketMaintenanceService.UpdateField(
+                candidate,
+                previousSignature,
+                previousSignature,
+                field.FieldSignature,
+                field.FieldSignature);
+
+        }
+
+        private int FindRuntimeIndex (
+            GravityFieldNode target)
+        {
+            IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
+
+            for ( int i = 0; i < fields.Count; i++ )
+            {
+                if (ReferenceEquals(fields[i], target))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         private void EvaluateAndCommitPhysics(

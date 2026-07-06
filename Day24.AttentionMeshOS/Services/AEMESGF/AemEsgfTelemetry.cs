@@ -342,6 +342,60 @@ namespace Day24.AttentionMeshOS.Services
         int originalCount,
         int boundedCount);
 
+
+        //semantic Quantization Telemetry
+
+        [LoggerMessage(
+            EventId = 3038,
+            Level = LogLevel.Information,
+            Message = "Semantic Bucket registered. BucketCode={BucketCode}, FieldId={FieldId}, RuntimeIndex={RuntimeIndex}.")]
+        public static partial void BucketRegistered(
+        ILogger logger,
+        int bucketCode,
+        Guid fieldId,
+        int runtimeIndex);
+
+        [LoggerMessage(
+            EventId = 3039,
+            Level = LogLevel.Information,
+            Message = "Semantic Bucket unregistered. BucketCode={BucketCode},  FieldId={FieldId},  RuntimeIndex={RuntimeIndex}.")]
+        public static partial void BucketUnregistered(
+        ILogger logger,
+        int bucketCode,
+        Guid fieldId,
+        int runtimeIndex);
+
+
+        [LoggerMessage(
+            EventId = 3040,
+            Level = LogLevel.Information,
+            Message = "Semantic Bucket lookup completed. BucketCode={BucketCode}, CandidateCount={CandidateCount}.")]
+        public static partial void BucketLookupCompleted(
+        ILogger logger,
+        int bucketCode,
+        int candidateCount);
+
+        [LoggerMessage(
+            EventId = 3041,
+            Level = LogLevel.Information,
+            Message = "Semantic Bucket neighbor expansion completed. CenterBucketCode={CenterBucketCode}, NeighborCount={NeighborCount}.")]
+        public static partial void BucketNeighborExpansionCompleted(
+        ILogger logger,
+        int centerBucketCode,
+        int neighborCount);
+
+
+        [LoggerMessage(
+            EventId = 3042,
+            Level = LogLevel.Information,
+            Message = "Semantic Bucket metrics Captured. BucketCount={BucketCount}, TotalEntries={TotalEntries}, AverageOccupancy={AverageOccupancy}, LargestBucketSize={LargestBucketSize}, SmallestBucketSize={SmallestBucketSize}.")]
+        public static partial void BucketMetricsCaptured(
+        ILogger logger,
+        int bucketCount,
+        int totalEntries,
+        double AverageOccupancy,
+        int largestBucketSize,
+        int smallestBucketSize);
     }
 
 }

@@ -1,5 +1,6 @@
 //gs
 using System;
+using System.Linq;
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Services;
 using Day24.AttentionMeshOS.Storage;
@@ -169,8 +170,9 @@ namespace Day24.AttentionMeshOS.Extensions
                 .Validate(
                     options =>
                         string.Equals(options.ResolverType, "AllFields", StringComparison.OrdinalIgnoreCase) ||
-                        string.Equals(options.ResolverType, "Fingerprint", StringComparison.OrdinalIgnoreCase),
-                    "Candidate Resolution Configuration error: Resolver Type must be either AllFields or Fingerprint.")
+                        string.Equals(options.ResolverType, "Fingerprint", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(options.ResolverType, "Bucket", StringComparison.OrdinalIgnoreCase),
+                    "Candidate Resolution Configuration error: Resolver Type must be either AllFields, Bucket or Fingerprint.")
                 .Validate(
                     options => options.FingerprintBlockSize > 0,
                     "Candidate Resolution configuration error: FingerprintBlockSize must be greater than 0.")
@@ -184,7 +186,14 @@ namespace Day24.AttentionMeshOS.Extensions
                     options => options.MaximumCandidateCount >= options.MinimumCandidateCount,
                     "CandidateResolution configuration error : MaximumCandidateCount must be greater than or equal to minimum candidateCount.")
                 .ValidateOnStart();
-
+            //===================================================================================
+            //Quantization-bucket options
+            //======================================================================================
+            services
+                .AddOptions<SemanticQuantizationOptions>()
+                .Bind(configuration.GetSection("Quantization"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
             //=============================================================================================
             //============================//services//====================================================
             //==================================================================================
@@ -313,7 +322,16 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<ICandidateResolutionSnapshotProvider, CandidateResolutionSnapshotProvider>();
             services.AddSingleton<CandidateResolverSelector>();
             services.AddSingleton<CandidateBenchmarkService>();
-
+            //=============================================================================
+            //quauntization the buckets..
+            //==================================
+            services.AddSingleton<ICandidateResolver, BucketCandidateResolver>();
+            services.AddSingleton<ISemanticQuantizer, SemanticQuantizer>();
+            services.AddSingleton<IBucketRegistry, BucketRegistry>();
+            services.AddSingleton<BucketRegistry>();
+            services.AddSingleton<BucketMaintenanceService>();
+            services.AddSingleton<ISemanticBucketMetricsProvider, SemanticBucketMetricsProvider>();
+            services.AddSingleton<ISemanticBucketSnapshotProvider, SemanticBucketSnapshotProvider>();
 
             //===========================================================================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
