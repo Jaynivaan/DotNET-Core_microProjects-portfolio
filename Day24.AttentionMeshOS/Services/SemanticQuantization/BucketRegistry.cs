@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Day24.AttentionMeshOS.Models;
 using Day24.AttentionMeshOS.Abstractions;
+using Microsoft.Extensions.Logging;
 
 
 namespace Day24.AttentionMeshOS.Services
@@ -12,6 +13,13 @@ namespace Day24.AttentionMeshOS.Services
     {
         private readonly Dictionary<SemanticBucketKey, SemanticBucket> _buckets = new();
         private readonly object _syncLock = new();
+        private readonly ILogger<BucketRegistry> _logger;
+
+        public BucketRegistry(
+            ILogger<BucketRegistry> logger)
+        {
+            _logger = logger;
+        }
 
         public void Register(
             SemanticBucketKey bucketKey,
@@ -30,7 +38,13 @@ namespace Day24.AttentionMeshOS.Services
                 bucket.InternalEntries.RemoveAll(
                     existing => existing.Candidate.Equals(entry.Candidate));
 
-                bucket.InternalEntries.Add(entry);                
+                bucket.InternalEntries.Add(entry);
+
+                AemEsgfTelemetry.BucketRegistered(
+                    _logger,
+                    bucketKey.BucketCode,
+                    entry.Candidate.FieldId,
+                    entry.Candidate.RuntimeIndex);
             }
         }
 
@@ -47,10 +61,21 @@ namespace Day24.AttentionMeshOS.Services
 
                 int removed = bucket.InternalEntries.RemoveAll(
                     entry => entry.Candidate.Equals(candidate));
+
                 if ( bucket.InternalEntries.Count == 0)
                 {
                     _buckets.Remove(bucketKey);
                 }
+
+                if ( removed > 0)
+                {
+                    AemEsgfTelemetry.BucketUnregistered(
+                        _logger,
+                        bucketKey.BucketCode,
+                        candidate.FieldId,
+                        candidate.RuntimeIndex);
+                } 
+                    
                 return removed > 0;
             }
         }

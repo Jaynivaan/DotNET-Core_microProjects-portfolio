@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Day24.AttentionMeshOS.Abstractions;
 using Day24.AttentionMeshOS.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Day24.AttentionMeshOS.Services
 {
@@ -10,6 +11,7 @@ namespace Day24.AttentionMeshOS.Services
     {
         private const int NeighborRadius = 1;
 
+        private readonly ILogger<BucketCandidateResolver> _logger;
         private readonly ISemanticQuantizer _quantizer;
         private readonly IBucketRegistry _bucketRegistry;
         private readonly BucketNeighborProvider _neighborProvider;
@@ -18,11 +20,13 @@ namespace Day24.AttentionMeshOS.Services
         public string Name => "Bucket";
 
         public BucketCandidateResolver(
+            ILogger<BucketCandidateResolver> logger,
             ISemanticQuantizer quantizer,
             IBucketRegistry bucketRegistry,
             BucketNeighborProvider neighborProvider,
             BucketCandidateOrderingService orderingService)
         {
+            _logger = logger;
             _quantizer = quantizer;
             _bucketRegistry = bucketRegistry;
             _neighborProvider = neighborProvider;
@@ -61,6 +65,11 @@ namespace Day24.AttentionMeshOS.Services
 
             IReadOnlyList<CandidateFieldRef> orderedCandidates =
                 _orderingService.Order(candidatePool);
+
+            AemEsgfTelemetry.BucketLookupCompleted(
+                _logger,
+                centerKey.BucketCode,
+                orderedCandidates.Count);
 
             return new CandidateResolutionResult(
                 orderedCandidates,
