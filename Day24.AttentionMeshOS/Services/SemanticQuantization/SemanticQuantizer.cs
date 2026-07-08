@@ -16,6 +16,8 @@ namespace Day24.AttentionMeshOS.Services
             ArgumentNullException.ThrowIfNull(signature);
             ArgumentNullException.ThrowIfNull(presenceMask);
 
+        //  _logger.LogInformation("Quantizer 1: start.");
+
             if ( signature.Length != presenceMask.Length )
             {
                 throw new ArgumentException(
@@ -50,7 +52,7 @@ namespace Day24.AttentionMeshOS.Services
                                 > 0 => 3
                             };
                         }
-                        blockStart = (blockCode * 4) + ternaryValue;
+                        blockCode = (blockCode * 4) + ternaryValue;
                     }
                     bucketCode = (bucketCode * 31) + blockCode;
                 }

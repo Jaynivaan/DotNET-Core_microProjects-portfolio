@@ -37,6 +37,7 @@ namespace Day24.AttentionMeshOS.Services
             var crystallizationContext = new CrystallizationContext(
                 CorrelationId: context.RawInput.Id,
                 ReceivedAt: context.RawInput.RecievedAt,
+                SourceText: context.EffectiveText,
                 TernaryMask: ternaryMask,
                 Keywords: context.VectorPreparationResult.Keywords,
                 ExtractedTags: context.VectorPreparationResult.Tags);

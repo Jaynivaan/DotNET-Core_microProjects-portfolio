@@ -62,15 +62,22 @@ namespace Day24.AttentionMeshOS.Services
                     retired.FieldId,
                     retiredIndex);
 
-            _bucketMaintenanceService.RemoveField(
-                retiredRef,
-                retiredSignature,
-                retiredSignature);
+            
 
             MergeParticipants(survivor, retired);
             MergeMass(survivor, retired);
             MergeAccumulator(survivor, retired);
             RebuildSignature(survivor);
+
+            _bucketMaintenanceService.HandleMerge(
+                survivorRef,
+                previousSurvivorSignature,
+                previousSurvivorSignature,
+                survivor.FieldSignature,
+                survivor.FieldSignature,
+                retiredRef,
+                retiredSignature,
+                retiredSignature);
 
             survivor.LastEvolvedAt = mergedAt;
 
@@ -79,12 +86,7 @@ namespace Day24.AttentionMeshOS.Services
                 survivor.FieldId,
                 mergedAt);
 
-            _bucketMaintenanceService.UpdateField(
-                survivorRef,
-                previousSurvivorSignature,
-                previousSurvivorSignature,
-                survivor.FieldSignature,
-                survivor.FieldSignature);
+            
 
             _runtime.ResetField(retired.FieldId);
 

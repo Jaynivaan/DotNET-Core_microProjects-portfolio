@@ -55,8 +55,15 @@ namespace Day24.AttentionMeshOS.Services
 
         public GravityFormationResult Process ( GravityFormationContext context )
         {
+            _logger.LogInformation(
+                "GFE 1: before selection.");
+
             GravityFieldSelectionResult selection =
                _selectionEngine.SelectField(context);
+
+            _logger.LogInformation(
+                "GFE 2: after selection. MatchFound={MatchFound}",
+                selection.MatchFound);
 
             if ( selection.MatchFound &&
                 selection.Field is not null)

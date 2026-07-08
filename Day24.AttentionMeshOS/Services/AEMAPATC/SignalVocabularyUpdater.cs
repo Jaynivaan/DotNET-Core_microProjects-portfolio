@@ -37,6 +37,22 @@ namespace Day24.AttentionMeshOS.Services
                     seenSignals,
                     seenCount,
                     maxSignalsPerInput);
+
+                if ( seenCount == 0 &&
+                        !string.IsNullOrWhiteSpace(context.SourceText))                    
+                {
+                    string fallbackSignal = context.SourceText.Trim();
+
+                    if (slot.SignalVocabulary.TryGetValue(fallbackSignal, out int count))
+                    {
+                        slot.SignalVocabulary[fallbackSignal] = count + 1;
+                    }
+                    else
+                    {
+                        slot.SignalVocabulary.Add(fallbackSignal, 1);
+                    }
+
+                }
             }
             finally
             {

@@ -9,6 +9,8 @@ namespace Day24.AttentionMeshOS.Models
 
         DateTimeOffset ReceivedAt,
 
+        string SourceText,
+
         sbyte[] TernaryMask,
 
         IReadOnlyCollection<string> Keywords,

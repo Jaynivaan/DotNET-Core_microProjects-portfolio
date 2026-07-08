@@ -72,7 +72,16 @@ namespace Day24.AttentionMeshOS.Services
                 SignalVocabulary: BuildSignalVocabulary(birth.Name),
                 ObservedAt: birth.BornAt);
 
+            _logger.LogInformation("Before _GravityFormationEngine.Process(formationContext ); inside formationProcessor.");
+
+
             GravityFormationResult result = _gravityFormationEngine.Process(formationContext);
+
+          _logger.LogInformation(
+                "After _GravityFormationEngine.Process(formationContext ); inside formationProcessor. Processed={Processed}, Created={Created}, Matched={Matched}",
+                result.WasProcessed,
+                result.FieldCreated,
+                result.FieldMatched);
 
             if (result.FieldCreated)
             {                
@@ -87,6 +96,10 @@ namespace Day24.AttentionMeshOS.Services
                     _logger,
                     result.GravityFieldId!.Value);
             }
+
+            _logger.LogInformation(
+                "Gravity formation Processor completed");
+
             return Task.FromResult(ProcessorControl.Continue);
         }
         private static sbyte[] BuildPresenceMask(sbyte[] signature)

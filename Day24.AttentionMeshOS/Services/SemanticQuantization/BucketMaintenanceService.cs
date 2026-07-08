@@ -8,11 +8,11 @@ namespace Day24.AttentionMeshOS.Services
     public sealed class BucketMaintenanceService
     {
         private readonly ISemanticQuantizer _quantizer;
-        private readonly BucketRegistry _registry;
+        private readonly IBucketRegistry _registry;
 
         public BucketMaintenanceService(
             ISemanticQuantizer quantizer,
-            BucketRegistry registry)
+            IBucketRegistry registry)
         {
             _quantizer = quantizer;
             _registry = registry;
@@ -62,6 +62,36 @@ namespace Day24.AttentionMeshOS.Services
                 new SemanticBucketEntry(candidate));
 
         }
+
+        //merge field -Bucket orchestration
+
+        public void HandleMerge(
+            CandidateFieldRef survivor,
+            sbyte[] previousSurvivorSignature,
+            sbyte[] previousSurvivorPresenceMask,
+            sbyte[] currentSurvivorSignature,
+            sbyte[] currentSurvivorPresenceMask,
+            CandidateFieldRef retired,
+            sbyte[] retiredSignature,
+            sbyte[] retiredPresenceMask)
+        {
+            RemoveField(
+                retired,
+                retiredSignature,
+                retiredPresenceMask);
+
+            UpdateField(
+                survivor,
+                previousSurvivorSignature,
+                previousSurvivorPresenceMask,
+                currentSurvivorSignature,
+                currentSurvivorPresenceMask);
+        }
+            
+            
+            
+            
+            
         public void RemoveField(
             CandidateFieldRef candidate,
             sbyte[] signature,

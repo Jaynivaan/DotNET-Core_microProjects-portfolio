@@ -38,22 +38,30 @@ namespace Day24.AttentionMeshOS.Services
         {
             ArgumentNullException.ThrowIfNull(context);
 
+            _logger.LogInformation("Bucket resolve1:start..");
+
             SemanticBucketKey centerKey =
                 _quantizer.Quantize(
                     context.IncomingSignature,
                     context.PresenceMask);
+            _logger.LogInformation("Bucket resolve2: after _quantizer.Quantize()..");
 
             List<BucketCandidateOrderingInput> candidatePool = new();
 
+           
             AddBucketCandidates(
                 centerKey,
                 0,
                 candidatePool);
+            _logger.LogInformation("Bucket resolve3: after centerbucket..");
 
             IReadOnlyList<SemanticBucketKey> neighbors =
                 _neighborProvider.GetNeighbors(
                     centerKey,
                     NeighborRadius);
+
+            _logger.LogInformation("Bucket resolve4: after neigbors..Count={Count}",
+                neighbors.Count);
 
             for (int i = 0; i < neighbors.Count; i++)
             {
@@ -83,13 +91,15 @@ namespace Day24.AttentionMeshOS.Services
             int bucketDistance,
             List<BucketCandidateOrderingInput> candidatePool)
         {
+            _logger.LogInformation("Bucket resolve5: BucketResolver Add: before TryGetEntries.");
             if ( !_bucketRegistry.TryGetEntries(
                 bucketKey,
                 out IReadOnlyList<SemanticBucketEntry> entries))
             {
+                _logger.LogInformation("Bucket resolve6: BucketResolver Add: no entries.");
                 return;
             }
-
+            _logger.LogInformation("Bucket resolve7: BucketResolver Add: entries={Count}",entries.Count);
             for ( int i = 0; i < entries.Count; i++ )
             {
                 candidatePool.Add(

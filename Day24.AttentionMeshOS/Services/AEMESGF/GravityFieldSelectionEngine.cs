@@ -33,6 +33,7 @@ namespace Day24.AttentionMeshOS.Services
         public GravityFieldSelectionResult SelectField(
             GravityFormationContext context)
         {
+            _logger.LogInformation("Selection 1: start.");
             if ( !_options .Enabled ||
                 context.TernarySignature.Length ==0 ||
                 context.PresenceMask.Length == 0)
@@ -49,7 +50,9 @@ namespace Day24.AttentionMeshOS.Services
                 DateTimeOffset.UtcNow,
                 context.DynamicTagId);
 
+            _logger.LogInformation("Selection 2: before _candidateResolver.Resolve(candidateContext);..");
             CandidateResolutionResult CandidateResult = _candidateResolver.Resolve( candidateContext );
+            _logger.LogInformation("Selection 3: after _candidateResolver.Resolve(CandidateContext);..");
 
             IReadOnlyList<GravityFieldNode> fields = _runtime.Fields;
 
@@ -103,7 +106,7 @@ namespace Day24.AttentionMeshOS.Services
                 context.DynamicTagId,
                 bestField.FieldId,
                 Math.Round(bestScore, 4));
-
+            _logger.LogInformation("Selection 4: completed..");
             return new GravityFieldSelectionResult(
                 bestField,
                 bestScore,

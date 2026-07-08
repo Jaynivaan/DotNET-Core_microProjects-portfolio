@@ -327,11 +327,17 @@ namespace Day24.AttentionMeshOS.Extensions
             //==================================
             services.AddSingleton<ICandidateResolver, BucketCandidateResolver>();
             services.AddSingleton<ISemanticQuantizer, SemanticQuantizer>();
-            services.AddSingleton<IBucketRegistry, BucketRegistry>();
+         
+            
             services.AddSingleton<BucketRegistry>();
+            services.AddSingleton<IBucketRegistry>(sp =>
+                sp.GetRequiredService<BucketRegistry>());
+
             services.AddSingleton<BucketMaintenanceService>();
             services.AddSingleton<ISemanticBucketMetricsProvider, SemanticBucketMetricsProvider>();
             services.AddSingleton<ISemanticBucketSnapshotProvider, SemanticBucketSnapshotProvider>();
+            services.AddSingleton<BucketNeighborProvider>();
+            services.AddSingleton<BucketCandidateOrderingService>();
 
             //===========================================================================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();

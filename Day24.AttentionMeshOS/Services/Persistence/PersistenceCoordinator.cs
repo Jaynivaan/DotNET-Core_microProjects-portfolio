@@ -63,7 +63,9 @@ namespace Day24.AttentionMeshOS.Services
                     _dynamicTags.Capture(),
                     _gravityRegistry.Capture(),
                     _gravityRuntime.Capture(),
-                    ReplayJournal: null);
+                    ReplayJournal: null,
+                    GravityLineage: null
+                    );
 
                 _saveStore.Save(saveFile);
 
