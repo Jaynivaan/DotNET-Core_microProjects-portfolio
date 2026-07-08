@@ -10,6 +10,6 @@ namespace Day24.AttentionMeshOS.Abstractions
             GravityFieldNode source,
             GravityFieldNode target,
             DateTimeOffset mergedAt
-            )
+            );
     }
 }
