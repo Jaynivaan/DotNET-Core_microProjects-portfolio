@@ -31,5 +31,8 @@ namespace Day24.AttentionMeshOS.Options
 
         [Range(1, int.MaxValue)]
         public int MaximumMergeCandidates { get; init; } = 10;
+
+        [Range(0.0, 1.0)]
+        public double MigrationSimilarityThreshold { get; init; } = 0.75;
     }
 }
