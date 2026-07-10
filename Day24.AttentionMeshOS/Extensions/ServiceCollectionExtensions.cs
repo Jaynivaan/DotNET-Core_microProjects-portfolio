@@ -194,6 +194,19 @@ namespace Day24.AttentionMeshOS.Extensions
                 .Bind(configuration.GetSection("Quantization"))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+            //======================================================================================\
+            //Gravityfeild merge and dissolution dynamics 
+            ///-----------=======================================================
+            services
+                .AddOptions<GravityEvolutionOptions>()
+                .Bind(configuration.GetSection("GravityEvolution"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+
+
+
+
             //=============================================================================================
             //============================//services//====================================================
             //==================================================================================
@@ -218,6 +231,7 @@ namespace Day24.AttentionMeshOS.Extensions
 
             services.AddSingleton<IInputProcessor, CrystallizationProcessor>();
             services.AddSingleton<IInputProcessor, GravityFormationProcessor>();
+            services.AddSingleton<IInputProcessor, GravityEvolutionProcessor>();
 
             services.AddSingleton<IInputProcessor, PostProcessingGuardProcessor>();
             services.AddSingleton<ITagRuleProvider, TagRuleProvider>();
@@ -339,6 +353,24 @@ namespace Day24.AttentionMeshOS.Extensions
             services.AddSingleton<BucketNeighborProvider>();
             services.AddSingleton<BucketCandidateOrderingService>();
 
+            //==========================================================================
+            //gravity-evolutionlifecycle services
+            //(merging and dissolution of fields)
+            //============================================================================
+            services.AddSingleton<IGravityLineageRegistry, GravityLineageRegistry>();
+
+            services.AddSingleton<IGravityMergeEvaluator, GravityMergeEvaluator>();
+            services.AddSingleton<IGravityMergePolicy, GravityMergePolicy>();
+            services.AddSingleton<IGravityMergeExecutor, GravityMergeExecutor>();
+            services.AddSingleton<IGravityDissolutionPolicy, GravityDissolutionPolicy>();
+            services.AddSingleton<IGravityDissolutionExecutor, GravityDissolutionExecutor>();
+            services.AddSingleton<IDynamicTagMigrationPolicy, DynamicTagMigrationPolicy>();
+            services.AddSingleton<IGravityEvolutionEngine, GravityEvolutionEngine>();
+
+            services.AddSingleton<GravityEvolutionMetricsAggregator>();
+
+            services.AddSingleton<IGravityEvolutionSnapshotProvider, GravityEvolutionSnapshotProvider>();
+            services.AddSingleton<IGravityEvolutionStatisticsProvider, GravityEvolutionStatisticsProvider>();
             //===========================================================================
             services.AddSingleton<ITextSignalClassifier, RuleBasedTextSignalClassifier>();
             services.AddSingleton<IPersistenceShotBuilder, PersistenceShotBuilder>();

@@ -380,6 +380,7 @@ namespace Day24.AttentionMeshOS.Services
             Level = LogLevel.Information,
             Message = "Semantic Bucket neighbor expansion completed. CenterBucketCode={CenterBucketCode}, NeighborCount={NeighborCount}.")]
         public static partial void BucketNeighborExpansionCompleted(
+
         ILogger logger,
         int centerBucketCode,
         int neighborCount);
@@ -396,6 +397,98 @@ namespace Day24.AttentionMeshOS.Services
         double AverageOccupancy,
         int largestBucketSize,
         int smallestBucketSize);
+
+        //gravity evolution telemetry
+
+
+        [LoggerMessage(
+            EventId = 3043,
+            Level = LogLevel.Information,
+            Message = "Gravity evolution cycle started. FieldCount={FieldCount}, EvaluationTime={EvaluationTime}.")]
+        public static partial void GravityEvolutionStarted(
+        ILogger logger,
+        int fieldCount,
+        DateTimeOffset evaluationTime);
+
+        [LoggerMessage(
+           EventId = 3044,
+           Level = LogLevel.Information,
+           Message = "Gravity merge candidate Evaluated. SourceFieldId={SourceFieldId}, TargetFieldId={TargetFieldId}, SimilarityScore={SimilarityScore}, MassRatio={MassRatio}, StabilityScore={StabilityScore}.")]
+        public static partial void GravityMergeCandidateEvaluated(
+        ILogger logger,
+        Guid sourceFieldId,
+        Guid targetFieldId,
+        double similarityScore,
+        double massRatio,
+        double stabilityScore);
+
+        [LoggerMessage(
+           EventId = 3045,
+           Level = LogLevel.Information,
+           Message = "Gravity merge decision completed. SourceFieldId={SourceFieldId}, TargetFieldId={TargetFieldId}, Approved={Approved}, Reason={Reason}.")]
+        public static partial void GravityMergeDecisionCompleted(
+        ILogger logger,
+        Guid sourceFieldId,
+        Guid targetFieldId,
+        bool approved,
+        string reason);
+
+        [LoggerMessage(
+           EventId = 3046,
+           Level = LogLevel.Information,
+           Message = "Gravity merge Executed. SourceFieldId={SourceFieldId}, TargetFieldId={TargetFieldId}, ExecutedAt={ExecutedAt}.")]
+        public static partial void GravityMergeExecuted(
+        ILogger logger,
+        Guid sourceFieldId,
+        Guid targetFieldId,
+        DateTimeOffset executedAt);
+
+        [LoggerMessage(
+           EventId = 3047,
+           Level = LogLevel.Information,
+           Message = "Gravity dissolution candidate Evaluated. FieldId={FieldId}, AttentionEnergy={AttentionEnergy}, Stability={Stability}, SemanticMass={SemanticMass}, ParticipantCount={ParticipantCount}.")]
+        public static partial void GravityDissolutionCandidateEvaluated(
+        ILogger logger,
+        Guid fieldId,       
+        float attentionEnergy,
+        float stability,
+        float semanticMass,
+        int ParticipantCount);
+
+        [LoggerMessage(
+           EventId = 3048,
+           Level = LogLevel.Information,
+           Message = "Gravity dissolution decision completed.FieldId={FieldId}, Approved={Approved}, Reason={Reason}.")]
+        public static partial void GravityDissolutionDecisionCompleted(
+        ILogger logger,
+        Guid fieldId,
+        bool approved,
+        string reason);
+
+        [LoggerMessage(
+           EventId = 3049,
+           Level = LogLevel.Information,
+           Message = "Gravity field Dissolved. FieldId={FieldId}, DissolvedAt={DissolvedAt}.")]
+        public static partial void GravityFieldDissolved(
+        ILogger logger,
+        Guid fieldId,
+        DateTimeOffset dissolvedAt);
+
+        [LoggerMessage(
+           EventId = 3050,
+           Level = LogLevel.Information,
+           Message = "Gravity evolution cycle completed. MergeCandidates={MergeCandidates}, MergesExecuted={MergesExecuted}, DissolutionCandidates={DissolutionCandidates}, DissolutionsExecuted={DissolutionsExecuted},EvolutionPerformed={EvolutionPerformed}.")]
+        public static partial void GravityEvolutionCompleted(
+        ILogger logger,
+        int mergeCandidates,
+        int mergesExecuted,
+        int dissolutionCandidates,
+        int dissolutionsExecuted,
+        bool evolutionPerformed);
+
+
+
+
     }
 
 }
